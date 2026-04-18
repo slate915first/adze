@@ -4,6 +4,13 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11.3] — 2026-04-19 · Feedback mode actually reports clicks now
+
+### Fixed
+- **In feedback mode, clicking on anything that wasn't annotated with `data-component` did nothing visible** — the click went through to whatever normal handler existed. Most setup buttons aren't annotated, so testers reported "nothing happens" and got frustrated. Now: every click in feedback mode opens the element-feedback modal, regardless of annotation.
+- When the clicked element has `data-component`, its curated path is used (e.g., `setup.assessment.phase_a`). Otherwise a CSS-selector-ish DOM path is derived (e.g., `button.btn.btn-gold`). Either way maintainers can find the element in source.
+- Feedback-mode cursor is now `crosshair` on the whole body and a subtle gold outline appears on any hovered element. Visual signal that the mode is active everywhere, not just on some elements.
+
 ## [15.11.2] — 2026-04-19 · HOTFIX — OTP verify: code length + type retry
 
 ### Fixed

@@ -17,7 +17,7 @@
 // v15.x bump qualifies). Old caches purged on activate.
 // ============================================================================
 
-const CACHE_NAME = 'adze-v15.11.2';
+const CACHE_NAME = 'adze-v15.11.3';
 
 // Files explicitly precached on install. Keep small — the rest is cached
 // lazily as the user navigates. If any item here 404s, the whole install

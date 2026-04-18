@@ -359,6 +359,15 @@
      and shows a small 💬 corner marker. Clicking either the element or the
      marker opens the feedback modal. The floating toggle button sits above
      all content at a fixed position. */
+  /* v15.11.3 — feedback mode outlines *everything* on hover so the tester
+     has a visible signal that a click will open a report. Keep the thicker
+     gold outline for data-component-annotated elements so the curated
+     reporting points still stand out. */
+  body.feedback-mode { cursor: crosshair; }
+  body.feedback-mode *:not(#feedback-fab):not(#feedback-banner):not(#modal-root):hover {
+    outline: 1px dashed rgba(212, 168, 87, 0.55);
+    outline-offset: 1px;
+  }
   body.feedback-mode [data-component] {
     position: relative;
     cursor: crosshair;

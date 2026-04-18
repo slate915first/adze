@@ -66,12 +66,20 @@ function feedbackClickCapture(e) {
   // Let clicks on the FAB, banner, and modals pass through so the user
   // can still exit or fill out the report form.
   if (e.target.closest('#feedback-fab, #feedback-banner, #modal-root')) return;
-  const comp = e.target.closest('[data-component]');
-  if (!comp) return;
+  // v15.11.3 — Intercept EVERY click in feedback mode, not just on
+  // elements with data-component. Previously testers complained nothing
+  // happened when they tapped — most buttons aren't annotated with
+  // data-component. Falling through opened the setup flow they were
+  // trying to report on. Now: prefer data-component for the path, fall
+  // back to a derived CSS-ish path. Always open the report modal.
   e.preventDefault();
   e.stopPropagation();
-  const path = comp.getAttribute('data-component');
-  const snippet = getElementSnippet(comp);
+  const annotated = e.target.closest('[data-component]');
+  const target = annotated || e.target;
+  const path = annotated
+    ? annotated.getAttribute('data-component')
+    : deriveDomPath(e.target);
+  const snippet = getElementSnippet(target);
   openElementFeedbackModal(path, snippet);
 }
 
@@ -79,6 +87,29 @@ function getElementSnippet(el) {
   if (!el) return '';
   const raw = (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' ');
   return raw.length > 140 ? raw.slice(0, 137) + '...' : raw;
+}
+
+// v15.11.3 — Derive a CSS-selector-ish path for elements without
+// data-component. Walks up the DOM until it hits a landmark we
+// recognize (id, body, #app, #modal-root). Enough to help me find the
+// element in source when a tester reports.
+function deriveDomPath(el) {
+  if (!el || !el.tagName) return '(unknown)';
+  const parts = [];
+  let cur = el;
+  let depth = 0;
+  while (cur && cur.tagName && cur.tagName !== 'BODY' && depth < 6) {
+    let token = cur.tagName.toLowerCase();
+    if (cur.id) { token += '#' + cur.id; parts.unshift(token); break; }
+    const cls = (cur.className && typeof cur.className === 'string')
+      ? cur.className.split(/\s+/).filter(Boolean).slice(0, 2).map(c => '.' + c).join('')
+      : '';
+    if (cls) token += cls;
+    parts.unshift(token);
+    cur = cur.parentElement;
+    depth++;
+  }
+  return parts.join(' > ') || el.tagName.toLowerCase();
 }
 
 function openElementFeedbackModal(path, snippet) {
