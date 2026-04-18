@@ -37,7 +37,58 @@ function renderAuthModal(m) {
   if (m.step === 'passphrase-unlock')       return renderPassphraseUnlock(m);
   if (m.step === 'passphrase-reset-confirm')return renderPassphraseResetConfirm(m);
   if (m.step === 'passphrase-success')      return renderPassphraseSuccess(m);
+  if (m.step === 'set-initial-password')    return renderSetInitialPassword(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.0 — Shown after a successful invite or recovery link click. The user
+// has a session but no password yet (or wants to change it). Mandatory step.
+function renderSetInitialPassword(m) {
+  const err = renderAuthError(m);
+  const email = (typeof authGetEmail === 'function') ? authGetEmail() : '';
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">🌱</div>
+        <h2 class="text-xl font-bold gold-text">Welcome to Adze</h2>
+        <p class="text-xs text-amber-100/70 mt-1">${escapeHtml(email)}</p>
+      </div>
+      ${err}
+      <div class="parchment rounded-xl p-4 mb-3 text-sm text-amber-100/85 serif leading-relaxed">
+        Choose a password for your account. You'll use this to sign back in next time. The next step will ask for a separate <i>encryption passphrase</i> that protects your synced data — that one is not recoverable, so think of it as the more important secret.
+      </div>
+      <div class="space-y-3 mb-3">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">New password</label>
+          <input id="initpw-new" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+        </div>
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Password again</label>
+          <input id="initpw-confirm" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button class="btn btn-gold" onclick="authDoSetInitialPassword()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Saving…' : 'Set password &amp; continue'}</button>
+      </div>
+    </div>
+  `;
+}
+
+async function authDoSetInitialPassword() {
+  const pw      = document.getElementById('initpw-new')?.value;
+  const confirm = document.getElementById('initpw-confirm')?.value;
+  if (!pw || pw.length < 8)   return authSetAuthError('Password must be at least 8 characters.');
+  if (pw !== confirm)         return authSetAuthError('Passwords do not match.');
+  authSetAuthBusy(true);
+  try {
+    await authSetInitialPassword(pw);
+    // Now route to the passphrase setup or unlock flow. For an invitee this
+    // will be passphrase-setup (no remote row exists yet); for a recovery
+    // user it could be either.
+    await authStartUnlockOrSetup();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
 }
 
 function renderPassphraseSuccess(m) {

@@ -68,7 +68,12 @@ async function boot() {
   //     unfinished (e.g. browser cache cleared on a second device), nudge
   //     the user straight into the passphrase-unlock modal so they can pull
   //     their synced data instead of re-running the setup flow.
-  if (typeof authGetMode === 'function' && authGetMode() === 'authed'
+  // 4b. If the user just arrived via an invite/recovery link, prompt them
+  //     to set a password BEFORE the unlock prompt — invitees have no
+  //     password yet, so an unlock attempt would silently fail.
+  if (typeof authHasPendingPasswordSet === 'function' && authHasPendingPasswordSet()) {
+    view.modal = { type: 'auth', step: 'set-initial-password', busy: false, error: null, consent: false, reset: false };
+  } else if (typeof authGetMode === 'function' && authGetMode() === 'authed'
       && !(typeof passphraseIsUnlocked === 'function' && passphraseIsUnlocked())
       && (!state || !state.setupComplete)) {
     view.modal = { type: 'auth', step: 'passphrase-unlock', busy: false, error: null, consent: false, reset: false };

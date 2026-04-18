@@ -201,7 +201,7 @@ function renderDiagnosticPhaseA() {
         ${wellbeingAck === 'crisis' ? `
           <button class="btn btn-ghost text-sm" onclick="pauseSetupForCare()">${t('setup.assessment.phase_a.pause_button')}</button>
         ` : `
-          <button class="btn btn-gold text-sm ${(!wellbeingAck || !diag.experience || !diag.dominantHindrance) ? 'opacity-50 pointer-events-none' : ''}" onclick="setupNext()">${t('common.continue')}</button>
+          <button id="phaseA-continue" class="btn btn-gold text-sm ${(!wellbeingAck || !diag.experience || !diag.dominantHindrance) ? 'opacity-50 pointer-events-none' : ''}" onclick="setupNext()">${t('common.continue')}</button>
         `}
       </div>
     </div>

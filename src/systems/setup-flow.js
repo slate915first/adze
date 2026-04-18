@@ -103,9 +103,24 @@ function setDiagnosticA(key, val) {
   }
   if (key === 'experience' || key === 'dominantHindrance') {
     patchRadioButtonsInPlace('setDiagnosticA', key, val);
+    refreshPhaseAContinueState();
     return;
   }
   renderModal();
+}
+
+// v15.0 — Re-evaluate the Phase A Continue button's enabled state. After
+// the in-place radio patch, the button needs to drop opacity-50 +
+// pointer-events-none once all three required fields are set. Without this
+// the button stays disabled forever (Li May reported it from mobile).
+function refreshPhaseAContinueState() {
+  const btn = document.getElementById('phaseA-continue');
+  if (!btn) return;
+  const diag = view.setupData && view.setupData.diagnostic;
+  if (!diag) return;
+  const ready = !!diag.wellbeingAck && !!diag.experience && !!diag.dominantHindrance;
+  btn.classList.toggle('opacity-50', !ready);
+  btn.classList.toggle('pointer-events-none', !ready);
 }
 
 function toggleDiagnosticHope(key) {
