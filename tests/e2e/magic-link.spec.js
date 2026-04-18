@@ -97,7 +97,7 @@ test.describe('Magic-link sign-in', () => {
     await expect(page.locator('#magic-code')).toBeVisible();
   });
 
-  test('non-6-digit code rejected client-side before network', async ({ page }) => {
+  test('very short code rejected client-side before network', async ({ page }) => {
     await stubSupabase(page);
     await page.goto('/');
     await page.getByRole('button', { name: /sign in with email/i }).click();
@@ -105,6 +105,6 @@ test.describe('Magic-link sign-in', () => {
     await page.getByRole('button', { name: /send code/i }).click();
     await page.fill('#magic-code', '12');
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-    await expect(page.getByText(/6 digits/i).first()).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/digits from your email/i).first()).toBeVisible({ timeout: 5000 });
   });
 });
