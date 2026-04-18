@@ -90,12 +90,21 @@ function setDiagnosticA(key, val) {
     view.setupData.diagnostic.energy = parseInt(val, 10);
     const el = document.getElementById('energy-val');
     if (el) el.textContent = val + t('setup.assessment.value_of_ten');
-    // no re-render — slider is fine, label updated in-place
     return;
   }
-  // For radio-style selects (experience, tradition, etc.), DO re-render —
-  // the selected chip needs to visually highlight.
   view.setupData.diagnostic[key] = val;
+  // v15.0 — wellbeingAck toggles layout (crisis vs. non-crisis shows entirely
+  // different content), so we still re-render for it. Experience and
+  // dominantHindrance are pure radio selections — patch the buttons in place
+  // to avoid the full-modal flicker the user reported.
+  if (key === 'wellbeingAck') {
+    renderModal();
+    return;
+  }
+  if (key === 'experience' || key === 'dominantHindrance') {
+    patchRadioButtonsInPlace('setDiagnosticA', key, val);
+    return;
+  }
   renderModal();
 }
 
@@ -105,7 +114,52 @@ function toggleDiagnosticHope(key) {
   if (idx >= 0) h.splice(idx, 1);
   else if (h.length < 2) h.push(key);
   view.setupData.diagnostic.hopes = h;
-  renderModal();
+  // v15.0 — in-place patch instead of full re-render. Multi-select with a
+  // cap of 2; non-selected buttons dim when the cap is reached.
+  const buttons = document.querySelectorAll('button[onclick^="toggleDiagnosticHope("]');
+  const atCap = h.length >= 2;
+  buttons.forEach(btn => {
+    const m = btn.getAttribute('onclick').match(/toggleDiagnosticHope\('([^']+)'\)/);
+    if (!m) return;
+    const itemKey = m[1];
+    const selected = h.includes(itemKey);
+    btn.className = `parchment rounded-lg p-2 text-left ${selected ? 'parchment-active' : 'hover:parchment-active'} ${!selected && atCap ? 'opacity-40' : ''}`;
+    // Toggle the ✓ on the label. Label is nested; find the bold element.
+    const labelEl = btn.querySelector('.text-xs.font-bold');
+    if (labelEl) {
+      const base = labelEl.textContent.replace(/\s*✓$/, '');
+      labelEl.textContent = selected ? base + ' ✓' : base;
+    }
+  });
+}
+
+// v15.0 — shared helper for radio-style button groups. Finds all buttons
+// whose onclick is "<handlerName>('<key>', '<whatever>')" and updates their
+// classes + ✓ marker according to the newly-selected value.
+function patchRadioButtonsInPlace(handlerName, key, newValue) {
+  const prefix = handlerName + "('" + key + "', '";
+  const buttons = document.querySelectorAll(`button[onclick^="${prefix}"]`);
+  buttons.forEach(btn => {
+    const onclick = btn.getAttribute('onclick');
+    const re = new RegExp(handlerName + "\\('" + key + "', '([^']+)'\\)");
+    const m = onclick.match(re);
+    if (!m) return;
+    const buttonValue = m[1];
+    const selected = buttonValue === newValue;
+    // Preserve any width/layout classes already applied — only toggle the
+    // state classes. The existing base classes vary by caller; the common
+    // selected-state markers are 'parchment-active' and 'lotus-glow'.
+    btn.classList.toggle('parchment-active', selected);
+    btn.classList.toggle('lotus-glow', selected);
+    if (!selected) btn.classList.add('hover:parchment-active');
+    else btn.classList.remove('hover:parchment-active');
+    // Toggle the ✓ in the label.
+    const labelEl = btn.querySelector('.text-xs.font-bold');
+    if (labelEl) {
+      const base = labelEl.textContent.replace(/\s*✓$/, '');
+      labelEl.textContent = selected ? base + ' ✓' : base;
+    }
+  });
 }
 
 function setDiagnosticB(key, val) {

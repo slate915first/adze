@@ -356,14 +356,32 @@ function renderDiagnosticPhaseB() {
   `;
 }
 
-// v11.1 — toggle a multi-select option inside Phase B (knowledge checks)
+// v11.1 — toggle a multi-select option inside Phase B (knowledge checks).
+// v15.0 — patches the clicked button's state in place instead of re-rendering,
+// to remove the flicker the user noticed on every tap.
 function toggleDiagnosticBMulti(key, optionKey) {
   const diag = view.setupData.diagnostic;
   if (!Array.isArray(diag[key])) diag[key] = [];
   const idx = diag[key].indexOf(optionKey);
-  if (idx >= 0) diag[key].splice(idx, 1);
-  else diag[key].push(optionKey);
-  renderModal();
+  const willSelect = idx < 0;
+  if (willSelect) diag[key].push(optionKey);
+  else            diag[key].splice(idx, 1);
+  // Patch the clicked button.
+  const btn = document.querySelector(`button[onclick="toggleDiagnosticBMulti('${key}', '${optionKey}')"]`);
+  if (btn) {
+    btn.className = `parchment rounded-lg p-2 text-left w-full ${willSelect ? 'parchment-active' : 'hover:parchment-active'}`;
+    const checkboxEl = btn.querySelector('.text-sm.mt-0\\.5');
+    if (checkboxEl) checkboxEl.textContent = willSelect ? '☑' : '☐';
+  }
+  // Update the "(n selected)" footer for this question.
+  // Footer element sits below the button list in the same card; find by
+  // traversing to the parent card then locating the italic footer span.
+  const card = btn ? btn.closest('.parchment.rounded-xl') : null;
+  const footer = card ? card.querySelector('.italic') : null;
+  if (footer) {
+    // Re-build the i18n string with the new count.
+    footer.textContent = t('setup.assessment.phase_b.multi_footer', { count: diag[key].length });
+  }
 }
 
 // v15.0 — toggle a chip (setup Phase B: stoppedBefore / physicalConcerns /
