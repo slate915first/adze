@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.10] — 2026-04-18 · 6-digit invite code (the Slack/Notion/Linear pattern)
+
+### Added
+- **Primary invite flow is now a 6-digit code.** Welcome page → "I have an invite code" → tester enters email + 6 digits → `supabase.auth.verifyOtp({ email, token, type: 'invite' })` → set-password modal → onboarding. Nothing happens server-side until the human types the code. Definitively prefetch-proof.
+- `authVerifyEmailOtp(email, token, type)` in `auth.js`. Validates the code is 6 digits, calls verifyOtp, handles the error path honestly.
+- New modal step `invite-code` with email + monospace code input (inputmode=numeric, autocomplete=one-time-code for SMS autofill on iOS).
+- `invite.html` email template redesigned: the 6-digit code is the primary thing in the email, big and monospace. The old clickable link stays as a low-key shortcut ("if your email client doesn't auto-fetch links").
+- Two new e2e tests — verify happy path + invalid-code rejection.
+
+### Why this pattern
+- Slack, Notion, Linear, GitHub device auth, most banks. All use codes for auth emails. The single reason: nothing in the link → nothing for a prefetcher to consume.
+- The landing-page-with-clickable-link (v15.9) survives as a fallback for testers who prefer to click.
+
+### Action required after Cloudflare deploys
+- Supabase dashboard → Authentication → Email Templates → Invite user → re-paste `email-templates/invite.html` (the HTML changed — code is now the primary element).
+
 ## [15.9] — 2026-04-18 · Prefetch-resistant invite + recovery flow
 
 ### Changed (security/UX)

@@ -137,6 +137,29 @@ test.describe('Invite-link flow', () => {
     await expect(page.locator('#initpw-new')).not.toBeVisible();
   });
 
+  // v15.10 — Primary flow: 6-digit code pasted into the app manually.
+  // No link, no prefetch, nothing happens server-side until the human
+  // types the code.
+  test('invite-code flow: enter email + 6-digit code → set-password modal', async ({ page }) => {
+    await stubSupabaseCdn(page);
+    await page.goto('/');
+    await page.getByRole('button', { name: /I have an invite code/i }).click();
+    await page.fill('#invcode-email', 'tester@adze.life');
+    await page.fill('#invcode-token', '482931');
+    await page.getByRole('button', { name: /verify code/i }).click();
+    await expect(page.locator('#initpw-new')).toBeVisible({ timeout: 5000 });
+  });
+
+  test('invite-code flow rejects non-6-digit code with a readable error', async ({ page }) => {
+    await stubSupabaseCdn(page);
+    await page.goto('/');
+    await page.getByRole('button', { name: /I have an invite code/i }).click();
+    await page.fill('#invcode-email', 'tester@adze.life');
+    await page.fill('#invcode-token', '12'); // too short
+    await page.getByRole('button', { name: /verify code/i }).click();
+    await expect(page.getByText(/6 digits/i)).toBeVisible({ timeout: 5000 });
+  });
+
   test('landing page does not auto-verify on load (token preserved)', async ({ page }) => {
     let verifyOtpCallCount = 0;
     // Intercept any actual verify endpoint hit (paranoia — there shouldn't be).

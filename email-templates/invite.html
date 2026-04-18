@@ -47,24 +47,42 @@
           </td>
         </tr>
 
-        <!-- CTA -->
+        <!-- Primary: the 6-digit code. Big, monospace, centered so a
+             tester can read it once and type it without fumbling. -->
         <tr>
-          <td align="center" style="padding:4px 32px 20px 32px;">
+          <td align="center" style="padding:4px 32px 16px 32px;font-family:Georgia,'Crimson Text',serif;font-size:13px;color:#e6dcc8;opacity:0.75;">
+            Your invite code:
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:0 32px 24px 32px;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td align="center" bgcolor="#d4a857" style="border-radius:8px;background:linear-gradient(135deg,#f4e4bc,#d4a857);">
-                  <a href="https://adze.life/?invite_token={{ .TokenHash }}&type=invite" target="_blank" style="display:inline-block;padding:14px 32px;font-family:Georgia,'Crimson Text',serif;font-size:16px;font-weight:700;line-height:1;color:#1a1530;text-decoration:none;border-radius:8px;">Accept invitation &amp; set password</a>
+                <td align="center" style="background:rgba(212,168,87,0.08);border:1px solid rgba(212,168,87,0.4);border-radius:10px;padding:16px 28px;">
+                  <div style="font-family:'SF Mono','Menlo','Monaco',monospace;font-size:32px;letter-spacing:10px;font-weight:700;color:#f4e4bc;">{{ .Token }}</div>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
 
-        <!-- Fallback link -->
+        <!-- How to use the code -->
+        <tr>
+          <td style="padding:0 36px 20px 36px;font-family:Georgia,'Crimson Text',serif;font-size:14px;line-height:1.65;color:#e6dcc8;">
+            <ol style="margin:0;padding:0 0 0 20px;">
+              <li style="margin-bottom:6px;">Open <a href="https://adze.life" style="color:#d4a857;text-decoration:underline;">adze.life</a> on your phone or computer.</li>
+              <li style="margin-bottom:6px;">Tap <b>"I have an invite code"</b> on the welcome screen.</li>
+              <li style="margin-bottom:0;">Enter your email and the code above.</li>
+            </ol>
+          </td>
+        </tr>
+
+        <!-- Optional clickable link as a shortcut, kept low-key so nobody
+             feels like they HAVE to click it (and so email prefetchers
+             have less signal to act on). -->
         <tr>
           <td style="padding:0 36px 24px 36px;font-family:Georgia,'Crimson Text',serif;font-size:12px;line-height:1.6;color:#e6dcc8;opacity:0.65;">
-            <p style="margin:0 0 6px 0;">If the button doesn't work, paste this into your browser:</p>
-            <p style="margin:0;word-break:break-all;"><a href="https://adze.life/?invite_token={{ .TokenHash }}&type=invite" style="color:#d4a857;text-decoration:underline;">https://adze.life/?invite_token={{ .TokenHash }}&type=invite</a></p>
+            <p style="margin:0;">Shortcut, if your email client doesn't auto-fetch links: <a href="https://adze.life/?invite_token={{ .TokenHash }}&type=invite" style="color:#d4a857;text-decoration:underline;">tap here to open the app with the code pre-filled</a>.</p>
           </td>
         </tr>
 

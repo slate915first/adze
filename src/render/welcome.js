@@ -36,6 +36,9 @@ function renderWelcome() {
         </button>
 
         ${publicSignup ? '' : `
+          <button class="mt-3 text-sm text-amber-200/80 hover:text-amber-100 underline" onclick="openAuth('invite-code')">
+            I have an invite code →
+          </button>
           <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
             To request access, email
             <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.

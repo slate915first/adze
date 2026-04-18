@@ -43,7 +43,63 @@ function renderAuthModal(m) {
   if (m.step === 'delete-account-confirm')  return renderDeleteAccountConfirm(m);
   if (m.step === 'delete-account-success')  return renderDeleteAccountSuccess(m);
   if (m.step === 'invite-landing')          return renderInviteLanding(m);
+  if (m.step === 'invite-code')             return renderInviteCode(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.10 — 6-digit code entry. The pro pattern: no link to click, no
+// prefetch to consume, nothing happens server-side until the human types
+// the code into this form. Slack / Notion / Linear / GitHub all use this.
+function renderInviteCode(m) {
+  const err = renderAuthError(m);
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">🔑</div>
+        <h2 class="text-xl font-bold gold-text">Enter your invite code</h2>
+        <p class="text-xs text-amber-100/70 mt-1 serif">Six digits from your invitation email.</p>
+      </div>
+      ${err}
+      <div class="space-y-3 mb-4">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Email</label>
+          <input id="invcode-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
+        </div>
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Code</label>
+          <input id="invcode-token" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
+        </div>
+      </div>
+      <div class="flex justify-between gap-2">
+        <button class="btn btn-ghost" onclick="openAuth('menu')" ${m.busy ? 'disabled' : ''}>Back</button>
+        <button class="btn btn-gold" onclick="authDoVerifyInviteCode()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Verifying…' : 'Verify code'}</button>
+      </div>
+      <p class="text-[11px] text-amber-100/55 italic text-center mt-4 leading-relaxed">
+        No code? Email <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a> to ask for a fresh invite.
+      </p>
+    </div>
+  `;
+}
+
+async function authDoVerifyInviteCode() {
+  const email = document.getElementById('invcode-email')?.value;
+  const token = document.getElementById('invcode-token')?.value;
+  if (!email) return authSetAuthError('Email is required.');
+  if (!token) return authSetAuthError('Code is required.');
+  authSetAuthBusy(true);
+  try {
+    await authVerifyEmailOtp(email, token, 'invite');
+    // Session established, no password yet → set-initial-password modal
+    // (existing flow from here: password → passphrase → onboarding).
+    view.modal.step = 'set-initial-password';
+    view.modal.busy = false;
+    view.modal.error = null;
+    view.modal.consent = false;
+    view.modal.reset = false;
+    renderModal();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
 }
 
 // v15.9 — Prefetch-resistant invite/recovery landing.

@@ -147,6 +147,39 @@ async function authSetInitialPassword(newPassword) {
   _pendingPasswordSet = false;
 }
 
+// v15.10 — Verify a 6-digit invite code the user typed in manually.
+// This is the prefetch-proof flow: nothing happens server-side until the
+// human types the code into the app. Type is 'invite' for new-tester
+// invitations; 'recovery' for password resets; 'email' for magic-link
+// signup if we ever enable that.
+async function authVerifyEmailOtp(email, token, type) {
+  if (!_supabase) throw new Error('Supabase client not initialized');
+  if (!email || !token) throw new Error('Email and code are required.');
+  const cleanEmail = String(email).trim().toLowerCase();
+  const cleanToken = String(token).trim().replace(/\s/g, '');
+  if (!/^\d{6}$/.test(cleanToken)) throw new Error('The code should be 6 digits.');
+  const { data, error } = await _supabase.auth.verifyOtp({
+    email: cleanEmail,
+    token: cleanToken,
+    type: type || 'invite'
+  });
+  if (error) {
+    throw new Error(error.message || 'That code is not valid. Check your email and try again, or ask for a new invite.');
+  }
+  if (!data || !data.session || !data.session.user) {
+    throw new Error('Verification did not return a session. Please ask for a fresh invite.');
+  }
+  _userId = data.session.user.id;
+  _userEmail = data.session.user.email;
+  _authMode = 'authed';
+  // Invite-type verifications land the user with a session but no password.
+  // Recovery-type too — they want to change the password. Both route to the
+  // set-initial-password modal via _pendingPasswordSet.
+  if (type === 'invite' || type === 'recovery') {
+    _pendingPasswordSet = true;
+  }
+}
+
 // v15.9 — Consume the pending invite/recovery token. Called from the
 // invite-landing modal when the user clicks "Set up your account". This is
 // the moment the token is actually spent — gmail / proxy / scanner
