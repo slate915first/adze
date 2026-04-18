@@ -155,6 +155,38 @@ function renderSettings() {
             </div>
           `;
         }).join('')}
+
+        ${state.prefs?.customBellDataUrl ? (() => {
+          const current = (state.prefs?.bellSound || 'warm') === 'custom';
+          const name = String(state.prefs.customBellName || 'custom').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+          const dur  = state.prefs.customBellDurationSec ? state.prefs.customBellDurationSec.toFixed(1) + 's' : '';
+          return `
+            <div class="rounded-lg p-3 ${current ? 'parchment-active border border-amber-400' : 'parchment border border-amber-700/30'}">
+              <div class="flex items-start gap-2">
+                <div class="flex-1 min-w-0">
+                  <button onclick="setBellSound('custom')" class="text-left w-full">
+                    <div class="text-sm font-bold text-amber-100">Your bell${current ? t('settings.bell.current_marker') : ''}</div>
+                    <div class="text-[11px] text-amber-100/60 truncate">${name}${dur ? ' · ' + dur : ''}</div>
+                  </button>
+                </div>
+                <button onclick="previewBellSound('custom')" class="btn btn-ghost text-xs shrink-0">${t('settings.bell.preview_button')}</button>
+                <button onclick="if(confirm('Remove your custom bell?'))clearCustomBell()" class="btn btn-ghost text-xs shrink-0 text-red-300/80" title="Remove">✕</button>
+              </div>
+            </div>
+          `;
+        })() : ''}
+      </div>
+
+      <!-- v15.5 — upload a personal bell. Stays on this device + encrypted
+           sync. Limits enforced in sound.js: ≤500 KB, ≤60 s, audio/* only. -->
+      <div class="mt-3 pt-3 border-t border-amber-800/30">
+        <input type="file" id="custom-bell-input" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" style="display:none" onchange="handleCustomBellPicked(this)">
+        <button onclick="document.getElementById('custom-bell-input').click()" class="btn btn-ghost text-xs w-full">
+          ${state.prefs?.customBellDataUrl ? '↻ Replace your bell' : '＋ Use your own bell'}
+        </button>
+        <p class="text-[10px] text-amber-100/50 mt-2 leading-relaxed">
+          MP3, WAV, OGG, or M4A · max <b>500 KB</b> · max <b>60 seconds</b>. Stays in your browser; syncs encrypted with the rest of your data. The maintainer cannot hear it.
+        </p>
       </div>
     </div>
 

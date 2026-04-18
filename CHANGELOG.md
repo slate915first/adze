@@ -4,6 +4,19 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.5] — 2026-04-18 · Custom bell upload + unit-test infra
+
+### Added
+- **Custom bell upload** in Settings → Bell sound → "＋ Use your own bell". Tester picks any audio file (MP3, WAV, OGG, M4A, AAC, FLAC); validation enforces ≤500 KB, ≤60 seconds, audio MIME / extension. Stored as a base64 data URL on `state.prefs.customBellDataUrl` so it syncs encrypted along with the rest of state — the maintainer cannot hear it on the server. New variant `'custom'` appears in the bell list with replace + remove + preview controls. Constraints + reasoning documented inline in `systems/sound.js`.
+- **Unit-test infrastructure** — Vitest + 33 tests covering `engine/diagnostic.js` across every experience branch, chip-array shapes (the v15.1.1 regression class is now caught by 6 dedicated tests), chip-flag-driven `beginnerCare` copy, experienced-branch insight detection (4NT, eightfold, tradition gratitude, dark territory), supporting habits, first-sutta selection. Runs in `npm test`.
+- **GitHub Actions CI** — `.github/workflows/test.yml` runs `npm ci` + `npm test` on every push and PR to main. Future PRs will fail the check before merge if any test breaks.
+- **`media-src 'self' data: blob:`** added to the CSP `_headers` so the custom bell's data URL plays without a policy violation.
+
+### Notes
+- 500 KB limit was chosen because base64 encoding inflates ~33%, and the ciphertext on Supabase needs to stay reasonable to encrypt/decrypt fast on each save.
+- Filename is HTML-escaped before display in Settings (no XSS via filename).
+- The file never leaves the browser before encryption; no server-side upload, no third-party storage.
+
 ## [15.4] — 2026-04-18 · Installable PWA + real bell recordings
 
 ### Added
