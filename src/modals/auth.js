@@ -60,11 +60,11 @@ function renderSetInitialPassword(m) {
       <div class="space-y-3 mb-3">
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">New password</label>
-          <input id="initpw-new" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+          <input id="initpw-new" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
         </div>
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Password again</label>
-          <input id="initpw-confirm" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+          <input id="initpw-confirm" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
       <div class="flex justify-end gap-2">
@@ -255,15 +255,20 @@ function renderPassphraseSetup(m) {
       <div class="space-y-3 mb-3">
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Passphrase</label>
-          <input id="pp-new" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
-          <p class="text-[11px] text-amber-100/60 mt-1">Different from your account password. Used only in your browser to encrypt your data.</p>
+          <input id="pp-new" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" oninput="authUpdatePassphraseStrength(this.value)" ${m.busy ? 'disabled' : ''}/>
+          <div class="mt-1.5">
+            <div class="h-1 w-full rounded bg-amber-950/40 overflow-hidden">
+              <div id="pp-strength-bar" class="h-full transition-all" style="width:0%;background:transparent"></div>
+            </div>
+            <p id="pp-strength-label" class="text-[11px] mt-1 text-amber-100/60">Different from your account password. Used only in your browser to encrypt your data.</p>
+          </div>
         </div>
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Passphrase again</label>
-          <input id="pp-new-confirm" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+          <input id="pp-new-confirm" type="password" autocomplete="new-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
         </div>
         <label class="flex items-start gap-2 text-xs text-amber-100/85 serif leading-relaxed">
-          <input id="pp-consent" type="checkbox" class="mt-0.5" ${m.consent ? 'checked' : ''} onchange="authSetConsent(this.checked)"/>
+          <input id="pp-consent" type="checkbox" class="mt-0.5" ${m.consent ? 'checked' : ''} onchange="authSetConsent(this.checked)" ${m.busy ? 'disabled' : ''}/>
           <span>I understand: <b>if I lose this passphrase, my synced practice data is gone.</b> No reset, no recovery.</span>
         </label>
       </div>
@@ -292,7 +297,7 @@ function renderPassphraseUnlock(m) {
       <div class="space-y-3 mb-3">
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Passphrase</label>
-          <input id="pp-unlock" type="password" autocomplete="current-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100"/>
+          <input id="pp-unlock" type="password" autocomplete="current-password" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
       <div class="flex justify-between gap-2">
@@ -346,6 +351,57 @@ function authSetConsent(v) {
   // input elements appear. Toggle the submit button's disabled state in place.
   const btn = document.getElementById('pp-submit');
   if (btn) btn.disabled = view.modal.busy || !view.modal.consent;
+}
+
+// v15.0 — Passphrase strength meter. Pure local; runs on every keystroke
+// in the new-passphrase input. Score uses length + character variety
+// (lowercase / uppercase / digit / symbol). No library, no zxcvbn — keeps
+// the app dependency-free. The label tells the user what to add for the
+// next tier so it's actionable instead of just judgmental.
+function authUpdatePassphraseStrength(value) {
+  const bar = document.getElementById('pp-strength-bar');
+  const label = document.getElementById('pp-strength-label');
+  if (!bar || !label) return;
+  const v = value || '';
+  if (v.length === 0) {
+    bar.style.width = '0%';
+    bar.style.background = 'transparent';
+    label.textContent = 'Different from your account password. Used only in your browser to encrypt your data.';
+    label.className = 'text-[11px] mt-1 text-amber-100/60';
+    return;
+  }
+  const variety =
+    (/[a-z]/.test(v) ? 1 : 0) +
+    (/[A-Z]/.test(v) ? 1 : 0) +
+    (/[0-9]/.test(v) ? 1 : 0) +
+    (/[^a-zA-Z0-9]/.test(v) ? 1 : 0);
+  let tier, color, msg, pct;
+  if (v.length < 8) {
+    tier = 'Too short';
+    color = '#9ca3af';                                 // gray
+    msg = 'At least 8 characters required.';
+    pct = 15;
+  } else if (v.length < 12 || variety < 2) {
+    tier = 'Weak';
+    color = '#dc2626';                                 // red
+    msg = 'Add more characters or mix in upper/lower-case, numbers, symbols.';
+    pct = 35;
+  } else if (v.length < 16 || variety < 3) {
+    tier = 'Decent';
+    color = '#d4a857';                                 // gold/amber
+    msg = 'Good. A few more characters or symbol variety would push it stronger.';
+    pct = 65;
+  } else {
+    tier = 'Strong';
+    color = '#16a34a';                                 // green
+    msg = 'Strong. Remember: this passphrase is not recoverable.';
+    pct = 100;
+  }
+  bar.style.width = pct + '%';
+  bar.style.background = color;
+  label.textContent = tier + ' — ' + msg;
+  label.className = 'text-[11px] mt-1';
+  label.style.color = color;
 }
 
 async function authStartUnlockOrSetup() {

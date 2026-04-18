@@ -188,6 +188,9 @@
     cursor: pointer;
     border: 1px solid transparent;
     font-family: 'Georgia', serif;
+    /* v15.0 — Apple HIG minimum tap target so mobile testers don't
+       miss small ghost buttons or "Skip" affordances. */
+    min-height: 44px;
   }
   .btn-gold {
     background: linear-gradient(135deg, #d4a857, #8b6914);
@@ -396,8 +399,10 @@
   /* Floating toggle button */
   .feedback-fab {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    /* v15.0 — Honor iOS safe-area inset so the FAB doesn't sit on the
+       home indicator on notched / dynamic-island iPhones. */
+    bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px));
+    right: max(20px, env(safe-area-inset-right));
     z-index: 200;
     width: 48px;
     height: 48px;

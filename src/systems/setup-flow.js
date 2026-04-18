@@ -241,7 +241,16 @@ function pauseSetupForCare() {
     members: [], pendingName: '', pendingChar: null,
     habitMode: null, selectedSmallHabits: [], duration: null,
     customMorning: 15, customEvening: 15, customMidday: 0,
-    diagnostic: { energy: 5, experience: null, hopes: [], dominantHindrance: null },
+    diagnostic: {
+      energy: 5, experience: null, hopes: [], dominantHindrance: null,
+      // v15.0 — chip arrays + Other free-text + Phase C cursor.
+      // Including these in the reset shape avoids undefined reads if the
+      // user re-enters setup after pausing.
+      stoppedBefore: [], stoppedBeforeOther: '',
+      physicalConcerns: [], physicalConcernsOther: '',
+      concerns: [], concernsOther: ''
+    },
+    phaseCStep: 0,
     recommendation: null, acceptedRec: false
   };
   view.modal = null;
