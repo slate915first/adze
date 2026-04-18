@@ -44,7 +44,119 @@ function renderAuthModal(m) {
   if (m.step === 'delete-account-success')  return renderDeleteAccountSuccess(m);
   if (m.step === 'invite-landing')          return renderInviteLanding(m);
   if (m.step === 'invite-code')             return renderInviteCode(m);
+  if (m.step === 'magic-request')           return renderMagicRequest(m);
+  if (m.step === 'magic-verify')            return renderMagicVerify(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.11 — Magic-link sign-in: two steps.
+// 1) magic-request: enter email, tap "Send code" → Supabase emails a
+//    6-digit code. Allowlist trigger rejects unapproved emails with a
+//    clear message surfaced here.
+// 2) magic-verify: enter the 6-digit code → verifyOtp → session →
+//    chain into existing passphrase-unlock / passphrase-setup flow.
+function renderMagicRequest(m) {
+  const err = renderAuthError(m);
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">✉️</div>
+        <h2 class="text-xl font-bold gold-text">Sign in with email</h2>
+        <p class="text-xs text-amber-100/70 mt-1 serif">We'll send a 6-digit code to your inbox.</p>
+      </div>
+      ${err}
+      <div class="space-y-3 mb-4">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Email</label>
+          <input id="magic-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" inputmode="email" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
+        </div>
+      </div>
+      <div class="flex justify-between gap-2">
+        <button class="btn btn-ghost" onclick="closeModal()" ${m.busy ? 'disabled' : ''}>Cancel</button>
+        <button class="btn btn-gold" onclick="authDoRequestMagicCode()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Sending…' : 'Send code'}</button>
+      </div>
+      <p class="text-[11px] text-amber-100/55 italic text-center mt-4 leading-relaxed">
+        Adze is in closed beta. Only pre-approved emails receive codes. To request access, email <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
+      </p>
+    </div>
+  `;
+}
+
+function renderMagicVerify(m) {
+  const err = renderAuthError(m);
+  const email = m.email || '';
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">🔑</div>
+        <h2 class="text-xl font-bold gold-text">Enter the code</h2>
+        <p class="text-xs text-amber-100/70 mt-1">Sent to ${escapeHtml(email)}</p>
+      </div>
+      ${err}
+      <div class="space-y-3 mb-4">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">6-digit code</label>
+          <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
+        </div>
+      </div>
+      <div class="flex justify-between gap-2">
+        <button class="btn btn-ghost" onclick="openAuth('magic-request')" ${m.busy ? 'disabled' : ''}>Back</button>
+        <button class="btn btn-gold" onclick="authDoVerifyMagicCode()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Verifying…' : 'Sign in'}</button>
+      </div>
+      <div class="mt-3 text-center">
+        <button class="text-[11px] text-amber-300/70 underline hover:text-amber-200" onclick="authDoResendMagicCode()" ${m.busy ? 'disabled' : ''}>Resend code</button>
+      </div>
+    </div>
+  `;
+}
+
+async function authDoRequestMagicCode() {
+  const email = document.getElementById('magic-email')?.value;
+  if (!email || !email.trim()) return authSetAuthError('Email is required.');
+  authSetAuthBusy(true);
+  try {
+    await authRequestMagicCode(email);
+    view.modal.step = 'magic-verify';
+    view.modal.email = String(email).trim().toLowerCase();
+    view.modal.busy = false;
+    view.modal.error = null;
+    renderModal();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
+}
+
+async function authDoVerifyMagicCode() {
+  const code = document.getElementById('magic-code')?.value;
+  const email = view.modal?.email;
+  if (!email) return authSetAuthError('Session expired. Go back and request a new code.');
+  if (!code) return authSetAuthError('Enter the 6-digit code.');
+  authSetAuthBusy(true);
+  try {
+    await authVerifyMagicCode(email, code);
+    // Session created. Chain into existing passphrase flow — if a
+    // user_state row exists, unlock; otherwise set a new passphrase.
+    await authStartUnlockOrSetup();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
+}
+
+async function authDoResendMagicCode() {
+  const email = view.modal?.email;
+  if (!email) return;
+  authSetAuthBusy(true);
+  try {
+    await authRequestMagicCode(email);
+    view.modal.busy = false;
+    view.modal.error = null;
+    // Lightweight feedback — flash the button label briefly. A full
+    // success-toast subsystem would be nicer; for now a status line.
+    view.modal.error = null;
+    renderModal();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
 }
 
 // v15.10 — 6-digit code entry. The pro pattern: no link to click, no

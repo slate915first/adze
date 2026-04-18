@@ -31,16 +31,13 @@ function renderWelcome() {
 
         <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="startSetup()">${t('welcome.begin_button')}</button>
 
-        <button class="mt-5 text-sm text-amber-200/80 hover:text-amber-100 underline" onclick="openAuth('signin')">
-          ${t('welcome.sign_in_link')}
+        <button class="mt-4 btn btn-ghost text-base px-8 py-2 w-full max-w-xs" onclick="openAuth('magic-request')">
+          Sign in with email
         </button>
 
         ${publicSignup ? '' : `
-          <button class="mt-3 text-sm text-amber-200/80 hover:text-amber-100 underline" onclick="openAuth('invite-code')">
-            I have an invite code →
-          </button>
           <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
-            To request access, email
+            Closed beta — invite-only. To request access, email
             <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
           </p>
         `}

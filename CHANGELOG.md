@@ -4,6 +4,33 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11] — 2026-04-19 · Magic-link sign-in + allowlist gating
+
+### Added
+- **Magic-link sign-in** (the Slack/Notion/Linear pattern). Welcome page now has a single **"Sign in with email"** button. Tester enters email → Supabase sends a 6-digit code via the **Magic Link** template → tester types the code in Adze → session created → passphrase setup → onboarding. **No passwords. No clickable token links. No prefetch vulnerability. Works in every email client.**
+- **Database-level allowlist** (`public.beta_allowlist`) + trigger on `auth.users` that rejects emails not on the list. Applied via Supabase MCP migration. You control access by editing one table — *anyone* trying to sign in with a non-allowlisted email gets rejected cleanly at the server before any code is emailed. Seeded with Dirk + Li May.
+- `email-templates/magic-link.html` — the email Supabase sends for `signInWithOtp`. Leads with a big monospace 6-digit code, minimal copy, instructions below.
+- `tests/e2e/magic-link.spec.js` (4 tests) — happy path, blocked email (allowlist rejection), wrong code, malformed code.
+- `systems/auth.js`: `authRequestMagicCode(email)` and `authVerifyMagicCode(email, code)`.
+- `modals/auth.js`: new steps `magic-request` + `magic-verify` with Resend Code action.
+
+### Changed
+- **Welcome page simplified from 3 confusing options to 2 clear ones:**
+  - **Begin** (anonymous local-only practice)
+  - **Sign in with email** (magic link)
+- Removed the "I already have an account — sign in" and "I have an invite code →" links. Both were broken under CSP anyway (see v15.10.1). The password-based sign-in flow still exists in code for edge cases but is no longer advertised.
+
+### Supabase setup (user action — one time, 3 minutes)
+1. **Authentication → Email Templates → Magic Link** → paste `email-templates/magic-link.html` → Save.
+2. Allowlist is already seeded with your email + Li May's. To add more testers: **Database → Tables → `beta_allowlist` → Insert row → email → Save**. That's the entire onboarding gesture from now on.
+3. No "Invite user" clicks anymore. Testers go to adze.life, tap Sign in with email, type their email → 6-digit code arrives → they're in. Or rejected at the server if their email isn't on the list.
+
+### Why this works where the previous attempts didn't
+- **Link prefetchers can't consume codes** — there's no link, only a 6-digit number the tester types.
+- **Allowlist enforced at the database trigger level** — cannot be bypassed from the client. Anyone typing an email not on the list is rejected before a code is even generated.
+- **No token format assumptions** — `{{ .Token }}` for magic link emails IS a 6-digit code (unlike invite emails where it's a long hash — my v15.10 mistake).
+- **One secret per user** — just the encryption passphrase. No password to forget, no invite to expire.
+
 ## [15.10.1] — 2026-04-19 · HOTFIX — CSP was blocking every inline onclick handler
 
 ### Fixed

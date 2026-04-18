@@ -147,6 +147,49 @@ async function authSetInitialPassword(newPassword) {
   _pendingPasswordSet = false;
 }
 
+// v15.11 — Magic-link sign-in (Slack/Notion/Linear pattern).
+// Step 1: request a code. Supabase sends a 6-digit code via email. The
+// allowlist trigger on auth.users (public.enforce_beta_allowlist) rejects
+// any email that's not pre-approved, so only invited testers get a code.
+async function authRequestMagicCode(email) {
+  if (!_supabase) throw new Error('Supabase client not initialized');
+  if (!email) throw new Error('Email is required.');
+  const cleanEmail = String(email).trim().toLowerCase();
+  const { error } = await _supabase.auth.signInWithOtp({
+    email: cleanEmail,
+    options: { shouldCreateUser: true }
+  });
+  if (error) {
+    // Surface the allowlist-rejection message directly if it's ours.
+    const m = error.message || 'Could not send the sign-in code.';
+    throw new Error(m);
+  }
+}
+
+// Step 2: verify the code. Creates the session; allowlist trigger has
+// already fired by now (it fires on user insert, which happens at the
+// first verify).
+async function authVerifyMagicCode(email, code) {
+  if (!_supabase) throw new Error('Supabase client not initialized');
+  const cleanEmail = String(email).trim().toLowerCase();
+  const cleanCode = String(code).trim().replace(/\s/g, '');
+  if (!/^\d{6}$/.test(cleanCode)) throw new Error('The code should be 6 digits.');
+  const { data, error } = await _supabase.auth.verifyOtp({
+    email: cleanEmail,
+    token: cleanCode,
+    type: 'email'
+  });
+  if (error) {
+    throw new Error(error.message || 'That code is not valid. Try again or request a new one.');
+  }
+  if (!data || !data.session || !data.session.user) {
+    throw new Error('Verification did not return a session.');
+  }
+  _userId = data.session.user.id;
+  _userEmail = data.session.user.email;
+  _authMode = 'authed';
+}
+
 // v15.10 — Verify a 6-digit invite code the user typed in manually.
 // This is the prefetch-proof flow: nothing happens server-side until the
 // human types the code into the app. Type is 'invite' for new-tester

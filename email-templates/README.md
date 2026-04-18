@@ -4,7 +4,8 @@ Custom email templates that replace Supabase's default blank emails. All three u
 
 | File                     | Purpose                                                                 | Supabase template slot |
 | ------------------------ | ----------------------------------------------------------------------- | ---------------------- |
-| `invite.html`            | Sent when you click "Invite user" in the Supabase dashboard            | **Invite user**        |
+| `magic-link.html`        | **v15.11 primary** — sent when a user requests a sign-in code from the welcome page. `{{ .Token }}` is the 6-digit OTP. | **Magic Link**         |
+| `invite.html`            | Legacy — old "Invite user" flow (superseded by magic-link + allowlist) | **Invite user** *(optional)* |
 | `confirm-signup.html`    | Sent after a self-signup (only fires if public signup is re-enabled)   | **Confirm signup**     |
 | `reset-password.html`    | Sent when a user requests a password reset                              | **Reset password**     |
 | `*.txt`                  | Plain-text fallback for non-HTML mail clients (same-named HTML file)   | *(pasted alongside)*   |
