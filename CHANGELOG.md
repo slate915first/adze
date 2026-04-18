@@ -4,6 +4,17 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.8] — 2026-04-18 · Invite-flow e2e regression guard
+
+### Added
+- `tests/e2e/invite-flow.spec.js` (3 tests) — verifies that landing on Adze with `#access_token=…&type=invite` (the URL Supabase emits after `verify(invite)`) opens the **Set your password** modal; same for `type=recovery`; and that a plain page load *without* the hash does **not** open the set-password modal. Stubs the Supabase JS CDN via Playwright route interception so no real Supabase round-trip is needed.
+
+### Why this matters
+- The invite-link path has now broken twice manually (path-viewer syntax error in v15.7, plus a separate cache-staleness issue Li May hit). With this test, future regressions in the implicit-flow URL detection / `_pendingPasswordSet` flag / `set-initial-password` modal step are caught in CI before they reach a tester.
+
+### Notes
+- The stub overrides `window.supabase.createClient` to return a fake client whose `getSession()` returns a session object. Combined with `urlPasswordSetHint` from the URL hash, this exercises the same code path a real invite triggers — without sending real emails.
+
 ## [15.7] — 2026-04-18 · Playwright e2e + path-viewer syntax fix
 
 ### Added
