@@ -350,6 +350,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s;
+  }
   /* v14.2 — Beta feedback mode. When body.feedback-mode is active, every
      element with a data-component attribute gets a dashed outline on hover
      and shows a small 💬 corner marker. Clicking either the element or the
