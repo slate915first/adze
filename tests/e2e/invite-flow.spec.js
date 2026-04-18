@@ -68,6 +68,24 @@ async function stubSupabaseCdn(page) {
   });
 }
 
+// Variant where getSession() returns null (anonymous visitor). Used for
+// tests that navigate to the welcome page first — with the authed stub,
+// bootstrap would open the passphrase-unlock modal over the welcome page
+// and block interaction.
+const SUPABASE_STUB_SCRIPT_ANON = SUPABASE_STUB_SCRIPT.replace(
+  'getSession: function() { return Promise.resolve({ data: { session: fakeSession }, error: null }); }',
+  'getSession: function() { return Promise.resolve({ data: { session: null }, error: null }); }'
+);
+async function stubSupabaseCdnAnon(page) {
+  await page.route(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js/, (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/javascript',
+      body: SUPABASE_STUB_SCRIPT_ANON,
+    });
+  });
+}
+
 test.describe('Invite-link flow', () => {
   test('lands on Set-your-password modal when URL hash has type=invite', async ({ page }) => {
     await stubSupabaseCdn(page);
@@ -141,7 +159,7 @@ test.describe('Invite-link flow', () => {
   // No link, no prefetch, nothing happens server-side until the human
   // types the code.
   test('invite-code flow: enter email + 6-digit code → set-password modal', async ({ page }) => {
-    await stubSupabaseCdn(page);
+    await stubSupabaseCdnAnon(page);
     await page.goto('/');
     await page.getByRole('button', { name: /I have an invite code/i }).click();
     await page.fill('#invcode-email', 'tester@adze.life');
@@ -151,7 +169,7 @@ test.describe('Invite-link flow', () => {
   });
 
   test('invite-code flow rejects non-6-digit code with a readable error', async ({ page }) => {
-    await stubSupabaseCdn(page);
+    await stubSupabaseCdnAnon(page);
     await page.goto('/');
     await page.getByRole('button', { name: /I have an invite code/i }).click();
     await page.fill('#invcode-email', 'tester@adze.life');
