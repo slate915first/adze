@@ -42,7 +42,65 @@ function renderAuthModal(m) {
   if (m.step === 'forgot-password-sent')    return renderForgotPasswordSent(m);
   if (m.step === 'delete-account-confirm')  return renderDeleteAccountConfirm(m);
   if (m.step === 'delete-account-success')  return renderDeleteAccountSuccess(m);
+  if (m.step === 'invite-landing')          return renderInviteLanding(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.9 — Prefetch-resistant invite/recovery landing.
+// Email links from Adze's templates point to /?invite_token=...&type=...
+// Adze itself is the landing page. The token is NOT verified on page load
+// — only when the user taps "Set up your account" below. That tap calls
+// verifyOtp client-side, consuming the token. Gmail / proxies / scanners
+// prefetching the email link only fetch this static landing page; the
+// token survives until the human acts.
+function renderInviteLanding(m) {
+  const err = renderAuthError(m);
+  const isRecovery = m.tokenType === 'recovery';
+  const headline = isRecovery ? 'Reset your password' : 'Welcome to Adze';
+  const lead = isRecovery
+    ? 'You asked to reset your password. Tap below to confirm and choose a new one.'
+    : 'A small circle invited you to test Adze — a meditation companion rooted in the Theravāda tradition. Tap below to confirm your invitation and set up your account.';
+  const cta = isRecovery ? 'Confirm &amp; choose a new password →' : 'Set up your account →';
+  const icon = isRecovery ? '🔑' : '🌱';
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-5xl mb-2">${icon}</div>
+        <h2 class="text-xl font-bold gold-text">${headline}</h2>
+      </div>
+      ${err}
+      <div class="parchment rounded-xl p-4 mb-4 text-sm text-amber-100/90 serif leading-relaxed">
+        <p>${lead}</p>
+      </div>
+      <div class="flex justify-center">
+        <button class="btn btn-gold w-full max-w-xs" onclick="authDoConsumeInviteToken()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Confirming…' : cta}</button>
+      </div>
+      <p class="text-[11px] text-amber-100/55 italic text-center mt-4 leading-relaxed">
+        ${isRecovery
+          ? 'This won\'t change your encryption passphrase. That stays separate, and remains non-recoverable.'
+          : 'After this you\'ll set a password (resettable), then a separate encryption passphrase that protects your synced data (not recoverable — write it down).'}
+      </p>
+    </div>
+  `;
+}
+
+async function authDoConsumeInviteToken() {
+  if (!(view.modal && view.modal.type === 'auth' && view.modal.step === 'invite-landing')) return;
+  authSetAuthBusy(true);
+  try {
+    await authConsumeInviteToken();
+    // Token is now consumed; pending-password-set is true. Hand off to
+    // the existing set-initial-password modal, which already chains to
+    // passphrase setup, then onboarding.
+    view.modal.step = 'set-initial-password';
+    view.modal.busy = false;
+    view.modal.error = null;
+    view.modal.consent = false;
+    view.modal.reset = false;
+    renderModal();
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
 }
 
 // v15.6 — Account deletion (GDPR right to erasure). Two-step flow:

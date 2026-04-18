@@ -53,7 +53,7 @@
             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td align="center" bgcolor="#d4a857" style="border-radius:8px;background:linear-gradient(135deg,#f4e4bc,#d4a857);">
-                  <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:14px 32px;font-family:Georgia,'Crimson Text',serif;font-size:16px;font-weight:700;line-height:1;color:#1a1530;text-decoration:none;border-radius:8px;">Accept invitation &amp; set password</a>
+                  <a href="https://adze.life/?invite_token={{ .TokenHash }}&type=invite" target="_blank" style="display:inline-block;padding:14px 32px;font-family:Georgia,'Crimson Text',serif;font-size:16px;font-weight:700;line-height:1;color:#1a1530;text-decoration:none;border-radius:8px;">Accept invitation &amp; set password</a>
                 </td>
               </tr>
             </table>
@@ -64,7 +64,7 @@
         <tr>
           <td style="padding:0 36px 24px 36px;font-family:Georgia,'Crimson Text',serif;font-size:12px;line-height:1.6;color:#e6dcc8;opacity:0.65;">
             <p style="margin:0 0 6px 0;">If the button doesn't work, paste this into your browser:</p>
-            <p style="margin:0;word-break:break-all;"><a href="{{ .ConfirmationURL }}" style="color:#d4a857;text-decoration:underline;">{{ .ConfirmationURL }}</a></p>
+            <p style="margin:0;word-break:break-all;"><a href="https://adze.life/?invite_token={{ .TokenHash }}&type=invite" style="color:#d4a857;text-decoration:underline;">https://adze.life/?invite_token={{ .TokenHash }}&type=invite</a></p>
           </td>
         </tr>
 

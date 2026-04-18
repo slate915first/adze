@@ -25,12 +25,19 @@ let _userEmail = null;
 let _pendingPasswordSet = false;   // v15.0 — true after an invite or recovery
                                     // token has been verified and the user
                                     // has a session but no password yet.
+let _pendingInviteToken = null;     // v15.9 — { token, type } when the URL
+                                    // carries ?invite_token=...&type=...
+                                    // and we're waiting for the user to
+                                    // click the invite-landing button to
+                                    // actually consume the token. This is
+                                    // the prefetch-resistant flow.
 
 function authGetMode() { return _authMode; }
 function authGetEmail() { return _userEmail; }
 function authGetUserId() { return _userId; }
 function authGetClient() { return _supabase; }
 function authHasPendingPasswordSet() { return _pendingPasswordSet; }
+function authHasPendingInviteToken() { return _pendingInviteToken; }
 
 async function authInit() {
   if (typeof supabase === 'undefined' || !supabase.createClient) {
@@ -64,6 +71,31 @@ async function authInit() {
   _supabase = supabase.createClient(ADZE_SUPABASE_URL, ADZE_SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true }
   });
+
+  // v15.9 — Prefetch-resistant invite/recovery flow. Our custom Supabase
+  // email templates emit a URL like:
+  //   https://adze.life/?invite_token=XXX&type=invite
+  //   https://adze.life/?invite_token=XXX&type=recovery
+  // Adze itself is the landing page — instead of auto-verifying (which
+  // would consume the token on every gmail / proxy / link-scanner
+  // prefetch), we stash the token, signal the boot to open an invite-
+  // landing modal, and only call verifyOtp when the user actually taps
+  // the "Set up your account" button. The token survives prefetches
+  // because nothing on this code path hits the verify endpoint.
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const inviteToken = params.get('invite_token');
+    const inviteType  = params.get('type');
+    if (inviteToken && (inviteType === 'invite' || inviteType === 'recovery')) {
+      _pendingInviteToken = { token: inviteToken, type: inviteType };
+      // Don't strip the URL yet — keep it so a refresh re-opens the
+      // landing modal. The token is consumed by authConsumeInviteToken
+      // below; that call is the one that strips.
+      return;
+    }
+  } catch (e) {
+    console.warn('Adze invite-landing URL parse skipped:', e);
+  }
 
   // Defensive PKCE-flow handling: if Supabase ever switches us to the newer
   // ?token_hash=...&type=invite query pattern, verify it here. Skipped if
@@ -113,6 +145,36 @@ async function authSetInitialPassword(newPassword) {
   const { error } = await _supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
   _pendingPasswordSet = false;
+}
+
+// v15.9 — Consume the pending invite/recovery token. Called from the
+// invite-landing modal when the user clicks "Set up your account". This is
+// the moment the token is actually spent — gmail / proxy / scanner
+// prefetches don't reach this code path because they only fetch the
+// landing HTML, never the verify endpoint.
+async function authConsumeInviteToken() {
+  if (!_supabase) throw new Error('Supabase client not initialized');
+  if (!_pendingInviteToken) throw new Error('No pending invite token.');
+  const { token, type } = _pendingInviteToken;
+  const { data, error } = await _supabase.auth.verifyOtp({ token_hash: token, type });
+  if (error) {
+    // Token already used (likely a real prior click) or expired.
+    throw new Error(error.message || 'This invitation link has expired or already been used. Please ask for a fresh invite.');
+  }
+  if (!data || !data.session || !data.session.user) {
+    throw new Error('Verification did not return a session. Please ask for a fresh invite.');
+  }
+  _userId = data.session.user.id;
+  _userEmail = data.session.user.email;
+  _authMode = 'authed';
+  _pendingPasswordSet = true;
+  _pendingInviteToken = null;
+  // Strip query params so a refresh doesn't re-trigger the landing modal
+  // (the token is now consumed; a second click would error).
+  try {
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+  } catch (e) { /* ignore */ }
 }
 
 async function authSignUp(email, password) {

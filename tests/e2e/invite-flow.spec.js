@@ -18,19 +18,25 @@ import { test, expect } from '@playwright/test';
 
 // The script body that replaces the real Supabase CDN bundle. Defines a
 // minimal `window.supabase` whose `createClient()` returns a fake client.
-// The fake getSession returns a session, so authInit thinks the implicit-
-// flow hash was consumed and a real session was created.
+//
+// Two behaviors:
+//   - `getSession()` returns a session (so the legacy hash-flow tests below
+//     act as if the SDK auto-processed an implicit invite link).
+//   - `verifyOtp()` returns a NEW session — the v15.9 invite-landing flow
+//     calls verifyOtp explicitly when the user taps the landing button.
 const SUPABASE_STUB_SCRIPT = `
   window.supabase = {
     createClient: function() {
+      const fakeUser = { id: 'test-user-id', email: 'tester@adze.life' };
+      const fakeSession = { user: fakeUser };
       return {
         auth: {
-          getSession: function() { return Promise.resolve({ data: { session: { user: { id: 'test-user-id', email: 'tester@adze.life' } } }, error: null }); },
+          getSession: function() { return Promise.resolve({ data: { session: fakeSession }, error: null }); },
           signOut: function() { return Promise.resolve({ error: null }); },
           signUp: function() { return Promise.resolve({ data: {}, error: null }); },
           signInWithPassword: function() { return Promise.resolve({ data: {}, error: null }); },
           updateUser: function() { return Promise.resolve({ data: {}, error: null }); },
-          verifyOtp: function() { return Promise.resolve({ data: { session: null }, error: null }); },
+          verifyOtp: function() { return Promise.resolve({ data: { session: fakeSession, user: fakeUser }, error: null }); },
           resetPasswordForEmail: function() { return Promise.resolve({ error: null }); },
           onAuthStateChange: function() { return { data: { subscription: { unsubscribe: function() {} } } }; }
         },
@@ -95,5 +101,56 @@ test.describe('Invite-link flow', () => {
     const setPwHeading = page.locator('#modal-root').getByRole('heading', { name: /welcome to adze/i });
     await page.waitForTimeout(800);
     await expect(setPwHeading).toHaveCount(0);
+  });
+
+  // v15.9 — Prefetch-resistant flow. The new email links emit
+  //   /?invite_token=XXX&type=invite|recovery
+  // which makes Adze the landing page and defers the verifyOtp call to a
+  // user click. These tests assert the landing button shows up, the click
+  // consumes the token (calls verifyOtp), and the user is handed off to
+  // the set-initial-password modal.
+
+  test('?invite_token=...&type=invite shows landing button, click → set-password', async ({ page }) => {
+    await stubSupabaseCdn(page);
+    await page.goto('/?invite_token=fake-token-abc&type=invite');
+
+    // Landing button visible.
+    const landingButton = page.getByRole('button', { name: /set up your account/i });
+    await expect(landingButton).toBeVisible({ timeout: 5000 });
+    // The auto-verify modal must NOT have fired (we should be on landing,
+    // not yet on set-initial-password).
+    await expect(page.locator('#initpw-new')).not.toBeVisible();
+
+    // Tap the button → verifyOtp gets called → set-initial-password modal opens.
+    await landingButton.click();
+    await expect(page.locator('#initpw-new')).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#initpw-confirm')).toBeVisible();
+  });
+
+  test('?invite_token=...&type=recovery shows recovery-flavored landing button', async ({ page }) => {
+    await stubSupabaseCdn(page);
+    await page.goto('/?invite_token=fake-token-rec&type=recovery');
+
+    // Recovery branch uses different copy: "Confirm & choose a new password".
+    const landingButton = page.getByRole('button', { name: /confirm.*choose a new password/i });
+    await expect(landingButton).toBeVisible({ timeout: 5000 });
+    await expect(page.locator('#initpw-new')).not.toBeVisible();
+  });
+
+  test('landing page does not auto-verify on load (token preserved)', async ({ page }) => {
+    let verifyOtpCallCount = 0;
+    // Intercept any actual verify endpoint hit (paranoia — there shouldn't be).
+    await page.route(/\/auth\/v1\/verify/, (route) => {
+      verifyOtpCallCount++;
+      route.fulfill({ status: 200, body: '{}' });
+    });
+    await stubSupabaseCdn(page);
+    await page.goto('/?invite_token=should-not-be-consumed&type=invite');
+
+    // Wait long enough for any auto-verify to have fired if it were going to.
+    await page.waitForTimeout(1500);
+    expect(verifyOtpCallCount).toBe(0);
+    // Landing button should still be there waiting for a tap.
+    await expect(page.getByRole('button', { name: /set up your account/i })).toBeVisible();
   });
 });

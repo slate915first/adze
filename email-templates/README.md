@@ -62,7 +62,11 @@ Check rendering in Gmail, Apple Mail, and on mobile. Each client renders differe
 
 ## Template variables
 
-All three templates use only one variable: `{{ .ConfirmationURL }}` — Supabase injects the correct one-time link per email. Do not modify the URL format.
+`invite.html` and `reset-password.html` use a custom prefetch-resistant URL built from `{{ .TokenHash }}` rather than Supabase's default `{{ .ConfirmationURL }}`. The custom URL points at adze.life — Adze itself becomes the landing page, and the token is only verified client-side after the user taps a button. This keeps gmail / proxy / link-scanner prefetches from consuming the single-use token before the human gets there.
+
+`confirm-signup.html` still uses `{{ .ConfirmationURL }}` (defensive default for the public-signup case, which is currently disabled).
+
+If you need to change the URL format, also update `auth.js` `authInit()` — it reads `?invite_token=…&type=…` from the URL.
 
 ## Design principles (for when you edit)
 

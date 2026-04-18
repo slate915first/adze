@@ -4,6 +4,29 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.9] — 2026-04-18 · Prefetch-resistant invite + recovery flow
+
+### Changed (security/UX)
+- **Email links now route through Adze itself.** The `invite.html` and `reset-password.html` templates emit URLs like `https://adze.life/?invite_token={{ .TokenHash }}&type=invite|recovery` instead of Supabase's default `{{ .ConfirmationURL }}`. Adze becomes the landing page; the token is **only** verified when the human clicks "Set up your account" on the landing modal.
+- This closes the gmail / proxy / link-scanner prefetch attack class. Previously, anything that prefetched the email URL hit Supabase's verify endpoint and consumed the single-use token before the human got there. Now prefetches only fetch a static landing page; the token survives.
+
+### Added
+- `auth.js` `_pendingInviteToken` state + `authConsumeInviteToken()` function. Reads `?invite_token=...&type=...` from the URL on boot, holds the token until the user taps the landing CTA, then calls `verifyOtp({ token_hash, type })` to spend it.
+- New modal step `invite-landing` in `modals/auth.js`. Two flavors via `tokenType`:
+  - **invite** — "Welcome to Adze" + "Set up your account →"
+  - **recovery** — "Reset your password" + "Confirm & choose a new password →"
+- Three new e2e tests in `tests/e2e/invite-flow.spec.js` (now 6 total):
+  - `?invite_token=...&type=invite` shows the landing button; click hands off to set-password.
+  - `?invite_token=...&type=recovery` shows the recovery-flavored button.
+  - Landing page does NOT auto-verify on load — the verify endpoint is never hit until the user clicks. (Asserted by intercepting the `/auth/v1/verify` route and checking call count = 0.)
+
+### Compatibility
+- The legacy `#access_token=…&type=invite` implicit-flow URL handling is kept as a defensive fallback for any pending invite emails sent before this release. New invites use the new format automatically.
+- Re-install the templates in Supabase dashboard → Email Templates after this deploys (the URL inside the HTML changed).
+
+### UX cost
+- One extra tap per invite acceptance. Net win: tokens no longer die to prefetches, so testers stop seeing "the link doesn't work." The landing page also frames the moment more deliberately than dropping straight into a password form from an email click.
+
 ## [15.8] — 2026-04-18 · Invite-flow e2e regression guard
 
 ### Added

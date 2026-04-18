@@ -64,14 +64,20 @@ async function boot() {
   //    to localStorage. Returns null for fresh users.
   state = await loadState();
 
-  // 4a. If a Supabase session rehydrated but local state is missing or
-  //     unfinished (e.g. browser cache cleared on a second device), nudge
-  //     the user straight into the passphrase-unlock modal so they can pull
-  //     their synced data instead of re-running the setup flow.
-  // 4b. If the user just arrived via an invite/recovery link, prompt them
-  //     to set a password BEFORE the unlock prompt — invitees have no
-  //     password yet, so an unlock attempt would silently fail.
-  if (typeof authHasPendingPasswordSet === 'function' && authHasPendingPasswordSet()) {
+  // 4a. If we landed on /?invite_token=...&type=invite|recovery, the URL
+  //     itself is "I have a token, but the human hasn't tapped yet." Open
+  //     the invite-landing modal — its CTA calls verifyOtp client-side,
+  //     so the token is only consumed when the human acts (immune to
+  //     gmail / proxy prefetches).
+  // 4b. If a session rehydrated and the user is already past the set-
+  //     password step (invite verified earlier), show the set-initial-
+  //     password modal so they can finish.
+  // 4c. Otherwise, if signed in but locked, prompt for the encryption
+  //     passphrase.
+  if (typeof authHasPendingInviteToken === 'function' && authHasPendingInviteToken()) {
+    const pending = authHasPendingInviteToken();
+    view.modal = { type: 'auth', step: 'invite-landing', busy: false, error: null, tokenType: pending.type };
+  } else if (typeof authHasPendingPasswordSet === 'function' && authHasPendingPasswordSet()) {
     view.modal = { type: 'auth', step: 'set-initial-password', busy: false, error: null, consent: false, reset: false };
   } else if (typeof authGetMode === 'function' && authGetMode() === 'authed'
       && !(typeof passphraseIsUnlocked === 'function' && passphraseIsUnlocked())
