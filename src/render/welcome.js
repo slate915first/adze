@@ -11,6 +11,7 @@
 // ============================================================================
 
 function renderWelcome() {
+  const publicSignup = typeof ADZE_PUBLIC_SIGNUP_ENABLED === 'boolean' ? ADZE_PUBLIC_SIGNUP_ENABLED : false;
   document.getElementById('app').innerHTML = `
     <div class="fade-in min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center max-w-md mx-auto">
 
@@ -18,15 +19,28 @@ function renderWelcome() {
         <div class="text-6xl md:text-7xl mb-4 breath">☸️</div>
         <h1 class="text-4xl md:text-5xl font-bold gold-text mb-1">${APP_NAME}</h1>
         <p class="text-base md:text-lg serif italic text-amber-200/80 mb-5">${APP_TAGLINE}</p>
-        <p class="text-sm text-amber-100/80 serif leading-relaxed mb-8 max-w-xs">
+        <p class="text-sm text-amber-100/80 serif leading-relaxed mb-6 max-w-xs">
           ${t('welcome.one_line')}
         </p>
+
+        ${publicSignup ? '' : `
+          <div class="mb-6 px-3 py-1.5 rounded-full text-[11px] tracking-wider uppercase text-amber-300/85 border border-amber-700/40 bg-amber-900/20">
+            Closed beta · by invitation
+          </div>
+        `}
 
         <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="startSetup()">${t('welcome.begin_button')}</button>
 
         <button class="mt-5 text-sm text-amber-200/80 hover:text-amber-100 underline" onclick="openAuth('signin')">
           ${t('welcome.sign_in_link')}
         </button>
+
+        ${publicSignup ? '' : `
+          <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
+            To request access, email
+            <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
+          </p>
+        `}
       </div>
 
       <div class="w-full pt-6 mt-6 border-t border-amber-800/30 text-[11px] text-amber-100/55 leading-relaxed">

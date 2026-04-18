@@ -97,6 +97,7 @@ function renderAuthMenu(m) {
     `;
   }
 
+  const publicSignup = typeof ADZE_PUBLIC_SIGNUP_ENABLED === 'boolean' ? ADZE_PUBLIC_SIGNUP_ENABLED : false;
   return `
     <div class="fade-in">
       <div class="text-center mb-4">
@@ -108,10 +109,16 @@ function renderAuthMenu(m) {
         By default, Adze stores everything on this device only — nothing leaves your browser. Signing in lets you pick up where you left off on another device. Your practice data is encrypted in your browser with a passphrase you choose, before it's sent to the server. Nobody but you can read it.
       </div>
       <div class="space-y-2">
-        <button class="btn btn-gold w-full" onclick="openAuth('signup')">Create an account</button>
-        <button class="btn btn-ghost w-full" onclick="openAuth('signin')">I already have an account</button>
+        ${publicSignup ? `<button class="btn btn-gold w-full" onclick="openAuth('signup')">Create an account</button>` : ''}
+        <button class="btn ${publicSignup ? 'btn-ghost' : 'btn-gold'} w-full" onclick="openAuth('signin')">${publicSignup ? 'I already have an account' : 'Sign in'}</button>
         <button class="btn btn-ghost w-full text-xs" onclick="closeModal()">Continue anonymously (local only)</button>
       </div>
+      ${publicSignup ? '' : `
+        <div class="mt-4 text-center text-[11px] text-amber-100/55 italic leading-relaxed">
+          Adze is in closed beta. If you'd like to test, email
+          <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
+        </div>
+      `}
     </div>
   `;
 }

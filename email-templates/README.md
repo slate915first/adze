@@ -1,50 +1,91 @@
 # Adze email templates
 
-Custom email templates that replace Supabase's default blank emails. Current:
+Custom email templates that replace Supabase's default blank emails. All three use the same parchment/gold aesthetic, single CTA, and mindful tone.
 
-| File                     | Purpose                                           | Supabase template slot |
-| ------------------------ | ------------------------------------------------- | ---------------------- |
-| `confirm-signup.html`    | Sent after signup; CTA confirms the email address | **Confirm signup**     |
-| `confirm-signup.txt`     | Plain-text fallback for non-HTML mail clients     | *(pasted alongside)*   |
+| File                     | Purpose                                                                 | Supabase template slot |
+| ------------------------ | ----------------------------------------------------------------------- | ---------------------- |
+| `invite.html`            | Sent when you click "Invite user" in the Supabase dashboard            | **Invite user**        |
+| `confirm-signup.html`    | Sent after a self-signup (only fires if public signup is re-enabled)   | **Confirm signup**     |
+| `reset-password.html`    | Sent when a user requests a password reset                              | **Reset password**     |
+| `*.txt`                  | Plain-text fallback for non-HTML mail clients (same-named HTML file)   | *(pasted alongside)*   |
 
-## How to install in Supabase
+## Prerequisites — Supabase SMTP via Resend
 
-1. Supabase dashboard → **Authentication → Email Templates**.
-2. Pick **Confirm signup** from the template dropdown.
-3. Set the subject line to:
-   ```
-   Welcome to Adze — confirm your email to begin
-   ```
-4. Paste the contents of `confirm-signup.html` into the **Message body (HTML)** field.
-5. (If your Supabase plan exposes a plain-text field:) paste `confirm-signup.txt` there. If it doesn't, leave it; the HTML version has fallback text baked in.
-6. Click **Save changes**.
-7. Send yourself a test signup to verify the styling renders in your real mail clients (Gmail, Apple Mail, Outlook — each renders differently).
+The templates below rely on Supabase sending through **your** Resend account (so the From address is `beta@adze.life` and mail gets through deliverability checks on your verified domain). One-time setup:
 
-## Template variables used
+1. **Resend dashboard** → API Keys → **Create API Key** → name it e.g. `Supabase Auth (adze.life)` → scope: Full access → copy the key.
+2. **Supabase dashboard** → Project Settings → **Authentication → SMTP Settings** → toggle **Enable Custom SMTP**.
+3. Fill in:
+   - Sender email: `beta@adze.life`
+   - Sender name: `Adze`
+   - Host: `smtp.resend.com`
+   - Port: `587`
+   - Username: `resend`
+   - Password: *(paste the Resend API key)*
+4. Save.
 
-- `{{ .ConfirmationURL }}` — the one-time verification link Supabase generates per-signup. **Do not hard-code or modify the URL format** — Supabase injects it.
+Once Supabase is sending through Resend, every auth email goes out from `beta@adze.life`.
 
-## Design principles (for when you edit these)
+## Installing each template
 
-- **Inline styles only.** No external stylesheets or `<style>` blocks in the `<head>` survive Gmail's rewrites cleanly. Everything that matters is on the element.
-- **Table-based layout.** Outlook still parses CSS grid/flex unpredictably; nested tables are ugly but universal.
-- **Max-width 560px.** Anything wider breaks on narrow mobile.
-- **Serif font stack.** `Georgia, 'Crimson Text', 'Times New Roman', serif` — matches the app's parchment/classical feel. Email clients strip custom fonts, so list real installed fonts.
-- **One call-to-action.** If a user scans for 0.5 seconds, they should see the button.
-- **Preheader.** The first `<div>` is the inbox-preview line. Keep it under 90 chars.
-- **Dark-mode friendly.** Dark background + gold accent works in both light- and dark-mode mail client shells.
-- **Mindful, not corporate.** Write how a practitioner would talk — warm, direct, honest about the tradeoff (no recovery of passphrase). Do NOT write "dear user" / "thanks for signing up".
+Supabase dashboard → **Authentication → Email Templates** → pick the template from the dropdown.
 
-## Future templates to add
+### Invite user (`invite.html`)
 
-When we turn on the corresponding Supabase features:
+- Subject: `You're invited to Adze — The Path of Awakening`
+- HTML body: paste `invite.html` contents.
+- Save.
 
-- `reset-password.html` — for the "Reset password" slot. Needed before public launch if we let users recover account passwords by email.
-- `magic-link.html` — only if we ever enable passwordless magic-link signin.
-- `change-email.html` — only if users can edit their account email.
+### Confirm signup (`confirm-signup.html`)
 
-Keep each template in its own file. Do not merge them — they're easier to tune individually.
+- Subject: `Welcome to Adze — confirm your email to begin`
+- HTML body: paste `confirm-signup.html` contents.
+- Save.
+
+*(Only relevant if you re-enable public signup later. Safe to install now as a defensive default.)*
+
+### Reset password (`reset-password.html`)
+
+- Subject: `Reset your Adze password`
+- HTML body: paste `reset-password.html` contents.
+- Save.
+
+## Test each template
+
+Use Supabase's **Send test email** button if available, or trigger the real flow:
+
+- **Invite:** Authentication → Users → Invite user → enter your own email.
+- **Confirm signup:** Only fires if public signup is on; otherwise the Invite flow covers the same ground.
+- **Reset password:** After the user flow exposes a "Forgot password?" link, click it. (Not yet wired into Adze's sign-in modal — coming.)
+
+Check rendering in Gmail, Apple Mail, and on mobile. Each client renders differently; the table-based layout keeps it stable but fonts and spacing can shift a bit.
+
+## Template variables
+
+All three templates use only one variable: `{{ .ConfirmationURL }}` — Supabase injects the correct one-time link per email. Do not modify the URL format.
+
+## Design principles (for when you edit)
+
+- **Inline styles only.** No `<style>` blocks — Gmail strips them in many contexts.
+- **Table-based layout.** Outlook still parses CSS grid/flex unpredictably.
+- **Max-width 560px.** Wider breaks on narrow mobile viewports.
+- **Serif font stack.** `Georgia, 'Crimson Text', 'Times New Roman', serif` matches the app's parchment feel and is installed on every mail client.
+- **One CTA per email.** Scanning testers should see the button in 0.5 seconds.
+- **Preheader.** The hidden first `<div>` is the inbox-preview line. Keep ≤ 90 chars.
+- **Dark-mode friendly.** Dark background + gold accent works in both light- and dark-mode shells.
+- **Mindful, not corporate.** Write the way a teacher-practitioner would talk — warm, direct, honest about tradeoffs (no recovery of the passphrase). Don't say "Dear user" or "Thanks for signing up".
+
+## Future templates
+
+- `magic-link.html` — only if you ever enable passwordless magic-link signin.
+- `change-email.html` — only if users can edit their account email (currently they can't).
+
+When adding a template, keep it in its own file — don't merge them, they're easier to tune individually.
 
 ## Deliverability
 
-If testers report Adze emails going to spam: add SPF / DKIM records for your sending domain in Supabase settings (dashboard → Authentication → Email Settings → SMTP). Supabase's shared sender works for low volume; once we pass ~100 users/month we should configure a custom SMTP (e.g. Resend, Postmark) to stay out of spam.
+You already have Resend's DNS records (SPF, DKIM, DMARC) on `adze.life`. That takes care of authentication. If testers still report Adze emails in spam:
+- Check the Resend dashboard for per-email delivery status.
+- Ask the tester to mark the first email as "Not spam" to train their client.
+- Make sure your sender name is consistent (`Adze`, not varying).
+- Add a plain-text fallback alongside the HTML body in Supabase if that option appears.

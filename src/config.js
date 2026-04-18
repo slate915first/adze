@@ -35,10 +35,19 @@ const FACTOR_KEYS = {
 };
 
 // ---------------------------------------------------------------------------
+// Beta access mode
+// v15.0 — during the closed beta, public sign-up is disabled in Supabase
+// (Authentication → Providers → Email → Enable sign ups: OFF). The auth
+// modal uses this flag to decide whether to show the "Create an account"
+// button. Flip to `true` when you open general signups.
+// ---------------------------------------------------------------------------
+const ADZE_PUBLIC_SIGNUP_ENABLED = false;
+
+// ---------------------------------------------------------------------------
 // Beta feedback routing
 // ---------------------------------------------------------------------------
 const FEEDBACK_CONFIG = {
-  email: 'adze.feedback@gmail.com',  // production beta address
+  email: 'feedback@adze.life',  // routed via Cloudflare Email Routing → Dirk's inbox
   subjects: {
     bug:    '[HQ-BUG]',
     idea:   '[HQ-IDEA]',
