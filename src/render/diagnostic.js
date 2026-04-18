@@ -387,40 +387,103 @@ function toggleDiagnosticBChip(key, chipKey) {
 }
 
 function renderDiagnosticPhaseC() {
+  // v15.0 — Phase C is one-question-at-a-time instead of all five sliders
+  // stacked. The user named this as a mindfulness concern: stacking five
+  // hindrance questions on one screen invites skimming. Showing them one by
+  // one, each with its example and a dedicated moment of attention, respects
+  // the practice this tool is for.
   const diag = view.setupData.diagnostic;
+  const total = SETUP_DIAGNOSTIC_C.length;
+  if (typeof view.setupData.phaseCStep !== 'number') view.setupData.phaseCStep = 0;
+  const stepIdx = Math.max(0, Math.min(total - 1, view.setupData.phaseCStep));
+  const q = SETUP_DIAGNOSTIC_C[stepIdx];
+  const isLast = stepIdx === total - 1;
+  const val = diag[q.id] != null ? diag[q.id] : 5;
+  // Progress bar: phases A + B + C, C weighted by how far through C you are.
+  // Total setup progress reaches 100% on the last C question.
+  const pctThroughC = (stepIdx + 1) / total;
+  const progressPct = Math.round(66 + 34 * pctThroughC);
+  // Dotted step indicator for Phase C specifically.
+  const dots = Array.from({length: total}, (_, i) => {
+    const cls = i < stepIdx
+      ? 'bg-amber-400/80'
+      : (i === stepIdx ? 'bg-amber-300 ring-2 ring-amber-200/40' : 'bg-amber-800/60');
+    return `<span class="inline-block w-2 h-2 rounded-full ${cls}"></span>`;
+  }).join('<span class="inline-block w-2"></span>');
   return `
     <div class="fade-in">
       <div class="text-center mb-2">
         <div class="text-[10px] uppercase tracking-wider text-amber-300/70 mb-1">${t('setup.assessment.eyebrow')} <span class="opacity-60">· ${t('setup.assessment.phase_of_3', {n: 3})}</span></div>
         <h2 class="text-2xl font-bold gold-text">${t('setup.assessment.phase_c.heading')}</h2>
       </div>
-      <p class="text-sm text-amber-100/70 italic mb-4 text-center">${t('setup.assessment.phase_c.intro')}</p>
-      <div class="w-full bg-amber-900/30 rounded-full h-1 mb-6 overflow-hidden">
-        <div class="h-full bg-amber-400/70 transition-all" style="width:100%"></div>
+      <p class="text-sm text-amber-100/70 italic mb-3 text-center">${t('setup.assessment.phase_c.intro')}</p>
+      <div class="w-full bg-amber-900/30 rounded-full h-1 mb-3 overflow-hidden">
+        <div class="h-full bg-amber-400/70 transition-all" style="width:${progressPct}%"></div>
+      </div>
+      <div class="text-center mb-5">
+        <div class="text-[10px] tracking-widest text-amber-300/70 mb-1">${stepIdx + 1} · ${total}</div>
+        <div>${dots}</div>
       </div>
 
-      ${SETUP_DIAGNOSTIC_C.map(q => {
-        const val = diag[q.id] != null ? diag[q.id] : 5;
-        return `
-          <div class="parchment rounded-xl p-4 mb-3">
-            <div class="text-sm font-bold text-amber-100 mb-1">${q.question}</div>
-            ${q.example ? `<div class="text-[11px] text-amber-100/60 italic mb-3 leading-relaxed">${q.example}</div>` : '<div class="mb-2"></div>'}
-            <input type="range" min="0" max="10" value="${val}" class="w-full" oninput="setDiagnosticC('${q.id}', this.value)" onchange="setDiagnosticC('${q.id}', this.value)">
-            <div class="flex justify-between text-[10px] text-amber-200/60 mt-1">
-              <span>${q.labels[0]}</span>
-              <span class="text-amber-300 font-bold"><span id="diagC-val-${q.id}">${val}</span>${t('setup.assessment.value_of_ten')}</span>
-              <span>${q.labels[1]}</span>
-            </div>
-          </div>
-        `;
-      }).join('')}
+      <div class="parchment rounded-xl p-5 mb-5">
+        <div class="text-base font-bold text-amber-100 mb-2 leading-snug">${q.question}</div>
+        ${q.example ? `<div class="text-[12px] text-amber-100/65 italic mb-5 leading-relaxed">${q.example}</div>` : '<div class="mb-3"></div>'}
+        <input type="range" min="0" max="10" value="${val}" class="w-full"
+          oninput="setDiagnosticC('${q.id}', this.value)"
+          onchange="setDiagnosticC('${q.id}', this.value)">
+        <div class="flex justify-between text-[10px] text-amber-200/60 mt-1">
+          <span>${q.labels[0]}</span>
+          <span class="text-amber-300 font-bold"><span id="diagC-val-${q.id}">${val}</span>${t('setup.assessment.value_of_ten')}</span>
+          <span>${q.labels[1]}</span>
+        </div>
+      </div>
 
-      <div class="flex justify-between mt-4">
-        <button class="btn btn-ghost text-sm" onclick="setupBack()">${t('common.back')}</button>
-        <button class="btn btn-gold text-sm" onclick="computeAndShowRecommendation()">${t('setup.assessment.phase_c.see_recommendation')}</button>
+      <div class="flex justify-between items-center gap-2">
+        <button class="btn btn-ghost text-sm" onclick="phaseCBack()">${t('common.back')}</button>
+        <div class="flex gap-2">
+          <button class="btn btn-ghost text-xs" onclick="phaseCSkip()">Skip this one</button>
+          <button class="btn btn-gold text-sm" onclick="phaseCNext()">${isLast ? t('setup.assessment.phase_c.see_recommendation') : t('common.continue')}</button>
+        </div>
       </div>
     </div>
   `;
+}
+
+// v15.0 — Phase C navigation helpers. Each moves the sub-step counter and
+// re-renders. setDiagnosticC (live slider) still updates the label in place.
+function phaseCNext() {
+  const total = SETUP_DIAGNOSTIC_C.length;
+  const step = view.setupData.phaseCStep || 0;
+  if (step < total - 1) {
+    view.setupData.phaseCStep = step + 1;
+    view._resetModalScroll = true;
+    renderModal();
+  } else {
+    computeAndShowRecommendation();
+  }
+}
+
+function phaseCSkip() {
+  const step = view.setupData.phaseCStep || 0;
+  const q = SETUP_DIAGNOSTIC_C[step];
+  if (q && view.setupData.diagnostic) {
+    view.setupData.diagnostic[q.id] = null;
+  }
+  phaseCNext();
+}
+
+function phaseCBack() {
+  const step = view.setupData.phaseCStep || 0;
+  if (step > 0) {
+    view.setupData.phaseCStep = step - 1;
+    view._resetModalScroll = true;
+    renderModal();
+  } else {
+    // Leaving Phase C backwards: reset the sub-step so a return to it starts
+    // at the beginning, not wherever the user happened to bail.
+    view.setupData.phaseCStep = 0;
+    setupBack();
+  }
 }
 
 function renderDiagnosticSlider(q, initial, elId) {

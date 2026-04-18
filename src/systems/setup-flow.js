@@ -26,12 +26,15 @@ function startSetup() {
       hopes: [],
       dominantHindrance: null,
       // beginner branch
-      stoppedBefore: '',
+      stoppedBefore: [],           // v15.0: array of chip keys
+      stoppedBeforeOther: '',      // v15.0: free-text "other", not interpreted
       realisticMinutes: 10,
       posture: null,
       timeOfDay: null,
-      physicalConcerns: '',
-      concerns: '',
+      physicalConcerns: [],        // v15.0: array of chip keys
+      physicalConcernsOther: '',   // v15.0
+      concerns: [],                // v15.0: array of chip keys
+      concernsOther: '',           // v15.0
       // experienced branch
       tradition: null,
       teachers: '',
@@ -47,6 +50,7 @@ function startSetup() {
       // v13.6 — wellbeing acknowledgment (null | 'ok' | 'struggling' | 'crisis')
       wellbeingAck: null
     },
+    phaseCStep: 0,           // v15.0 — one-question-at-a-time sub-step cursor
     recommendation: null,   // computed at end of diagnostic
     acceptedRec: false,      // user accepted recommendation (or adjusted)
     // v13.6 — stable per-session shuffle order for knowledge-check options.
