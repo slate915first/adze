@@ -95,8 +95,8 @@ function renderMagicVerify(m) {
       ${err}
       <div class="space-y-3 mb-4">
         <div>
-          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">6-digit code</label>
-          <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Code from email</label>
+          <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
       <div class="flex justify-between gap-2">

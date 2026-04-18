@@ -22,6 +22,9 @@ const SUPABASE_STUB = `
             return Promise.resolve({ data: {}, error: null });
           },
           verifyOtp: function(opts) {
+            // v15.11.2 — stub accepts the correct code on any of the 4
+            // types the client now retries; simulates Supabase returning
+            // an error for all other types/codes.
             if (!opts || opts.token !== '482931') {
               return Promise.resolve({ data: null, error: { message: 'Invalid or expired code.' } });
             }

@@ -173,21 +173,38 @@ async function authVerifyMagicCode(email, code) {
   if (!_supabase) throw new Error('Supabase client not initialized');
   const cleanEmail = String(email).trim().toLowerCase();
   const cleanCode = String(code).trim().replace(/\s/g, '');
-  if (!/^\d{6}$/.test(cleanCode)) throw new Error('The code should be 6 digits.');
-  const { data, error } = await _supabase.auth.verifyOtp({
-    email: cleanEmail,
-    token: cleanCode,
-    type: 'email'
-  });
-  if (error) {
-    throw new Error(error.message || 'That code is not valid. Try again or request a new one.');
+  // v15.11.2 — accept any reasonable code length. Supabase's default OTP
+  // length is 6, but projects can configure 4–10. A hardcoded 6 was
+  // rejecting Dirk's 8-digit production codes client-side.
+  if (!/^\d{4,10}$/.test(cleanCode)) {
+    throw new Error('The code should be the digits from your email.');
   }
-  if (!data || !data.session || !data.session.user) {
-    throw new Error('Verification did not return a session.');
+  // v15.11.2 — Supabase routes signInWithOtp differently based on whether
+  // the email already exists: new user → 'signup' / 'magiclink', existing
+  // user (pre-confirmed) → 'recovery'. The error "token has expired or is
+  // invalid" is returned for a VALID token with the wrong type, not just
+  // for real expiry — so the only reliable path is to try each type until
+  // one works. Failed attempts don't consume the token.
+  const attempts = ['email', 'magiclink', 'recovery', 'signup'];
+  let lastError = null;
+  for (const type of attempts) {
+    const { data, error } = await _supabase.auth.verifyOtp({
+      email: cleanEmail,
+      token: cleanCode,
+      type
+    });
+    if (!error && data && data.session && data.session.user) {
+      _userId = data.session.user.id;
+      _userEmail = data.session.user.email;
+      _authMode = 'authed';
+      return;
+    }
+    lastError = error;
   }
-  _userId = data.session.user.id;
-  _userEmail = data.session.user.email;
-  _authMode = 'authed';
+  throw new Error(
+    (lastError && lastError.message) ||
+    'That code is not valid. Try again or request a new one.'
+  );
 }
 
 // v15.10 — Verify a 6-digit invite code the user typed in manually.

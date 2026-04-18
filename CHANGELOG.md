@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11.2] — 2026-04-19 · HOTFIX — OTP verify: code length + type retry
+
+### Fixed
+- **Client regex hardcoded 6 digits.** Supabase's OTP length is per-project configurable (4–10). Dirk's project issued 8-digit codes which the client rejected before even calling verifyOtp. Regex relaxed to `^\d{4,10}$`.
+- **`verifyOtp` type was always `email`.** Supabase routes `signInWithOtp` differently depending on whether the target email already exists: new user → token type is `signup` or `magiclink`, existing user → `recovery`. The error "token has expired or is invalid" is returned for a valid-but-wrong-type token (not just real expiry), which made this invisible from the app's side. Now retries `email → magiclink → recovery → signup` in sequence until one succeeds. Failed attempts don't consume the token, so retrying is safe.
+
+### Known good: evidence from Supabase auth logs
+- `action: user_recovery_requested` is what Supabase logs when an existing user calls `signInWithOtp`. The fix handles exactly that case.
+
+### Pair action
+- Stale `d.sauerstein@gmail.com` auth user deleted (via MCP). Next magic-link test starts clean.
+
 ## [15.11.1] — 2026-04-19 · HOTFIX — fresh users land in passphrase-setup, not unlock
 
 ### Fixed
