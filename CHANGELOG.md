@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.3] — 2026-04-18 · Production hygiene + password reset
+
+### Added
+- **Public-repo essentials:** root `README.md` (project elevator, how-to-run, doc links), `LICENSE` (MIT), `SECURITY.md` (vulnerability disclosure policy + scope, security@adze.life).
+- **Defensive HTTP headers** via `src/_headers`: Content-Security-Policy locked to known origins (Supabase, Tailwind CDN, jsdelivr); X-Frame-Options DENY; X-Content-Type-Options nosniff; Strict-Transport-Security (1 year); Referrer-Policy strict-origin-when-cross-origin; Permissions-Policy locking off camera/mic/geolocation/etc.
+- **Terms of use** at `docs/TERMS.md` — Adze's first formal terms document (beta-realistic: as-is, no SLA, GDPR-respecting, MIT for code, your reflections belong to you).
+- **User-journey map** at `docs/USER-JOURNEY.md` — day-1 through day-30 milestones with the magic moment each one is designed to produce, plus failure modes and recovery hooks.
+- **Beta success metrics** at `docs/METRICS.md` — the 4 numbers (onboarding completion, day-7 retention, day-30 retention, reports per active tester per week), how to pull each from Supabase, exit criteria for leaving beta.
+- **"Forgot password?" UI** in the sign-in modal: opens a new `forgot-password` step that calls `authResetPassword(email)`, shows a generic "check your inbox" confirmation (without revealing whether the email exists). The reset link returns the user to the existing `set-initial-password` modal via the `type=recovery` URL hash that `authInit` already handles.
+
+### Changed
+- **`privacy_detail.para_gdpr` rewritten** to honestly describe the v15.x sync architecture: Adze is the data controller, Supabase is the processor under EU SCCs, ciphertext is unreadable by either, GDPR rights apply, contact `hello@adze.life` for any of them. The pre-v15.0 wording wrongly claimed no third party was involved.
+- README now points visitors directly to `adze.life` and links every doc in the project.
+
 ## [15.2] — 2026-04-18 · Chip flags shape recommendation copy
 
 ### Added

@@ -1,0 +1,34 @@
+# Cloudflare Pages / Workers static-asset response headers.
+# Applied to every URL served from the Worker. Defensive baseline; tighten
+# as the project's surface narrows.
+
+/*
+  # Lock the page out of frames so a malicious site can't iframe Adze and
+  # capture clicks (clickjacking). DENY is stricter than SAMEORIGIN.
+  X-Frame-Options: DENY
+
+  # Stop browsers from MIME-sniffing a response body and re-typing it
+  # (e.g. treating a text/plain as text/html). Helps defend against XSS.
+  X-Content-Type-Options: nosniff
+
+  # Force HTTPS for the next year (and future visits via HSTS preload).
+  # Strict because the entire app loads over HTTPS today.
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+  # Don't leak the full URL of the previous Adze page (which may include
+  # user-state-bearing query params someday) to outbound links.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Adze never asks the browser for camera, microphone, geolocation,
+  # payment, or USB. Lock all of them off so a future XSS can't ask either.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()
+
+  # Content Security Policy — most restrictive header. Allows:
+  #   - scripts/styles from same origin and the explicit CDNs Adze loads.
+  #     Tailwind CDN ships its own runtime that needs 'unsafe-eval' to do
+  #     just-in-time class generation; we accept that until we self-host.
+  #   - 'unsafe-inline' on styles for Tailwind's injected <style> tag.
+  #   - connect-src to Supabase (auth + RLS-scoped data).
+  #   - img-src 'self' + data: (for inline base64 emoji fallbacks).
+  #   - frame-ancestors 'none' to mirror X-Frame-Options for older browsers.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'

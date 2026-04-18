@@ -38,7 +38,75 @@ function renderAuthModal(m) {
   if (m.step === 'passphrase-reset-confirm')return renderPassphraseResetConfirm(m);
   if (m.step === 'passphrase-success')      return renderPassphraseSuccess(m);
   if (m.step === 'set-initial-password')    return renderSetInitialPassword(m);
+  if (m.step === 'forgot-password')         return renderForgotPassword(m);
+  if (m.step === 'forgot-password-sent')    return renderForgotPasswordSent(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.3 — "Forgot password?" entry. Sends a Supabase recovery email; the
+// link in that email lands the user back here with type=recovery in the
+// URL hash. authInit detects it, sets _pendingPasswordSet=true, and the
+// boot sequence shows the set-initial-password modal — same code path as
+// invited users. So this modal step only handles the request side.
+function renderForgotPassword(m) {
+  const err = renderAuthError(m);
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">📨</div>
+        <h2 class="text-xl font-bold gold-text">Reset your password</h2>
+      </div>
+      ${err}
+      <div class="parchment rounded-xl p-3 mb-3 text-xs text-amber-100/85 serif leading-relaxed">
+        Enter the email you signed up with. We'll send you a link to choose a new password. <b>This won't reset your encryption passphrase</b> — that one stays separate, and remains non-recoverable.
+      </div>
+      <div class="space-y-3 mb-3">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Email</label>
+          <input id="forgot-email" type="email" autocomplete="email" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
+        </div>
+      </div>
+      <div class="flex justify-between gap-2">
+        <button class="btn btn-ghost" onclick="openAuth('signin')" ${m.busy ? 'disabled' : ''}>Back</button>
+        <button class="btn btn-gold" onclick="authDoForgotPassword()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Sending…' : 'Send reset link'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderForgotPasswordSent(m) {
+  return `
+    <div class="fade-in text-center py-4">
+      <div class="text-5xl mb-3">📬</div>
+      <h2 class="text-xl font-bold gold-text mb-2">Check your inbox</h2>
+      <p class="text-sm text-amber-100/85 serif leading-relaxed mb-4 px-3">
+        If an Adze account exists for that email, a reset link is on its way. The link works once and expires in an hour.
+      </p>
+      <p class="text-[11px] text-amber-100/55 italic mb-5 px-3">
+        Don't see it? Check your spam folder. The sender is <b>beta@adze.life</b>.
+      </p>
+      <button class="btn btn-gold" onclick="closeModal()">Done</button>
+    </div>
+  `;
+}
+
+async function authDoForgotPassword() {
+  const email = document.getElementById('forgot-email')?.value.trim();
+  if (!email) return authSetAuthError('Email is required.');
+  authSetAuthBusy(true);
+  try {
+    await authResetPassword(email);
+    view.modal.step = 'forgot-password-sent';
+    view.modal.busy = false;
+    view.modal.error = null;
+    renderModal();
+  } catch (e) {
+    // Don't reveal whether the email exists — generic confirmation either way.
+    view.modal.step = 'forgot-password-sent';
+    view.modal.busy = false;
+    view.modal.error = null;
+    renderModal();
+  }
 }
 
 // v15.0 — Shown after a successful invite or recovery link click. The user
@@ -229,6 +297,9 @@ function renderAuthSignin(m) {
       <div class="flex justify-between gap-2">
         <button class="btn btn-ghost" onclick="openAuth('menu')" ${m.busy ? 'disabled' : ''}>Back</button>
         <button class="btn btn-gold" onclick="authDoSignIn()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Signing in…' : 'Sign in'}</button>
+      </div>
+      <div class="mt-3 text-center">
+        <button class="text-[11px] text-amber-300/70 underline hover:text-amber-200" onclick="openAuth('forgot-password')" ${m.busy ? 'disabled' : ''}>Forgot password?</button>
       </div>
     </div>
   `;
