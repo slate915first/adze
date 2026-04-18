@@ -1,0 +1,49 @@
+{
+  "sliders": [
+    {
+      "id": "energy",
+      "question": "Average energy this week",
+      "labels": [
+        "Depleted",
+        "Vital"
+      ]
+    },
+    {
+      "id": "concentration",
+      "question": "Concentration trend this week",
+      "labels": [
+        "Scattered",
+        "Collected"
+      ]
+    },
+    {
+      "id": "sila",
+      "question": "Ethical ground this week",
+      "labels": [
+        "Slipping",
+        "Steady"
+      ]
+    },
+    {
+      "id": "purpose",
+      "question": "Sense of purpose this week",
+      "labels": [
+        "Lost",
+        "Clear"
+      ]
+    },
+    {
+      "id": "mettaWarmth",
+      "question": "Warmth toward yourself and others",
+      "labels": [
+        "Cold",
+        "Warm"
+      ]
+    }
+  ],
+  "writing": {
+    "id": "week_note",
+    "question": "In one paragraph: what was the strongest thing the practice showed you this week — pleasant or unpleasant?",
+    "hint": "Kept for your own review later. No one else sees it."
+  }
+}

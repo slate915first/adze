@@ -1,0 +1,131 @@
+{
+  "pathRanks": [
+    {
+      "id": 0,
+      "key": "andha_puthujjana",
+      "tier": "pre-training",
+      "pali": "Andha-puthujjana",
+      "english": "Uninstructed worldling",
+      "fullTitle": "Andha-puthujjana — uninstructed worldling",
+      "suttaRef": "AN 2.3",
+      "description": "Has not yet begun the training. The path is unknown territory.",
+      "uncertifiable": false
+    },
+    {
+      "id": 1,
+      "key": "kalyana_beginning",
+      "tier": "training",
+      "pali": "Kalyāṇa-puthujjana",
+      "english": "Well-trained worldling — beginning",
+      "fullTitle": "Kalyāṇa-puthujjana — beginning the training",
+      "suttaRef": "Vism I",
+      "description": "The intention is real. The baseline has been taken. The first sits are ahead.",
+      "uncertifiable": false
+    },
+    {
+      "id": 2,
+      "key": "sila_visuddhi",
+      "tier": "training",
+      "pali": "Sīla-visuddhi",
+      "english": "Purification of virtue",
+      "fullTitle": "Kalyāṇa-puthujjana · Sīla-visuddhi",
+      "suttaRef": "Vism I",
+      "description": "The ethical ground is being laid through action, not just intention. The player has shown up on the cushion enough times that sīla is a lived thing.",
+      "uncertifiable": false
+    },
+    {
+      "id": 3,
+      "key": "citta_visuddhi",
+      "tier": "training",
+      "pali": "Citta-visuddhi",
+      "english": "Purification of mind",
+      "fullTitle": "Kalyāṇa-puthujjana · Citta-visuddhi",
+      "suttaRef": "Vism III–XI",
+      "description": "Sit practice is established and regular. The mind is beginning to collect. Samādhi is no longer an idea — it is a place the practitioner can sometimes find.",
+      "uncertifiable": false
+    },
+    {
+      "id": 4,
+      "key": "ditthi_visuddhi",
+      "tier": "training",
+      "pali": "Diṭṭhi-visuddhi",
+      "english": "Purification of view",
+      "fullTitle": "Kalyāṇa-puthujjana · Diṭṭhi-visuddhi",
+      "suttaRef": "Vism XVIII",
+      "description": "The hindrances are being seen clearly and named as they arise. The player is no longer identified with every state that moves through the mind. Kāmā, Byāpāda, Thīna, Uddhacca, Vicikicchā — these are visitors now, not self.",
+      "uncertifiable": false
+    },
+    {
+      "id": 5,
+      "key": "anusari",
+      "tier": "approaching",
+      "pali": "Saddhānusārī / Dhammānusārī",
+      "english": "Faith-follower / Dhamma-follower",
+      "fullTitle": "Saddhānusārī / Dhammānusārī — approaching the path",
+      "suttaRef": "SN 25.1 · MN 22",
+      "description": "The three gate legs have passed on at least one day — the practitioner has tasted the suppression of the hindrances as a lived state. In the canonical description, the faith-follower walks by confidence in the teaching and the dhamma-follower walks by direct investigation. Both are approaching stream-entry.",
+      "note": "From here, rank advancement stops. The next transition is beyond what the game can measure.",
+      "uncertifiable": false
+    },
+    {
+      "id": 6,
+      "key": "vimamsi_puthujjana",
+      "tier": "advanced",
+      "pali": "Vīmaṃsī-puthujjana",
+      "english": "Deep investigator",
+      "fullTitle": "Vīmaṃsī-puthujjana — the investigating practitioner",
+      "suttaRef": "Vism · MN 22",
+      "description": "The practitioner is now examining the dhamma directly in their own experience, not only through the cushion but through reflection on what the cushion reveals. In the commentarial tradition, this level of sustained investigation is described as the ground on which stream-entry can arise. This is game rank 6. The game does not claim the practitioner has entered the stream — that event is marked by specific fetters falling away and is not something any self-report tool can verify.",
+      "note": "This is a game rank describing the work being done, not a claim about attainment. The canonical parallel to sustained practice at this level is the approach to sotāpatti-phala in the tradition, but the game is explicit that approach is not arrival.",
+      "uncertifiable": false
+    },
+    {
+      "id": 7,
+      "key": "dhira_puthujjana",
+      "tier": "advanced",
+      "pali": "Dhīra-puthujjana",
+      "english": "Steadfast practitioner",
+      "fullTitle": "Dhīra-puthujjana — the steadfast one",
+      "suttaRef": "Vism · MN 22",
+      "description": "Continuous engagement with three or more of Māra's armies. Sensual desire and ill will have been worked with consistently enough that the practitioner recognizes their arising before they have fully taken hold. In the tradition, this depth of engagement is what the commentaries describe around the sakadāgāmī-phala stage; the game uses the description but never claims the attainment.",
+      "note": "Game rank. The canonical territory the tradition describes here involves specific fetters weakening — something only the practitioner's own lived experience, confirmed by a qualified teacher, can know.",
+      "uncertifiable": false
+    },
+    {
+      "id": 8,
+      "key": "subhavita_puthujjana",
+      "tier": "advanced",
+      "pali": "Subhāvita-puthujjana",
+      "english": "Deeply cultivated practitioner",
+      "fullTitle": "Subhāvita-puthujjana — the deeply cultivated one",
+      "suttaRef": "Vism · MN 22",
+      "description": "Five or more of Māra's armies in the weakening state, all measurable awakening factors at seven or higher. At this depth of work, the tool has given nearly everything it can. The practitioner is increasingly working with what arises in the sit itself, not with tracker mechanics. The canonical teaching associated with this territory is the anāgāmī level of non-return; the game, again, cites the parallel without claiming it.",
+      "note": "Game rank. If you recognize this territory in your own experience, the person to talk to is a living teacher in the tradition you trust, not an app.",
+      "uncertifiable": false
+    },
+    {
+      "id": 9,
+      "key": "pariyosana",
+      "tier": "advanced",
+      "pali": "Pariyosāna",
+      "english": "Completion of the scaffolding",
+      "fullTitle": "Pariyosāna — the game's endpoint",
+      "suttaRef": "Dhp 90–99",
+      "description": "All ten of Māra's armies have been worked with to the quiet status through sustained engagement. Reaching this rank means the full teaching arc this tool can provide has been walked. The canonical language for complete liberation — arahatta — is used nowhere as the rank name, because no app can claim that territory. What this rank tells you is that the scaffolding has done its job. Scaffolding comes down once the building stands.",
+      "note": "The game will now offer you liberation — meaning it will end itself and hand you a final summary to take into real practice with a real teacher. The game is not the dhamma. The dhamma is the path.",
+      "uncertifiable": false
+    }
+  ],
+  "shadowFloorByRank": [
+    20,
+    30,
+    40,
+    50,
+    60,
+    70,
+    60,
+    40,
+    20,
+    5
+  ]
+}

@@ -1,0 +1,429 @@
+{
+  "mind": {
+    "name": "Mindfulness",
+    "icon": "🧘",
+    "color": "#a78bfa",
+    "description": "Train the mind through meditation. The foundation of the whole development.",
+    "quests": {
+      "sotapatti": {
+        "name": "Beginner Path",
+        "levelKey": "sotapatti",
+        "desc": "For those beginning, or returning after a long absence. Five minutes morning, five minutes evening. Nothing else. The single task is to make the chain unbroken until missing a day feels strange.",
+        "tagline": "Beginner • 5 + 5 minutes",
+        "duration": 90,
+        "morningMinutes": 5,
+        "eveningMinutes": 5,
+        "maxSmallHabits": 0,
+        "levelIcon": "🌱",
+        "levelColor": "#10b981",
+        "smallHabits": []
+      },
+      "sakadagami": {
+        "name": "Established Path",
+        "levelKey": "sakadagami",
+        "desc": "For those with a daily practice already underway. Two sits of fifteen minutes each. You may add one supporting habit — one only — to accompany the sits without overwhelming them.",
+        "tagline": "Established practitioner • 15 + 15 minutes • 1 supporting habit",
+        "duration": 90,
+        "morningMinutes": 15,
+        "eveningMinutes": 15,
+        "maxSmallHabits": 1,
+        "levelIcon": "🌿",
+        "levelColor": "#3b82f6",
+        "smallHabits": []
+      },
+      "anagami": {
+        "name": "Dedicated Path",
+        "levelKey": "anagami",
+        "desc": "For serious practitioners whose sitting is already part of the day. Two sits of thirty minutes each. Up to three supporting habits. The subtle defilements become the real work.",
+        "tagline": "Dedicated • 30 + 30 minutes • up to 3 supporting habits",
+        "duration": 120,
+        "morningMinutes": 30,
+        "eveningMinutes": 30,
+        "maxSmallHabits": 3,
+        "levelIcon": "🌳",
+        "levelColor": "#8b5cf6",
+        "smallHabits": []
+      },
+      "arahant": {
+        "name": "Veteran Path",
+        "levelKey": "arahant",
+        "desc": "For long-term practitioners who already sit an hour morning and an hour evening. All supporting habits are available. The subtle defilements — conceit, restlessness, residual craving — become the real battleground at this practice intensity. This is the most demanding starting configuration. Note: this is a description of practice intensity, not an attainment claim — no setup choice in any tool can put you at any of the four noble persons. That work is yours and your teacher's.",
+        "tagline": "Veteran practitioner • 60 + 60 minutes • all habits available",
+        "duration": 180,
+        "morningMinutes": 60,
+        "eveningMinutes": 60,
+        "maxSmallHabits": 99,
+        "levelIcon": "☸️",
+        "levelColor": "#fbbf24",
+        "smallHabits": []
+      },
+      "custom": {
+        "name": "Your Own Path",
+        "levelKey": "custom",
+        "desc": "You set the duration for each sit with a slider. You pick any supporting habits you wish. For those who already know what they need.",
+        "tagline": "Custom • your minutes • your habits",
+        "duration": 90,
+        "morningMinutes": 15,
+        "eveningMinutes": 15,
+        "maxSmallHabits": 99,
+        "levelIcon": "✨",
+        "levelColor": "#f59e0b",
+        "smallHabits": []
+      }
+    }
+  },
+  "body": {
+    "name": "Body & Health",
+    "icon": "💪",
+    "color": "#10b981",
+    "description": "Strengthen the vessel that carries you",
+    "hidden": true,
+    "quests": {
+      "foundation_movement": {
+        "name": "Daily Movement Foundation",
+        "desc": "Establish basic physical health. The minimum effective dose for someone starting from zero.",
+        "duration": 60,
+        "keyHabit": {
+          "name": "Walk 30 min",
+          "icon": "🚶",
+          "points": 18,
+          "miss": -8
+        },
+        "smallHabits": [
+          {
+            "name": "10 squats / push-ups",
+            "icon": "💪",
+            "points": 5
+          },
+          {
+            "name": "5 min stretch",
+            "icon": "🤸",
+            "points": 4
+          },
+          {
+            "name": "2L water",
+            "icon": "💧",
+            "points": 5
+          }
+        ]
+      },
+      "marathon": {
+        "name": "Marathon Training",
+        "desc": "Build a runner's base. 16 weeks from zero to marathon-ready pacing.",
+        "duration": 112,
+        "keyHabit": {
+          "name": "Run (per training plan)",
+          "icon": "🏃",
+          "points": 25,
+          "miss": -12
+        },
+        "smallHabits": [
+          {
+            "name": "Foam roll / mobility",
+            "icon": "🧘‍♂️",
+            "points": 6
+          },
+          {
+            "name": "Protein at every meal",
+            "icon": "🥩",
+            "points": 5
+          },
+          {
+            "name": "8h sleep",
+            "icon": "😴",
+            "points": 8
+          },
+          {
+            "name": "Strength session",
+            "icon": "🏋️",
+            "points": 10
+          }
+        ]
+      },
+      "weight_recomp": {
+        "name": "Body Recomposition",
+        "desc": "Sustainable fat loss + muscle gain. Built on the only two things that actually work: progressive resistance training + protein.",
+        "duration": 90,
+        "keyHabit": {
+          "name": "Strength training",
+          "icon": "🏋️",
+          "points": 20,
+          "miss": -10
+        },
+        "smallHabits": [
+          {
+            "name": "0.8g protein per lb bodyweight",
+            "icon": "🍳",
+            "points": 8
+          },
+          {
+            "name": "8000+ steps",
+            "icon": "👣",
+            "points": 6
+          },
+          {
+            "name": "Sleep 7-9h",
+            "icon": "😴",
+            "points": 8
+          },
+          {
+            "name": "No liquid calories",
+            "icon": "🚫",
+            "points": 4
+          }
+        ]
+      }
+    }
+  },
+  "knowledge": {
+    "name": "Knowledge & Skills",
+    "icon": "📚",
+    "color": "#3b82f6",
+    "description": "Master a craft, language, or domain through deep practice",
+    "hidden": true,
+    "quests": {
+      "language": {
+        "name": "Learn a Language",
+        "desc": "Spaced repetition + comprehensible input. Built on what actually works (Krashen, Wozniak), not what feels productive.",
+        "duration": 180,
+        "keyHabit": {
+          "name": "Anki review (15 min)",
+          "icon": "🃏",
+          "points": 18,
+          "miss": -8
+        },
+        "smallHabits": [
+          {
+            "name": "Comprehensible input (15 min)",
+            "icon": "👂",
+            "points": 8
+          },
+          {
+            "name": "5 new sentences in target language",
+            "icon": "💬",
+            "points": 6
+          },
+          {
+            "name": "Read native content (10 min)",
+            "icon": "📖",
+            "points": 6
+          }
+        ]
+      },
+      "instrument": {
+        "name": "Learn an Instrument",
+        "desc": "Daily focused practice beats marathon weekend sessions. Ericsson's deliberate practice for music.",
+        "duration": 180,
+        "keyHabit": {
+          "name": "Focused practice (30 min)",
+          "icon": "🎹",
+          "points": 20,
+          "miss": -10
+        },
+        "smallHabits": [
+          {
+            "name": "Scales / technique (10 min)",
+            "icon": "🎵",
+            "points": 5
+          },
+          {
+            "name": "Sight-reading (5 min)",
+            "icon": "👀",
+            "points": 5
+          },
+          {
+            "name": "Listen to one piece deeply",
+            "icon": "🎧",
+            "points": 4
+          }
+        ]
+      },
+      "deep_reading": {
+        "name": "Become a Deep Reader",
+        "desc": "Replace shallow scrolling with sustained engagement. For anyone whose attention has been fragmented by feeds.",
+        "duration": 60,
+        "keyHabit": {
+          "name": "Read 30 min (paper)",
+          "icon": "📚",
+          "points": 18,
+          "miss": -8
+        },
+        "smallHabits": [
+          {
+            "name": "Phone in another room",
+            "icon": "📵",
+            "points": 6
+          },
+          {
+            "name": "Note one insight",
+            "icon": "💡",
+            "points": 4
+          },
+          {
+            "name": "No social media before noon",
+            "icon": "🚫",
+            "points": 6
+          }
+        ]
+      }
+    }
+  },
+  "bad_habit": {
+    "name": "Replace a Bad Habit",
+    "icon": "🔄",
+    "color": "#ef4444",
+    "description": "Rewire one specific pattern using cue-routine-reward replacement",
+    "hidden": true,
+    "quests": {
+      "phone_addiction": {
+        "name": "Reclaim Attention from the Phone",
+        "desc": "For chronic scrolling, dopamine hijack, and the loss of deep focus. Built on Wendy Wood's environment design research.",
+        "duration": 60,
+        "keyHabit": {
+          "name": "Phone in drawer 20:00–08:00",
+          "icon": "📵",
+          "points": 20,
+          "miss": -10
+        },
+        "smallHabits": [
+          {
+            "name": "No phone first 60 min after waking",
+            "icon": "🌅",
+            "points": 8
+          },
+          {
+            "name": "Replacement: read 10 min",
+            "icon": "📖",
+            "points": 5
+          },
+          {
+            "name": "Replacement: 5 min walk",
+            "icon": "🚶",
+            "points": 5
+          }
+        ]
+      },
+      "sugar": {
+        "name": "Break the Sugar Loop",
+        "desc": "Sugar is one of the few substances that creates a real craving cycle. Replacing it requires both removing the cue and giving the reward another way.",
+        "duration": 45,
+        "keyHabit": {
+          "name": "No added sugar today",
+          "icon": "🚫",
+          "points": 18,
+          "miss": -8
+        },
+        "smallHabits": [
+          {
+            "name": "Protein-forward breakfast",
+            "icon": "🍳",
+            "points": 6
+          },
+          {
+            "name": "Replacement: fruit instead of dessert",
+            "icon": "🍎",
+            "points": 4
+          },
+          {
+            "name": "Walk after dinner",
+            "icon": "🚶‍♀️",
+            "points": 5
+          }
+        ]
+      },
+      "drinking": {
+        "name": "Loosen Alcohol's Grip",
+        "desc": "Whether you're going dry or just cutting back. The replacement is what makes it stick — your brain needs the same evening signal.",
+        "duration": 90,
+        "keyHabit": {
+          "name": "Alcohol-free day",
+          "icon": "🚱",
+          "points": 20,
+          "miss": -10
+        },
+        "smallHabits": [
+          {
+            "name": "Replacement evening ritual (tea/sparkling)",
+            "icon": "🍵",
+            "points": 6
+          },
+          {
+            "name": "20 min outside before sunset",
+            "icon": "🌇",
+            "points": 5
+          },
+          {
+            "name": "Journal: what cue showed up?",
+            "icon": "📓",
+            "points": 5
+          }
+        ]
+      }
+    }
+  },
+  "arts": {
+    "name": "Creative Practice",
+    "icon": "🎨",
+    "color": "#f59e0b",
+    "description": "Build a body of creative work through daily showing-up",
+    "hidden": true,
+    "quests": {
+      "writing": {
+        "name": "Write Daily",
+        "desc": "For anyone trying to finish a novel, build a writing habit, or simply think clearly on the page.",
+        "duration": 90,
+        "keyHabit": {
+          "name": "Write 500 words",
+          "icon": "✍️",
+          "points": 20,
+          "miss": -10
+        },
+        "smallHabits": [
+          {
+            "name": "Morning pages (3 pages free)",
+            "icon": "📝",
+            "points": 6
+          },
+          {
+            "name": "Read 20 min (in your genre)",
+            "icon": "📖",
+            "points": 5
+          },
+          {
+            "name": "Capture 1 idea",
+            "icon": "💡",
+            "points": 3
+          }
+        ]
+      },
+      "visual_art": {
+        "name": "Daily Visual Practice",
+        "desc": "For drawing, painting, or any visual craft. Quantity creates quality.",
+        "duration": 90,
+        "keyHabit": {
+          "name": "Sketch 20 min",
+          "icon": "✏️",
+          "points": 18,
+          "miss": -8
+        },
+        "smallHabits": [
+          {
+            "name": "Study one master work",
+            "icon": "🖼️",
+            "points": 5
+          },
+          {
+            "name": "Photograph what catches eye",
+            "icon": "📷",
+            "points": 4
+          },
+          {
+            "name": "One quick gesture drawing",
+            "icon": "⚡",
+            "points": 4
+          }
+        ]
+      }
+    }
+  }
+}

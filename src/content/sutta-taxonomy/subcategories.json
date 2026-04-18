@@ -1,0 +1,135 @@
+[
+  {
+    "id": "speech",
+    "label": "How to speak",
+    "icon": "🗣️",
+    "group": "life",
+    "teaser": "What to say, how to say it, and when silence is kinder. The Buddha was specific: true, beneficial, timely, spoken with a mind of good-will."
+  },
+  {
+    "id": "anger",
+    "label": "Anger & provocation",
+    "icon": "⚔️",
+    "group": "life",
+    "teaser": "When someone provokes you. When anger arises in yourself. The suttas on meeting hostility without becoming hostile."
+  },
+  {
+    "id": "fear",
+    "label": "Fear & dread",
+    "icon": "🌑",
+    "group": "life",
+    "teaser": "The Bodhisatta sat through fear in the forest at night. The teachings on what to do when fear arises — and what not to do."
+  },
+  {
+    "id": "unwanted_thoughts",
+    "label": "Unwanted thoughts",
+    "icon": "🌀",
+    "group": "life",
+    "teaser": "Rumination, mental proliferation (papañca), thoughts you cannot stop. The Buddha taught specific methods for this — not \"let them go\" platitudes."
+  },
+  {
+    "id": "sensual_craving",
+    "label": "Sensual craving",
+    "icon": "🔥",
+    "group": "life",
+    "teaser": "When sensual pleasures are pulling at the mind. The suttas that show craving's mechanism and its cost — not moralizing, but clear sight."
+  },
+  {
+    "id": "grief_and_loss",
+    "label": "Grief & loss",
+    "icon": "🥀",
+    "group": "life",
+    "teaser": "Illness, aging, loss of a loved one, facing your own death. The suttas the tradition has always given to the bereaved and the dying."
+  },
+  {
+    "id": "doubt",
+    "label": "Doubt",
+    "icon": "❓",
+    "group": "life",
+    "teaser": "When doubt about the teaching or the path arises. The Buddha did not demand faith — he invited testing. The sutta that tells you how to test."
+  },
+  {
+    "id": "family_and_friends",
+    "label": "Family & friendship",
+    "icon": "🤝",
+    "group": "life",
+    "teaser": "How a householder relates to parents, spouse, children, friends. The Buddha taught a specific code for lay life; it is still useful."
+  },
+  {
+    "id": "livelihood",
+    "label": "Right livelihood",
+    "icon": "⚒️",
+    "group": "life",
+    "teaser": "Work that does not harm. What counts as wrong livelihood. The balance between making a living and staying honest."
+  },
+  {
+    "id": "effort",
+    "label": "Effort & perseverance",
+    "icon": "🏔️",
+    "group": "life",
+    "teaser": "When you want to give up. When the practice feels stuck. The Bodhisatta's own encounters with Māra — and how he stayed."
+  },
+  {
+    "id": "right_view",
+    "label": "Right view",
+    "icon": "👁️",
+    "group": "view",
+    "teaser": "The forerunner of the entire path. Not a belief — a way of seeing. Several complementary doors into it, from several teachers."
+  },
+  {
+    "id": "impermanence",
+    "label": "Impermanence",
+    "icon": "🍂",
+    "group": "view",
+    "teaser": "\"Whatever is subject to arising is subject to cessation.\" The insight that broke stream-enterer after stream-enterer — seen directly, not philosophically."
+  },
+  {
+    "id": "not_self",
+    "label": "Not-self (anattā)",
+    "icon": "💧",
+    "group": "view",
+    "teaser": "The teaching most likely to be misunderstood. Not \"there is no you\" — a precise instruction on where to stop identifying, and why it frees."
+  },
+  {
+    "id": "wrong_views",
+    "label": "Wrong views to guard",
+    "icon": "🕸️",
+    "group": "view",
+    "teaser": "The views that trap. The ways the dhamma itself can be grasped wrongly — like the snake seized by the tail. Read these before they catch you."
+  },
+  {
+    "id": "meditation_method",
+    "label": "How to meditate",
+    "icon": "🧘",
+    "group": "practice",
+    "teaser": "The Buddha's own meditation instructions. Not technique A vs technique B — the complete curriculum, from the breath to the six sense bases."
+  },
+  {
+    "id": "hindrances",
+    "label": "The five hindrances",
+    "icon": "🌫️",
+    "group": "practice",
+    "teaser": "The specific five things that obstruct concentration and clarity — named, diagnosed, and given antidotes. Required reading for anyone sitting regularly."
+  },
+  {
+    "id": "metta",
+    "label": "Loving-kindness",
+    "icon": "💗",
+    "group": "practice",
+    "teaser": "Mettā is not a feeling to summon — it is a quality to cultivate, until it becomes boundless. The suttas that frame what that actually means in practice."
+  },
+  {
+    "id": "viewing_progress",
+    "label": "How to view progress",
+    "icon": "📏",
+    "group": "practice",
+    "teaser": "You cannot see your practice ripen day by day. The suttas that frame progress honestly — and save you from the two pitfalls: thinking you've arrived, and thinking nothing is happening."
+  },
+  {
+    "id": "going_forth",
+    "label": "The search & awakening",
+    "icon": "🚪",
+    "group": "arc",
+    "teaser": "The Bodhisatta's own journey — from the going-forth to the awakening to the final nibbāna. The arc the whole path is walking."
+  }
+]

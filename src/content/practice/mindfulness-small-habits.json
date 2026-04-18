@@ -1,0 +1,72 @@
+[
+  {
+    "id": "walking",
+    "name": "Walking meditation (10 min)",
+    "icon": "🚶",
+    "points": 8,
+    "desc": "Slow, deliberate walking with attention on the movement of the body. MN 10 lists walking as equal to sitting."
+  },
+  {
+    "id": "body_scan",
+    "name": "Body scan (5 min)",
+    "icon": "👤",
+    "points": 6,
+    "desc": "A brief scan through the body, noting what is here. The first foundation of mindfulness."
+  },
+  {
+    "id": "metta",
+    "name": "Mettā practice (5 min)",
+    "icon": "💗",
+    "points": 7,
+    "desc": "Loving-kindness extended outward in widening circles. Softens the heart that the sit alone cannot reach."
+  },
+  {
+    "id": "mindful_meal",
+    "name": "One mindful meal",
+    "icon": "🥣",
+    "points": 5,
+    "desc": "Eat one meal today in silence, with full attention to taste and the act of eating. Simple, difficult."
+  },
+  {
+    "id": "sense_restraint",
+    "name": "Sense-door check-in",
+    "icon": "👁️",
+    "points": 5,
+    "desc": "Once today, pause and notice: which sense door has been pulling you most? Not to fix — just to see."
+  },
+  {
+    "id": "noble_silence",
+    "name": "30 min of noble silence",
+    "icon": "🤫",
+    "points": 6,
+    "desc": "No speaking, no input — phone off, no media. Thirty minutes alone with your own mind."
+  },
+  {
+    "id": "mindful_pause",
+    "name": "Three mindful pauses",
+    "icon": "⏸️",
+    "points": 4,
+    "desc": "Three times today, stop whatever you are doing and take three conscious breaths. Nothing else."
+  },
+  {
+    "id": "evening_review",
+    "name": "Evening review (2 min)",
+    "icon": "🌙",
+    "points": 4,
+    "desc": "Before bed: what was my best moment of presence today? What pulled me most? No judgment, just seeing."
+  },
+  {
+    "id": "generosity",
+    "name": "One act of generosity",
+    "icon": "🤲",
+    "points": 6,
+    "desc": "The suttas say dāna (generosity) is the first perfection. One deliberate act of giving — time, attention, or thing."
+  },
+  {
+    "id": "speech_watch",
+    "name": "Watch your speech",
+    "icon": "💬",
+    "points": 5,
+    "desc": "Today, notice one instance where you almost said something and chose silence, or chose kinder words."
+  }
+]

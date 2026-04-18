@@ -1,0 +1,22 @@
+[
+  {
+    "id": "life",
+    "label": "When life is struggling",
+    "blurb": "The Buddha gave specific teachings for specific struggles. Find yours."
+  },
+  {
+    "id": "view",
+    "label": "Seeing clearly",
+    "blurb": "The teachings that reshape how you view experience itself."
+  },
+  {
+    "id": "practice",
+    "label": "The practice itself",
+    "blurb": "The method, the obstacles, the cultivation."
+  },
+  {
+    "id": "arc",
+    "label": "The path's shape",
+    "blurb": "Where the whole thing is going."
+  }
+]

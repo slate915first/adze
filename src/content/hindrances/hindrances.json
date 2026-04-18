@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sensual",
+    "pali": "Kāmacchanda",
+    "english": "Sensual desire",
+    "icon": "🍷"
+  },
+  {
+    "id": "illwill",
+    "pali": "Byāpāda",
+    "english": "Ill will",
+    "icon": "🗡️"
+  },
+  {
+    "id": "sloth",
+    "pali": "Thīna-middha",
+    "english": "Sloth and torpor",
+    "icon": "😴"
+  },
+  {
+    "id": "restless",
+    "pali": "Uddhacca-kukkucca",
+    "english": "Restlessness and worry",
+    "icon": "🌊"
+  },
+  {
+    "id": "doubt",
+    "pali": "Vicikicchā",
+    "english": "Doubt",
+    "icon": "❓"
+  }
+]

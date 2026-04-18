@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "Kāmā",
+    "english": "Sense Pleasures",
+    "icon": "🍷",
+    "desc": "The first army. The pull of pleasure. The voice that says \"just one more\" — one more episode, one more scroll, one more bite. Not evil, just sticky.",
+    "challenge": "For 3 days, complete your key habit BEFORE checking your phone or any screen.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 2,
+    "name": "Arati",
+    "english": "Discontent",
+    "icon": "😒",
+    "desc": "The second army. The restlessness with what is. Boredom dressed up as the need for change. The whisper that says \"this isn't enough.\"",
+    "challenge": "For 3 days, after sitting, write one sentence: \"What is here right now that I have been missing?\"",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 3,
+    "name": "Khuppipāsā",
+    "english": "Hunger and Thirst",
+    "icon": "🥖",
+    "desc": "The third army. Physical craving that hijacks attention. Not the body's need but the mind's grasping at relief through consumption.",
+    "challenge": "For 3 days, eat one meal in complete silence, paying full attention to taste and fullness.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 4,
+    "name": "Taṇhā",
+    "english": "Craving",
+    "icon": "💸",
+    "desc": "The fourth army. The deepest of Mara's forces. The thirst that creates the self that thirsts. Wanting to want, beneath all wanting.",
+    "challenge": "For 3 days, when you notice wanting something, pause and ask: \"What does the wanting want?\" Write what you find.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 5,
+    "name": "Thīna-middha",
+    "english": "Sloth and Torpor",
+    "icon": "😴",
+    "desc": "The fifth army. The dullness that comes for serious practitioners. Not laziness — a deeper closing of the mind, a heaviness that makes the path feel dim.",
+    "challenge": "For 3 days, do your sit standing or walking instead of sitting. Move when sloth tries to hold you.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 6,
+    "name": "Bhīrū",
+    "english": "Fear",
+    "icon": "😨",
+    "desc": "The sixth army. As practice deepens, fear arises. Fear of letting go. Fear of what you might see. The Buddha himself faced this in MN 4 — terror in the forest as he sat through the night watches.",
+    "challenge": "For 3 days, sit one minute longer than is comfortable. Stay with the fear of staying.",
+    "suttaRef": "MN 4"
+  },
+  {
+    "id": 7,
+    "name": "Vicikicchā",
+    "english": "Doubt",
+    "icon": "❓",
+    "desc": "The seventh army. The questioning that paralyzes: \"Am I doing this right? Is this even working? Should I be doing something else?\" Mara loves this one.",
+    "challenge": "For 3 days, do not change your practice. No tweaks. No \"better methods.\" Just do exactly what you said you would do.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 8,
+    "name": "Makkha-thambha",
+    "english": "Hypocrisy and Stubbornness",
+    "icon": "🎭",
+    "desc": "The eighth army. The gap between who you think you are and what you actually do. Pretending the practice is going well when it isn't. Refusing to admit you missed.",
+    "challenge": "For 3 days, tell one teammate (or write in your journal) the truth about how the practice actually went, including what you avoided.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 9,
+    "name": "Lābha-siloka",
+    "english": "Gain, Praise, Fame",
+    "icon": "🏆",
+    "desc": "The ninth army. The hunger to be recognized. To be seen as the one who practices. The subtle pride that turns dhamma into another way of being someone.",
+    "challenge": "For 3 days, do your key habit and tell no one. Don't log it publicly. Don't mention it. Just do it.",
+    "suttaRef": "Sn 3.2"
+  },
+  {
+    "id": 10,
+    "name": "Att-ukkaṃsana",
+    "english": "Self-Praise, Disparaging Others",
+    "icon": "👑",
+    "desc": "The tenth and final army. The mind that lifts itself by lowering others. \"At least I'm not like...\" The last and most subtle defilement, very close to the gates of awakening.",
+    "challenge": "For 3 days, when you notice comparing yourself to anyone (better OR worse), pause and silently wish them well.",
+    "suttaRef": "Sn 3.2"
+  }
+]

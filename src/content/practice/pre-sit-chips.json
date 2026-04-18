@@ -1,0 +1,47 @@
+[
+  {
+    "id": "anxious",
+    "label": "anxious",
+    "icon": "😰"
+  },
+  {
+    "id": "tired",
+    "label": "tired",
+    "icon": "😴"
+  },
+  {
+    "id": "restless",
+    "label": "restless",
+    "icon": "🌊"
+  },
+  {
+    "id": "angry",
+    "label": "angry",
+    "icon": "🗡️"
+  },
+  {
+    "id": "sad",
+    "label": "sad",
+    "icon": "🌧️"
+  },
+  {
+    "id": "settled",
+    "label": "settled",
+    "icon": "🪷"
+  },
+  {
+    "id": "joyful",
+    "label": "joyful",
+    "icon": "🌸"
+  },
+  {
+    "id": "numb",
+    "label": "numb",
+    "icon": "🫥"
+  },
+  {
+    "id": "neutral",
+    "label": "neutral",
+    "icon": "◯"
+  }
+]

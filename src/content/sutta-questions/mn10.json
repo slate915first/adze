@@ -1,0 +1,43 @@
+{
+  "suttaId": "mn10",
+  "ref": "MN 10",
+  "name": "Satipaṭṭhāna Sutta",
+  "english": "Foundations of Mindfulness",
+  "questions": [
+    {
+      "id": "mn10_q1",
+      "q": "What are the Four Foundations of Mindfulness (satipaṭṭhāna) that this sutta describes?",
+      "a": "Body (kāya), feelings (vedanā), mind (citta), and mental qualities (dhammā). Everything in experience falls into one of these four frames; the practice is to be present to whatever arises, as it arises, in whichever foundation it arises."
+    },
+    {
+      "id": "mn10_q2",
+      "q": "The Buddha calls satipaṭṭhāna \"the direct path\" (ekāyano maggo). Direct toward what?",
+      "a": "Toward the purification of beings, the overcoming of sorrow and lamentation, the disappearance of pain and grief, the attainment of the true way, and the realization of nibbāna. Not toward calm for its own sake, not toward special states — toward liberation."
+    },
+    {
+      "id": "mn10_q3",
+      "q": "What is the refrain (the \"insight refrain\") that repeats after every practice in this sutta?",
+      "a": "One abides contemplating the object internally and externally; one contemplates its arising and passing; mindfulness is established to the extent necessary for knowledge and recollection; one abides independent, not clinging to anything in the world. This refrain is not decoration — it is the actual instruction for what mindfulness does."
+    },
+    {
+      "id": "mn10_q4",
+      "q": "Name at least three of the body-contemplations (kāyānupassanā) this sutta lays out.",
+      "a": "Six are offered: mindfulness of breathing, the four postures (walking/standing/sitting/lying down), clear comprehension in all activities, contemplation of the body's parts (the 31/32 parts), contemplation of the four elements, and the nine cemetery contemplations."
+    },
+    {
+      "id": "mn10_q5",
+      "q": "When observing feelings (vedanā), what distinction is being made? What are the three primary categories?",
+      "a": "Pleasant, painful, and neither-pleasant-nor-painful. The practice is to know a pleasant feeling as pleasant, a painful as painful, a neutral as neutral — and to know whether it is worldly or unworldly. The discipline is precision of feeling-tone before reactivity."
+    },
+    {
+      "id": "mn10_q6",
+      "q": "The fourth foundation — dhammānupassanā — covers several frameworks. Name at least two of them.",
+      "a": "Five hindrances, five aggregates of clinging, six internal and external sense bases, seven factors of awakening, Four Noble Truths. This foundation integrates the rest of the dhamma: once mindfulness is stable, these are the frames through which insight arises."
+    },
+    {
+      "id": "mn10_q7",
+      "q": "The sutta ends with a specific guarantee. What is it?",
+      "a": "That anyone who develops these four foundations in this way for seven years — or seven months, or even seven days — may expect one of two fruits: final knowledge here and now, or, if any clinging remains, non-returning. The Buddha is unusually specific about the practice being testable on a real timeline."
+    }
+  ]
+}

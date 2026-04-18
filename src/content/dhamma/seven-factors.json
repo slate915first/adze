@@ -1,0 +1,72 @@
+[
+  {
+    "id": "sati",
+    "pali": "Sati",
+    "english": "Mindfulness",
+    "icon": "🪷",
+    "suttaRef": "SN 46.3 · MN 10",
+    "description": "The foundation of all the other factors. Unmuddled attention — the ability to know what is happening while it is happening, without being swept into it.",
+    "measurable": true,
+    "derivation": "journal evidence"
+  },
+  {
+    "id": "dhammavicaya",
+    "pali": "Dhamma-vicaya",
+    "english": "Investigation",
+    "icon": "🔍",
+    "suttaRef": "SN 46.3",
+    "description": "Investigation of phenomena. The wisdom that turns mindfulness into insight — examining states as they arise, seeing how they come, how they go, and what they are made of.",
+    "measurable": true,
+    "derivation": "journal evidence, weighted"
+  },
+  {
+    "id": "viriya",
+    "pali": "Viriya",
+    "english": "Energy",
+    "icon": "🔥",
+    "suttaRef": "SN 46.3",
+    "description": "Energetic effort. Not forceful striving — steady, persistent application. The quality that shows up on the cushion even on the days you don't feel like it.",
+    "measurable": true,
+    "derivation": "sit consistency"
+  },
+  {
+    "id": "piti",
+    "pali": "Pīti",
+    "english": "Rapture",
+    "icon": "✨",
+    "suttaRef": "SN 46.3 · Vism IV",
+    "description": "The joy that arises when the hindrances quiet and the mind collects. Not a goal to chase — a sign that the work is going right. Sometimes physical (tingling, lightness), sometimes a quality of gladness.",
+    "measurable": false,
+    "emergentWhen": "samadhi is steady and the gate holds"
+  },
+  {
+    "id": "passaddhi",
+    "pali": "Passaddhi",
+    "english": "Tranquility",
+    "icon": "🕊️",
+    "suttaRef": "SN 46.3",
+    "description": "The settling that follows rapture. Body and mind become tranquil — the heat of viriya matures into cool stability. Pīti was energetic; passaddhi is still.",
+    "measurable": false,
+    "emergentWhen": "samadhi is steady and pīti has arisen"
+  },
+  {
+    "id": "samadhi",
+    "pali": "Samādhi",
+    "english": "Concentration",
+    "icon": "💎",
+    "suttaRef": "SN 46.3 · MN 44",
+    "description": "Unified collection of mind. The gathering that allows phenomena to be seen clearly without the mind being swept away by them. Samādhi is not a trance — it is the opposite of a scattered mind.",
+    "measurable": true,
+    "derivation": "concentration diagnostic"
+  },
+  {
+    "id": "upekkha",
+    "pali": "Upekkhā",
+    "english": "Equanimity",
+    "icon": "⚖️",
+    "suttaRef": "SN 46.3 · AN 4.170",
+    "description": "The balance that is not indifference. A mind that is moved by nothing and closed to nothing. The mature quality of a practitioner who has done the work — the last of the seven factors because it rests on all the others.",
+    "measurable": false,
+    "emergentWhen": "all the earlier factors are established"
+  }
+]

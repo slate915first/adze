@@ -1,0 +1,438 @@
+/* ============================================================================
+ * src/styles/styles.css
+ * ----------------------------------------------------------------------------
+ * Inlined into the build output inside the <style> block via the
+ * INLINE-CSS marker in app.html. Tailwind is still loaded via CDN; this
+ * file contains the Adze-specific custom styles: parchment cards, gold
+ * text, breath animation, hindrance colors, etc.
+ * ============================================================================ */
+
+  :root {
+    --shadow-level: 0;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at top, #1a1530 0%, #0a0612 50%, #050308 100%);
+    color: #e6dcc8;
+    font-family: 'Georgia', 'Crimson Text', serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(20,0,0,calc(var(--shadow-level)*0.6)) 100%);
+    pointer-events: none;
+    z-index: 1;
+    transition: background 1s ease;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,calc(var(--shadow-level)*0.4));
+    pointer-events: none;
+    z-index: 1;
+    transition: background 1s ease;
+  }
+  #app, #modal-root { position: relative; z-index: 10; }
+
+  .serif { font-family: 'Georgia', serif; }
+  .sans { font-family: -apple-system, system-ui, sans-serif; }
+
+  .parchment {
+    background: linear-gradient(145deg, rgba(244,228,188,0.08), rgba(212,184,140,0.04));
+    border: 1px solid rgba(212,184,140,0.25);
+    backdrop-filter: blur(8px);
+  }
+  .parchment-active {
+    background: linear-gradient(145deg, rgba(244,228,188,0.18), rgba(212,184,140,0.1));
+    border-color: #d4a857;
+    box-shadow: 0 0 30px rgba(212,168,87,0.3);
+  }
+  .gold-text {
+    background: linear-gradient(135deg, #f4e4bc, #d4a857, #f4e4bc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lotus-glow { box-shadow: 0 0 30px rgba(244,228,188,0.4); }
+  .mara-glow { box-shadow: 0 0 25px rgba(220,38,38,0.5); }
+  .sangha-glow { box-shadow: 0 0 20px rgba(168,85,247,0.4); }
+
+  .habit-row { transition: all 0.3s ease; cursor: pointer; }
+  .habit-row:hover { background: rgba(244,228,188,0.05); transform: translateX(4px); }
+  .habit-done { background: linear-gradient(90deg, rgba(244,228,188,0.15), transparent); border-left: 3px solid #d4a857; }
+  .habit-missed { background: linear-gradient(90deg, rgba(220,38,38,0.1), transparent); border-left: 3px solid #991b1b; opacity: 0.6; }
+
+  .checkbox {
+    width: 36px; height: 36px;
+    border: 2px solid rgba(212,168,87,0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.3);
+  }
+  .checkbox:hover { border-color: #d4a857; transform: scale(1.1); box-shadow: 0 0 20px rgba(212,168,87,0.4); }
+  .checkbox.done {
+    background: radial-gradient(circle, #f4e4bc, #d4a857);
+    border-color: #f4e4bc;
+    box-shadow: 0 0 20px rgba(244,228,188,0.6);
+  }
+
+  .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+  @keyframes pulse-glow {
+    0%,100% { box-shadow: 0 0 20px rgba(244,228,188,0.3); }
+    50% { box-shadow: 0 0 40px rgba(244,228,188,0.6); }
+  }
+
+  .breath { animation: breath 4s ease-in-out infinite; }
+  @keyframes breath {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+
+  .float-up { animation: floatUp 1.8s ease-out forwards; }
+  @keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100px); opacity: 0; }
+  }
+
+  .fade-in { animation: fadeIn 0.6s ease-out; }
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .scroll-reveal { animation: scrollReveal 1.2s ease-out; }
+  @keyframes scrollReveal {
+    0% { opacity: 0; transform: scale(0.8) rotateX(20deg); }
+    100% { opacity: 1; transform: scale(1) rotateX(0); }
+  }
+
+  .tab-active {
+    background: linear-gradient(135deg, rgba(212,168,87,0.3), rgba(244,228,188,0.2));
+    color: #f4e4bc;
+    border-color: #d4a857;
+    box-shadow: 0 4px 15px rgba(212,168,87,0.3);
+  }
+
+  .progress-bar {
+    height: 12px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(212,168,87,0.3);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d4a857, #f4e4bc);
+    transition: width 0.6s ease;
+    box-shadow: 0 0 10px rgba(244,228,188,0.5);
+  }
+  .shadow-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7f1d1d, #dc2626, #991b1b);
+    transition: width 0.6s ease;
+    box-shadow: 0 0 10px rgba(220,38,38,0.6);
+  }
+
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal {
+    max-width: 700px;
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .scrollbar::-webkit-scrollbar { width: 8px; }
+  .scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #d4a857, #8b6914);
+    border-radius: 4px;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(212,168,87,0.3);
+    color: #f4e4bc;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.5rem;
+    width: 100%;
+    font-family: 'Georgia', serif;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #d4a857;
+    box-shadow: 0 0 0 3px rgba(212,168,87,0.2);
+  }
+
+  .btn {
+    padding: 0.7rem 1.4rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: 'Georgia', serif;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #d4a857, #8b6914);
+    color: #1a1530;
+    border-color: #f4e4bc;
+  }
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212,168,87,0.5);
+  }
+  .btn-ghost {
+    background: rgba(244,228,188,0.05);
+    color: #f4e4bc;
+    border-color: rgba(212,168,87,0.3);
+  }
+  .btn-ghost:hover {
+    background: rgba(244,228,188,0.1);
+    border-color: #d4a857;
+  }
+  .btn-danger {
+    background: rgba(220,38,38,0.2);
+    color: #fca5a5;
+    border-color: rgba(220,38,38,0.5);
+  }
+
+  .character-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .character-card:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+  .character-selected {
+    border-color: #d4a857;
+    background: linear-gradient(145deg, rgba(244,228,188,0.2), rgba(212,168,87,0.1));
+    box-shadow: 0 0 30px rgba(212,168,87,0.4);
+  }
+
+  .army-card {
+    background: linear-gradient(145deg, rgba(40,10,10,0.6), rgba(20,5,5,0.4));
+    border: 1px solid rgba(220,38,38,0.4);
+  }
+  .army-defeated {
+    background: linear-gradient(145deg, rgba(34,197,94,0.1), rgba(0,0,0,0.4));
+    border-color: rgba(34,197,94,0.5);
+  }
+
+  .lotus-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 0 10px rgba(244,228,188,0.5));
+  }
+
+  .stage-marker {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    border: 3px solid rgba(212,168,87,0.4);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.5);
+    transition: all 0.4s;
+    flex-shrink: 0;
+  }
+  .stage-current {
+    border-color: #f4e4bc;
+    background: radial-gradient(circle, rgba(244,228,188,0.3), rgba(212,168,87,0.1));
+    box-shadow: 0 0 30px rgba(244,228,188,0.5);
+    transform: scale(1.15);
+  }
+  .stage-complete {
+    background: radial-gradient(circle, #d4a857, #8b6914);
+    border-color: #f4e4bc;
+  }
+
+  .scroll-paper {
+    background:
+      linear-gradient(180deg, rgba(244,228,188,0.95), rgba(232,212,164,0.9));
+    color: #2c1810;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: 2px solid #8b6914;
+    box-shadow: 0 0 50px rgba(244,228,188,0.4);
+    font-family: 'Georgia', serif;
+    line-height: 1.7;
+  }
+  .scroll-paper h3 {
+    color: #5c2c0a;
+    font-style: italic;
+  }
+
+  .ember {
+    position: absolute;
+    width: 4px; height: 4px;
+    background: #fbbf24;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: ember 4s linear infinite;
+  }
+  @keyframes ember {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translateY(-200px) translateX(var(--dx,20px)); opacity: 0; }
+  }
+
+  .quest-banner {
+    background:
+      linear-gradient(135deg, rgba(244,228,188,0.1), rgba(212,168,87,0.05)),
+      radial-gradient(ellipse at top, rgba(244,228,188,0.15), transparent);
+    border: 1px solid rgba(212,168,87,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .quest-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(244,228,188,0.05), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 6s infinite;
+    pointer-events: none;
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg, #d4a857, #f4e4bc, #d4a857, #f4e4bc, #d4a857);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .danger-pulse { animation: dangerPulse 1.5s ease-in-out infinite; }
+  @keyframes dangerPulse {
+    0%,100% { box-shadow: 0 0 20px rgba(220,38,38,0.4); }
+    50% { box-shadow: 0 0 40px rgba(220,38,38,0.8); }
+  }
+
+  .codex-entry {
+    background: linear-gradient(145deg, rgba(244,228,188,0.08), rgba(212,168,87,0.04));
+    border-left: 3px solid #d4a857;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .codex-entry:hover { background: rgba(244,228,188,0.12); }
+
+  .tooltip { position: relative; }
+  .tooltip:hover .tooltip-text { opacity: 1; }
+  .tooltip-text {
+    position: absolute;
+    bottom: 100%; left: 50%;
+    transform: translateX(-50%);
+    background: #1a1530;
+    border: 1px solid #d4a857;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  /* v14.2 — Beta feedback mode. When body.feedback-mode is active, every
+     element with a data-component attribute gets a dashed outline on hover
+     and shows a small 💬 corner marker. Clicking either the element or the
+     marker opens the feedback modal. The floating toggle button sits above
+     all content at a fixed position. */
+  body.feedback-mode [data-component] {
+    position: relative;
+    cursor: crosshair;
+  }
+  body.feedback-mode [data-component]:hover {
+    outline: 2px dashed #d4a857;
+    outline-offset: 2px;
+  }
+  body.feedback-mode [data-component]:hover::after {
+    content: '💬 ' attr(data-component);
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #d4a857;
+    color: #1a1530;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 0 6px 0 6px;
+    z-index: 100;
+    pointer-events: none;
+    font-family: -apple-system, system-ui, sans-serif;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* Don't nest outlines — only the innermost [data-component] under the
+     cursor gets the highlight. CSS :hover naturally bubbles so we use a
+     child-exclusion rule to suppress parent highlights when hovering a
+     descendant. */
+  body.feedback-mode [data-component]:has([data-component]:hover) {
+    outline: none;
+  }
+  body.feedback-mode [data-component]:has([data-component]:hover)::after {
+    content: none;
+  }
+  /* Floating toggle button */
+  .feedback-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 200;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f4e4bc, #d4a857);
+    color: #1a1530;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212,168,87,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feedback-fab.active {
+    background: linear-gradient(135deg, #fca5a5, #dc2626);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(220,38,38,0.5);
+    animation: fabPulse 2s ease-in-out infinite;
+  }
+  @keyframes fabPulse {
+    0%,100% { box-shadow: 0 4px 15px rgba(220,38,38,0.4); }
+    50%     { box-shadow: 0 4px 25px rgba(220,38,38,0.7); }
+  }
+  .feedback-fab:hover { transform: scale(1.08); }
+  .feedback-banner {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, rgba(220,38,38,0.95), rgba(168,30,30,0.9));
+    color: #fff;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 12px;
+    font-family: -apple-system, system-ui, sans-serif;
+    z-index: 199;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .feedback-banner b { letter-spacing: 0.5px; }

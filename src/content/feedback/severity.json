@@ -1,0 +1,26 @@
+[
+  {
+    "id": "blocking",
+    "label": "Blocking",
+    "desc": "Cannot continue using the app",
+    "color": "red"
+  },
+  {
+    "id": "major",
+    "label": "Major",
+    "desc": "Annoying but I can work around it",
+    "color": "amber"
+  },
+  {
+    "id": "minor",
+    "label": "Minor",
+    "desc": "Small issue, polish",
+    "color": "emerald"
+  },
+  {
+    "id": "cosmetic",
+    "label": "Cosmetic",
+    "desc": "Visual / wording only",
+    "color": "blue"
+  }
+]

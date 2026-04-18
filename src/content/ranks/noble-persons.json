@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "key": "sotapanna",
+    "pali": "Sotāpanna",
+    "english": "Stream-enterer",
+    "removes": "Fetters 1–3 (self-identity view, doubt, clinging to rites)",
+    "remainingBirths": "At most seven more lives, never in lower realms"
+  },
+  {
+    "id": 2,
+    "key": "sakadagami",
+    "pali": "Sakadāgāmī",
+    "english": "Once-returner",
+    "removes": "Fetters 1–3 gone; 4–5 (sensual desire, ill will) greatly weakened",
+    "remainingBirths": "At most one more human life"
+  },
+  {
+    "id": 3,
+    "key": "anagami",
+    "pali": "Anāgāmī",
+    "english": "Non-returner",
+    "removes": "All five lower fetters destroyed",
+    "remainingBirths": "No more human birth; awakens in the pure abodes"
+  },
+  {
+    "id": 4,
+    "key": "arahant",
+    "pali": "Arahant",
+    "english": "Fully awakened",
+    "removes": "All ten fetters destroyed",
+    "remainingBirths": "No more becoming"
+  }
+]

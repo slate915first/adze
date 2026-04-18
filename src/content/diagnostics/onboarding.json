@@ -1,0 +1,141 @@
+[
+  {
+    "id": "energy",
+    "type": "slider",
+    "question": "Right now, how much energy do you actually have for this path?",
+    "hint": "Not how much you wish you had. How much is actually here.",
+    "min": 1,
+    "max": 10,
+    "labels": [
+      "Depleted",
+      "Vital"
+    ]
+  },
+  {
+    "id": "dominant_hindrance",
+    "type": "select",
+    "question": "If you had to name the strongest pull in your mind lately, which would it be?",
+    "hint": "Tap the one closest to the truth. You can name the others separately.",
+    "options": [
+      {
+        "key": "sensual",
+        "label": "Sensual desire",
+        "icon": "🍷",
+        "desc": "The pull of pleasure — food, screens, attention, comfort."
+      },
+      {
+        "key": "illwill",
+        "label": "Ill will",
+        "icon": "🗡️",
+        "desc": "Irritation, resentment, quiet judgment, the silent \"no\"."
+      },
+      {
+        "key": "sloth",
+        "label": "Sloth & torpor",
+        "icon": "😴",
+        "desc": "Heaviness, dullness, the mind closing rather than opening."
+      },
+      {
+        "key": "restless",
+        "label": "Restlessness",
+        "icon": "🌊",
+        "desc": "The inability to settle. The next tab. The need to move."
+      },
+      {
+        "key": "doubt",
+        "label": "Doubt",
+        "icon": "❓",
+        "desc": "Is this even working? Am I doing it right? What's the point?"
+      }
+    ]
+  },
+  {
+    "id": "sensual",
+    "type": "slider",
+    "question": "How strong is the pull of sensual desire in your days right now?",
+    "hint": "Food, screens, attention-seeking, restless consumption. Not moral — just honest.",
+    "min": 0,
+    "max": 10,
+    "labels": [
+      "Quiet",
+      "Pulling"
+    ]
+  },
+  {
+    "id": "illwill",
+    "type": "slider",
+    "question": "How much ill will — irritation, resentment, silent judgment — is moving in you?",
+    "min": 0,
+    "max": 10,
+    "labels": [
+      "Open heart",
+      "Hardened"
+    ]
+  },
+  {
+    "id": "restless",
+    "type": "slider",
+    "question": "How restless is your mind when you try to be still?",
+    "min": 0,
+    "max": 10,
+    "labels": [
+      "Settled",
+      "Agitated"
+    ]
+  },
+  {
+    "id": "doubt",
+    "type": "slider",
+    "question": "How much doubt do you carry about this path?",
+    "hint": "Doubt is not the enemy — it's information. Name it honestly.",
+    "min": 0,
+    "max": 10,
+    "labels": [
+      "Confident",
+      "Uncertain"
+    ]
+  },
+  {
+    "id": "purpose",
+    "type": "slider",
+    "question": "How clear is your sense of why you are doing this at all?",
+    "min": 1,
+    "max": 10,
+    "labels": [
+      "Lost",
+      "Clear"
+    ]
+  },
+  {
+    "id": "experience",
+    "type": "select",
+    "question": "How much meditation experience do you have?",
+    "hint": "This tells your teacher whether to start from the beginning.",
+    "options": [
+      {
+        "key": "none",
+        "label": "Never sat",
+        "icon": "🌱",
+        "desc": "I've never really meditated. I need the basics."
+      },
+      {
+        "key": "some",
+        "label": "A little",
+        "icon": "🪴",
+        "desc": "I've tried apps or occasional sits. Not consistent."
+      },
+      {
+        "key": "regular",
+        "label": "Regular practice",
+        "icon": "🌳",
+        "desc": "I sit most days. I know the basics."
+      },
+      {
+        "key": "experienced",
+        "label": "Long practice",
+        "icon": "🏔️",
+        "desc": "Years of practice. Retreats. Established routine."
+      }
+    ]
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "setup",
+    "label": "Setup / diagnostic",
+    "icon": "🪷"
+  },
+  {
+    "id": "timer",
+    "label": "Meditation timer",
+    "icon": "🔔"
+  },
+  {
+    "id": "today",
+    "label": "Today / dashboard",
+    "icon": "📅"
+  },
+  {
+    "id": "path",
+    "label": "Path / stages",
+    "icon": "🛤️"
+  },
+  {
+    "id": "reflection",
+    "label": "Reflection / journal",
+    "icon": "🪞"
+  },
+  {
+    "id": "review",
+    "label": "Review / charts",
+    "icon": "📈"
+  },
+  {
+    "id": "wisdom",
+    "label": "Wisdom / suttas",
+    "icon": "📜"
+  },
+  {
+    "id": "sangha",
+    "label": "Sangha / members",
+    "icon": "🪷"
+  },
+  {
+    "id": "settings",
+    "label": "Settings / export",
+    "icon": "⚙️"
+  },
+  {
+    "id": "content",
+    "label": "Teaching content",
+    "icon": "☸️"
+  },
+  {
+    "id": "ui",
+    "label": "Visual / layout",
+    "icon": "🎨"
+  },
+  {
+    "id": "other",
+    "label": "Other / unclear",
+    "icon": "❓"
+  }
+]

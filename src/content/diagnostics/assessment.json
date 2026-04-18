@@ -1,0 +1,721 @@
+{
+  "phaseA": [
+    {
+      "id": "energy",
+      "type": "slider",
+      "question": "How much energy do you actually have for this path, right now?",
+      "hint": "Not how much you wish you had. Today's truth.",
+      "min": 1,
+      "max": 10,
+      "labels": [
+        "Depleted",
+        "Vital"
+      ]
+    },
+    {
+      "id": "experience",
+      "type": "select",
+      "question": "How much meditation experience do you bring?",
+      "hint": "This tells the recommendation engine where to start you.",
+      "options": [
+        {
+          "key": "none",
+          "label": "Never sat",
+          "icon": "🌱",
+          "desc": "I have never really meditated. I need the basics, clearly given."
+        },
+        {
+          "key": "some",
+          "label": "A little",
+          "icon": "🪴",
+          "desc": "Apps, occasional sits, maybe a course years ago. Not consistent."
+        },
+        {
+          "key": "regular",
+          "label": "Regular practice",
+          "icon": "🌳",
+          "desc": "I sit most days. The basics are known. Consistency is there."
+        },
+        {
+          "key": "long",
+          "label": "Long practice",
+          "icon": "🏔️",
+          "desc": "Years of practice, retreats done, a teacher or lineage behind me."
+        }
+      ]
+    },
+    {
+      "id": "hopes",
+      "type": "multi",
+      "question": "What do you hope this quest helps with?",
+      "hint": "Pick up to two. Guides the recommendation.",
+      "max": 2,
+      "options": [
+        {
+          "key": "build",
+          "label": "Build a daily practice",
+          "icon": "🧱",
+          "desc": "The thread unbroken — the first thing the Buddha asked of his disciples."
+        },
+        {
+          "key": "deepen",
+          "label": "Deepen what I already have",
+          "icon": "🌊",
+          "desc": "The sit is there; I want the next step."
+        },
+        {
+          "key": "understand",
+          "label": "Understand the dhamma",
+          "icon": "📜",
+          "desc": "The suttas, the map of the path, how the pieces fit."
+        },
+        {
+          "key": "hindrance",
+          "label": "Work with a specific hindrance",
+          "icon": "⚔️",
+          "desc": "One of the five is particularly heavy right now."
+        }
+      ]
+    },
+    {
+      "id": "dominantHindrance",
+      "type": "select",
+      "question": "If you had to name the strongest pull in your mind lately, which would it be?",
+      "hint": "Tap the one closest to the truth. The others can be named separately.",
+      "options": [
+        {
+          "key": "sensual",
+          "label": "Sensual desire",
+          "icon": "🍷",
+          "desc": "The pull of pleasure — food, screens, attention, comfort."
+        },
+        {
+          "key": "illwill",
+          "label": "Ill will",
+          "icon": "🗡️",
+          "desc": "Irritation, resentment, quiet judgment, the silent \"no\"."
+        },
+        {
+          "key": "sloth",
+          "label": "Sloth & torpor",
+          "icon": "😴",
+          "desc": "Heaviness, dullness, the mind closing rather than opening."
+        },
+        {
+          "key": "restless",
+          "label": "Restlessness",
+          "icon": "🌊",
+          "desc": "The inability to settle. The next tab. The need to move."
+        },
+        {
+          "key": "doubt",
+          "label": "Doubt",
+          "icon": "❓",
+          "desc": "Is this working? Am I doing it right? What's the point?"
+        }
+      ]
+    }
+  ],
+  "phaseB_beginner": [
+    {
+      "id": "stoppedBefore",
+      "type": "textarea",
+      "question": "Optional — what has stopped a daily practice from sticking before?",
+      "hint": "You can skip this. One or two lines — honest, not polished. If anything comes to mind, it helps the engine set the bar realistically.",
+      "placeholder": "e.g. \"I forget in the morning\" or \"10 minutes always feels too long\""
+    },
+    {
+      "id": "realisticMinutes",
+      "type": "slider",
+      "question": "How many minutes could you sit today, honestly, without bargaining?",
+      "hint": "The number you know you can actually keep, not the number you wish for.",
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "labels": [
+        "2 min",
+        "30 min"
+      ]
+    },
+    {
+      "id": "posture",
+      "type": "select",
+      "question": "How would you like to sit?",
+      "hint": "Comfort matters more than form. The Buddha never said the posture makes the meditation — he sat on grass. Whatever lets you stay present is right.",
+      "options": [
+        {
+          "key": "chair",
+          "label": "A chair",
+          "icon": "🪑",
+          "desc": "Feet flat on the ground, spine long, hands on thighs. Completely honorable."
+        },
+        {
+          "key": "cushion",
+          "label": "A cushion on the floor",
+          "icon": "🟤",
+          "desc": "Cross-legged or kneeling. Knees below hips if possible."
+        },
+        {
+          "key": "bench",
+          "label": "A meditation bench (seiza)",
+          "icon": "🟧",
+          "desc": "Kneeling with the bench taking the weight off the ankles."
+        },
+        {
+          "key": "lying",
+          "label": "Lying down, for now",
+          "icon": "🛏️",
+          "desc": "Honest choice if the body needs it. Stay alert — don't fall asleep if you can help it."
+        },
+        {
+          "key": "unsure",
+          "label": "Not sure yet",
+          "icon": "❓",
+          "desc": "I'll try and see what feels right."
+        }
+      ]
+    },
+    {
+      "id": "timeOfDay",
+      "type": "select",
+      "question": "When can you most realistically sit?",
+      "hint": "The hour you can actually keep, not the ideal one. The classical advice is first thing in the morning, but the best time is the one you will not skip.",
+      "options": [
+        {
+          "key": "earlymorning",
+          "label": "First thing in the morning",
+          "icon": "🌅",
+          "desc": "Before anything else. The classical advice."
+        },
+        {
+          "key": "midmorning",
+          "label": "Mid-morning",
+          "icon": "☕",
+          "desc": "After the first rush of the day has settled."
+        },
+        {
+          "key": "midday",
+          "label": "Lunch or midday",
+          "icon": "☀️",
+          "desc": "A pause in the middle of the day."
+        },
+        {
+          "key": "evening",
+          "label": "Evening, before bed",
+          "icon": "🌙",
+          "desc": "To close the day. Helps sleep in many practitioners."
+        },
+        {
+          "key": "varies",
+          "label": "Varies day to day",
+          "icon": "🔀",
+          "desc": "Life is like that right now. The app will adapt."
+        }
+      ]
+    },
+    {
+      "id": "physicalConcerns",
+      "type": "textarea",
+      "question": "Optional — any physical concerns to be aware of? Back, knees, pain, sleep?",
+      "hint": "You can skip this. The engine will soften advice around anything you mention — no posture suggestion that makes an existing pain worse.",
+      "placeholder": "e.g. \"bad knees, can't sit cross-legged\" or \"chronic back pain\""
+    },
+    {
+      "id": "concerns",
+      "type": "textarea",
+      "question": "Optional — anything about starting a meditation practice that makes you nervous or unsure?",
+      "hint": "You can skip this. Nothing is too small or too much. The reassurance on your first screens will be shaped by what you name here.",
+      "placeholder": "e.g. \"I can't stop thinking\" or \"I've tried and failed before\""
+    }
+  ],
+  "phaseB_experienced": [
+    {
+      "id": "tradition",
+      "type": "select",
+      "question": "What is your primary tradition or lineage?",
+      "hint": "Tells the engine which language and framing will feel native.",
+      "options": [
+        {
+          "key": "goenka",
+          "label": "Goenka / Vipassana",
+          "icon": "🧘",
+          "desc": "10-day courses, body-scanning, the body as the field of sensation."
+        },
+        {
+          "key": "theravada",
+          "label": "Theravāda (other)",
+          "icon": "🪷",
+          "desc": "Forest tradition, Mahasi, Pa Auk, Ajahn Chah lineage, etc."
+        },
+        {
+          "key": "mahayana",
+          "label": "Mahāyāna / Tibetan",
+          "icon": "☸️",
+          "desc": "Zen, Pure Land, Tibetan Buddhism, Chinese Buddhism."
+        },
+        {
+          "key": "secular",
+          "label": "Secular mindfulness",
+          "icon": "🧠",
+          "desc": "MBSR, mindfulness-based therapy, insight without the metaphysics."
+        },
+        {
+          "key": "mixed",
+          "label": "Mixed / no one tradition",
+          "icon": "🌀",
+          "desc": "Multiple streams, or following what works pragmatically."
+        },
+        {
+          "key": "other",
+          "label": "Other",
+          "icon": "✨",
+          "desc": "Yoga, Advaita, Sufi, contemplative Christianity, etc."
+        }
+      ]
+    },
+    {
+      "id": "teachers",
+      "type": "multi",
+      "question": "Teachers or books that have shaped your practice?",
+      "hint": "Tap all that apply. Helps the engine match tone and framing. Nothing here is required — \"mixed / none listed\" is a perfectly honest answer.",
+      "max": 99,
+      "options": [
+        {
+          "key": "t_goenka",
+          "label": "S. N. Goenka (Vipassana Research Institute)"
+        },
+        {
+          "key": "t_ubakhin",
+          "label": "Sayagyi U Ba Khin"
+        },
+        {
+          "key": "t_chah",
+          "label": "Ajahn Chah"
+        },
+        {
+          "key": "t_sumedho",
+          "label": "Ajahn Sumedho"
+        },
+        {
+          "key": "t_brahm",
+          "label": "Ajahn Brahm"
+        },
+        {
+          "key": "t_pasanno",
+          "label": "Ajahn Pasanno"
+        },
+        {
+          "key": "t_thanissaro",
+          "label": "Thanissaro Bhikkhu (Ṭhānissaro)"
+        },
+        {
+          "key": "t_amaro",
+          "label": "Ajahn Amaro"
+        },
+        {
+          "key": "t_mahasi",
+          "label": "Mahasi Sayadaw"
+        },
+        {
+          "key": "t_paauk",
+          "label": "Pa Auk Sayadaw"
+        },
+        {
+          "key": "t_tejaniya",
+          "label": "Sayadaw U Tejaniya"
+        },
+        {
+          "key": "t_gunaratana",
+          "label": "Bhante Henepola Gunaratana"
+        },
+        {
+          "key": "t_bodhi",
+          "label": "Bhikkhu Bodhi"
+        },
+        {
+          "key": "t_analayo",
+          "label": "Bhikkhu Anālayo"
+        },
+        {
+          "key": "t_kornfield",
+          "label": "Jack Kornfield"
+        },
+        {
+          "key": "t_salzberg",
+          "label": "Sharon Salzberg"
+        },
+        {
+          "key": "t_goldstein",
+          "label": "Joseph Goldstein"
+        },
+        {
+          "key": "t_ingram",
+          "label": "Daniel Ingram (MCTB)"
+        },
+        {
+          "key": "t_culadasa",
+          "label": "Culadasa (The Mind Illuminated)"
+        },
+        {
+          "key": "t_shinzen",
+          "label": "Shinzen Young"
+        },
+        {
+          "key": "t_yuttadhammo",
+          "label": "Bhante Yuttadhammo"
+        },
+        {
+          "key": "t_thichnhathanh",
+          "label": "Thich Nhat Hanh"
+        },
+        {
+          "key": "t_suzuki",
+          "label": "Shunryu Suzuki"
+        },
+        {
+          "key": "t_kabatzinn",
+          "label": "Jon Kabat-Zinn (MBSR)"
+        },
+        {
+          "key": "t_mingyur",
+          "label": "Mingyur Rinpoche"
+        },
+        {
+          "key": "t_trungpa",
+          "label": "Chögyam Trungpa"
+        },
+        {
+          "key": "t_suttas",
+          "label": "The Pali suttas directly (Bodhi, Ñāṇamoli, Access to Insight translations)"
+        },
+        {
+          "key": "t_other",
+          "label": "Other teacher(s) — I will name them if the engine asks"
+        },
+        {
+          "key": "t_none",
+          "label": "No specific teacher or book — I have drawn on many"
+        }
+      ]
+    },
+    {
+      "id": "currentSitLength",
+      "type": "slider",
+      "question": "Typical sit length right now, in minutes?",
+      "hint": "The actual average, not the aspirational.",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "labels": [
+        "10 min",
+        "90 min"
+      ]
+    },
+    {
+      "id": "currentEdge",
+      "type": "select",
+      "question": "Where is the edge of your practice right now?",
+      "hint": "What you are actively working on, or what you would work on if you had guidance.",
+      "options": [
+        {
+          "key": "samatha",
+          "label": "Concentration / samatha",
+          "icon": "🪷",
+          "desc": "Access concentration, jhāna factors, steady one-pointedness."
+        },
+        {
+          "key": "vipassana",
+          "label": "Insight / vipassanā",
+          "icon": "🔍",
+          "desc": "Seeing the three characteristics directly — anicca, dukkha, anattā."
+        },
+        {
+          "key": "metta",
+          "label": "Metta / brahmavihāras",
+          "icon": "💛",
+          "desc": "The heart practices — kindness, compassion, sympathetic joy, equanimity."
+        },
+        {
+          "key": "offcushion",
+          "label": "Off-cushion integration",
+          "icon": "🚶",
+          "desc": "Bringing sati into speech, work, relationships, the daily tangle."
+        },
+        {
+          "key": "hindrance",
+          "label": "A specific hindrance",
+          "icon": "⚔️",
+          "desc": "One of the five is the real work right now."
+        },
+        {
+          "key": "subtle",
+          "label": "Subtle defilements",
+          "icon": "💎",
+          "desc": "Conceit, restlessness about fine things, the last craving for becoming."
+        }
+      ]
+    },
+    {
+      "id": "wantFromTool",
+      "type": "multi",
+      "question": "What do you want from this tool that you don't already have?",
+      "hint": "Pick all that apply. Honest answers shape what the engine surfaces first — habits, reflections, suttas, or structure. Picking nothing is fine too.",
+      "max": 99,
+      "options": [
+        {
+          "key": "w_continuity",
+          "label": "Continuity — especially when I travel or life is disrupted"
+        },
+        {
+          "key": "w_structure",
+          "label": "A structured reading plan for the suttas"
+        },
+        {
+          "key": "w_habits",
+          "label": "Help building supporting habits beyond the sit (speech, reflection, generosity)"
+        },
+        {
+          "key": "w_pattern",
+          "label": "Honest pattern-level feedback over weeks and months, not just a streak counter"
+        },
+        {
+          "key": "w_hindrance",
+          "label": "Specific help with one hindrance that keeps resurfacing"
+        },
+        {
+          "key": "w_offcushion",
+          "label": "A way to bring sati off the cushion into daily life"
+        },
+        {
+          "key": "w_community",
+          "label": "A sense of companionship on the path (even if only a simulated one for now)"
+        },
+        {
+          "key": "w_curious",
+          "label": "I'm curious — not sure yet what I want"
+        },
+        {
+          "key": "w_other",
+          "label": "Something else — I'll watch and see"
+        }
+      ]
+    },
+    {
+      "id": "fourTruths",
+      "type": "multi",
+      "question": "Which of these are the Four Noble Truths?",
+      "hint": "Not a test — no scoring, no wrong-answer penalty. The engine uses what you pick (and what you miss) to decide whether foundation material belongs in your first weeks or not.",
+      "max": 8,
+      "options": [
+        {
+          "key": "dukkha",
+          "label": "The truth of dukkha — suffering, unsatisfactoriness",
+          "correct": true
+        },
+        {
+          "key": "origin",
+          "label": "The origin of dukkha — craving (taṇhā)",
+          "correct": true
+        },
+        {
+          "key": "cessation",
+          "label": "The cessation of dukkha — nibbāna",
+          "correct": true
+        },
+        {
+          "key": "path",
+          "label": "The path to cessation — the noble eightfold path",
+          "correct": true
+        },
+        {
+          "key": "karma",
+          "label": "The law of karma and its fruits",
+          "correct": false
+        },
+        {
+          "key": "rebirth",
+          "label": "Rebirth in the realms of saṃsāra",
+          "correct": false
+        },
+        {
+          "key": "compassion",
+          "label": "The cultivation of compassion for all beings",
+          "correct": false
+        },
+        {
+          "key": "impermanence",
+          "label": "The three characteristics (anicca, dukkha, anattā)",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "id": "eightfold",
+      "type": "multi",
+      "question": "Which of these belong to the Noble Eightfold Path?",
+      "hint": "Select all that belong. The ones you miss tell the engine where the foundation may be thin — regardless of how long you've been sitting.",
+      "max": 12,
+      "options": [
+        {
+          "key": "view",
+          "label": "Right view (sammā-diṭṭhi)",
+          "correct": true
+        },
+        {
+          "key": "intention",
+          "label": "Right intention (sammā-saṅkappa)",
+          "correct": true
+        },
+        {
+          "key": "speech",
+          "label": "Right speech (sammā-vācā)",
+          "correct": true
+        },
+        {
+          "key": "action",
+          "label": "Right action (sammā-kammanta)",
+          "correct": true
+        },
+        {
+          "key": "livelihood",
+          "label": "Right livelihood (sammā-ājīva)",
+          "correct": true
+        },
+        {
+          "key": "effort",
+          "label": "Right effort (sammā-vāyāma)",
+          "correct": true
+        },
+        {
+          "key": "mindfulness",
+          "label": "Right mindfulness (sammā-sati)",
+          "correct": true
+        },
+        {
+          "key": "concentration",
+          "label": "Right concentration (sammā-samādhi)",
+          "correct": true
+        },
+        {
+          "key": "faith",
+          "label": "Right faith (distractor — saddhā is a faculty, not a path factor)",
+          "correct": false
+        },
+        {
+          "key": "devotion",
+          "label": "Right devotion (distractor)",
+          "correct": false
+        },
+        {
+          "key": "compassion",
+          "label": "Right compassion (distractor — karuṇā is a brahmavihāra)",
+          "correct": false
+        }
+      ]
+    },
+    {
+      "id": "stuckness",
+      "type": "select",
+      "question": "Where, if anywhere, does your practice feel stuck right now?",
+      "hint": "The honest answer tells the engine what to surface first. No answer makes you less of a practitioner.",
+      "options": [
+        {
+          "key": "plateau",
+          "label": "Plateau — nothing changes",
+          "icon": "🏔️",
+          "desc": "Sitting steadily but no movement in depth or insight."
+        },
+        {
+          "key": "dryness",
+          "label": "Dryness — practice has lost warmth",
+          "icon": "🏜️",
+          "desc": "The sit is mechanical. The heart is absent. Metta may be thin."
+        },
+        {
+          "key": "offcushion",
+          "label": "Strong on the cushion, weak off it",
+          "icon": "🔀",
+          "desc": "Hours of sitting don't translate to daily life. Sati fails when stress rises."
+        },
+        {
+          "key": "intensity",
+          "label": "Sitting hard but missing something",
+          "icon": "🔥",
+          "desc": "Classical Goenka / intensive-retreat pattern. The foundation of sīla or view may be thin."
+        },
+        {
+          "key": "dark",
+          "label": "Something dark has opened",
+          "icon": "🌑",
+          "desc": "Dark night, difficult territory. A real teacher is what this needs."
+        },
+        {
+          "key": "doubt",
+          "label": "Doubt about the path itself",
+          "icon": "❓",
+          "desc": "The method, the tradition, or the whole project."
+        },
+        {
+          "key": "not_stuck",
+          "label": "Not stuck — practice is alive",
+          "icon": "🪷",
+          "desc": "Moving, learning, integrating. Good."
+        }
+      ]
+    },
+    {
+      "id": "unclear",
+      "type": "textarea",
+      "question": "Optional — anything unclear or unresolved about the path for you right now?",
+      "hint": "You can skip this. Anything you write — doctrinal, practical, personal — helps the engine surface the right sutta. It will not be shared anywhere.",
+      "placeholder": "e.g. \"anattā — I understand it intellectually but can't see it in experience\" or \"I don't know why sīla matters if the mind is already settled\""
+    }
+  ],
+  "phaseC": [
+    {
+      "id": "sensual",
+      "question": "Pull of sensual desire right now",
+      "labels": [
+        "Quiet",
+        "Pulling"
+      ],
+      "example": "Food cravings, scrolling, attraction, wanting pleasant sensations. The mind leaning toward what it wants."
+    },
+    {
+      "id": "illwill",
+      "question": "Ill will / irritation right now",
+      "labels": [
+        "Open",
+        "Hardened"
+      ],
+      "example": "Anger, resentment, judgment, impatience. The mind pushing away what it does not want."
+    },
+    {
+      "id": "restless",
+      "question": "Restlessness when you try to be still",
+      "labels": [
+        "Settled",
+        "Agitated"
+      ],
+      "example": "The body fidgets, the mind jumps, worry spirals, can't settle into a sit. Also: regret replaying."
+    },
+    {
+      "id": "doubt",
+      "question": "Doubt about this path",
+      "labels": [
+        "Confident",
+        "Uncertain"
+      ],
+      "example": "Not sure the practice works, questioning the teacher/teaching, suspicion of your own motivation."
+    },
+    {
+      "id": "purpose",
+      "question": "Clarity of purpose for doing this",
+      "labels": [
+        "Lost",
+        "Clear"
+      ],
+      "example": "Why are you doing this at all? Clear purpose supports every other factor; lost purpose undermines everything."
+    }
+  ]
+}

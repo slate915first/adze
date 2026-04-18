@@ -1,0 +1,42 @@
+[
+  {
+    "id": "clearer",
+    "label": "clearer",
+    "icon": "💧"
+  },
+  {
+    "id": "still_restless",
+    "label": "still restless",
+    "icon": "🌊"
+  },
+  {
+    "id": "tired",
+    "label": "more tired",
+    "icon": "😴"
+  },
+  {
+    "id": "something_opened",
+    "label": "something opened",
+    "icon": "🪷"
+  },
+  {
+    "id": "frustrated",
+    "label": "frustrated",
+    "icon": "😤"
+  },
+  {
+    "id": "peaceful",
+    "label": "peaceful",
+    "icon": "🕊️"
+  },
+  {
+    "id": "unchanged",
+    "label": "unchanged",
+    "icon": "◯"
+  },
+  {
+    "id": "grateful",
+    "label": "grateful",
+    "icon": "🙏"
+  }
+]

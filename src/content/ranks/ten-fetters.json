@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "key": "sakkayaditthi",
+    "pali": "Sakkāya-diṭṭhi",
+    "english": "Self-identity view",
+    "tier": "lower",
+    "removedBy": "sotāpanna"
+  },
+  {
+    "id": 2,
+    "key": "vicikiccha",
+    "pali": "Vicikicchā",
+    "english": "Doubt about the path",
+    "tier": "lower",
+    "removedBy": "sotāpanna"
+  },
+  {
+    "id": 3,
+    "key": "silabbataparamasa",
+    "pali": "Sīlabbata-parāmāsa",
+    "english": "Clinging to rites and rituals",
+    "tier": "lower",
+    "removedBy": "sotāpanna"
+  },
+  {
+    "id": 4,
+    "key": "kamaraga",
+    "pali": "Kāma-rāga",
+    "english": "Sensual desire",
+    "tier": "lower",
+    "removedBy": "anāgāmī (weakened by sakadāgāmī)"
+  },
+  {
+    "id": 5,
+    "key": "byapada",
+    "pali": "Byāpāda",
+    "english": "Ill will",
+    "tier": "lower",
+    "removedBy": "anāgāmī (weakened by sakadāgāmī)"
+  },
+  {
+    "id": 6,
+    "key": "ruparaga",
+    "pali": "Rūpa-rāga",
+    "english": "Desire for fine-material existence",
+    "tier": "higher",
+    "removedBy": "arahant"
+  },
+  {
+    "id": 7,
+    "key": "aruparaga",
+    "pali": "Arūpa-rāga",
+    "english": "Desire for immaterial existence",
+    "tier": "higher",
+    "removedBy": "arahant"
+  },
+  {
+    "id": 8,
+    "key": "mana",
+    "pali": "Māna",
+    "english": "Conceit — \"I am\"",
+    "tier": "higher",
+    "removedBy": "arahant"
+  },
+  {
+    "id": 9,
+    "key": "uddhacca",
+    "pali": "Uddhacca",
+    "english": "Restlessness (subtle)",
+    "tier": "higher",
+    "removedBy": "arahant"
+  },
+  {
+    "id": 10,
+    "key": "avijja",
+    "pali": "Avijjā",
+    "english": "Ignorance",
+    "tier": "higher",
+    "removedBy": "arahant"
+  }
+]

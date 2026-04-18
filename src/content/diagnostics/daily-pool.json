@@ -1,0 +1,74 @@
+[
+  {
+    "id": "energy",
+    "question": "Energy level today",
+    "labels": [
+      "Depleted",
+      "Vital"
+    ]
+  },
+  {
+    "id": "sensual",
+    "question": "Pull of sensual desire today",
+    "labels": [
+      "Quiet",
+      "Pulling"
+    ]
+  },
+  {
+    "id": "illwill",
+    "question": "Ill will / irritation today",
+    "labels": [
+      "Open",
+      "Hardened"
+    ]
+  },
+  {
+    "id": "sloth",
+    "question": "Sloth / heaviness in the sit today",
+    "labels": [
+      "Clear",
+      "Heavy"
+    ]
+  },
+  {
+    "id": "restless",
+    "question": "Restlessness today",
+    "labels": [
+      "Settled",
+      "Agitated"
+    ]
+  },
+  {
+    "id": "doubt",
+    "question": "Doubt today",
+    "labels": [
+      "Confident",
+      "Uncertain"
+    ]
+  },
+  {
+    "id": "sila",
+    "question": "Ethical steadiness today",
+    "labels": [
+      "Slipping",
+      "Steady"
+    ]
+  },
+  {
+    "id": "mettaWarmth",
+    "question": "Warmth toward others today",
+    "labels": [
+      "Cold",
+      "Warm"
+    ]
+  },
+  {
+    "id": "concentration",
+    "question": "Concentration in the sit today",
+    "labels": [
+      "Scattered",
+      "Collected"
+    ]
+  }
+]

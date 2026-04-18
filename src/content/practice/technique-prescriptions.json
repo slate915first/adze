@@ -1,0 +1,58 @@
+{
+  "sensual": {
+    "trigger": "high",
+    "threshold": 6,
+    "factor": "sensual",
+    "title": "For strong sensual pull",
+    "suttaRef": "AN 4.14 • MN 20",
+    "teaching": "The Buddha's first method for strong sensual desire was not to push against it but to notice what else is true at the same time.\n\nTry this for three days: whenever the pull arises — for food, a screen, a comfort — before following or resisting, pause for two slow breaths and ask: \"What is the ending of this going to look like?\" Not as judgment, as observation. Sensual pleasure always ends. The mind that clearly sees the ending stops being hooked by the beginning.\n\nIf the pull is very strong, sit for one minute with the body: notice that this body that wants comfort will also, one day, be a corpse. This is not morbid — it is the Buddha's own prescription in AN 4.14 (Saṃvara — restraint). It cools the fire long enough for wisdom to arrive."
+  },
+  "illwill": {
+    "trigger": "high",
+    "threshold": 6,
+    "factor": "illwill",
+    "title": "For ill will and irritation",
+    "suttaRef": "SN 46.54 • MN 20",
+    "teaching": "The Buddha gave metta as the direct antidote to ill will — not as positive thinking but as a deliberate training of the heart.\n\nFor seven days: at the start of each sit, spend two minutes silently repeating \"may this being be free from anger, free from fear, at ease\" — first for yourself, then for one person you find easy to love, then for one person you feel neutral about, then (and this is where the training actually happens) for the one you are irritated with. If \"may they be happy\" feels false, try the lighter form: \"may they be free from the anger that is hurting them.\" That version slips past the resistance.\n\nMN 20 adds a second method: when a thought of ill will arises and metta isn't available, simply notice \"this is an unwholesome state\" and let it fall away, the way you'd drop a hot coal. Naming alone weakens it."
+  },
+  "sloth": {
+    "trigger": "high",
+    "threshold": 6,
+    "factor": "sloth",
+    "title": "For sloth and torpor",
+    "suttaRef": "AN 7.58",
+    "teaching": "When Mahā Moggallāna was nodding off in meditation, the Buddha came to him and gave eight remedies, in order from gentlest to strongest. Try them in sequence:\n\n1. Don't attend to the drowsy thought — direct the mind elsewhere in the sit.\n2. Recall a teaching you know well, going over it in the mind.\n3. Recite a passage of dhamma aloud if you're alone.\n4. Pull your earlobes and rub your limbs.\n5. Stand up, splash water on your face, and look out at the four directions.\n6. Bring light to mind — sunlight, the stars — and hold that perception.\n7. Walk, with senses inward, aware.\n8. If nothing works: lie down mindfully, right side, with the intention to rise as soon as awake.\n\nThis is AN 7.58 almost verbatim. The Buddha said: try one, then the next. Don't force past exhaustion — but don't collapse into it either."
+  },
+  "restless": {
+    "trigger": "high",
+    "threshold": 6,
+    "factor": "restless",
+    "title": "For restlessness and agitation",
+    "suttaRef": "MN 20 • AN 10.60",
+    "teaching": "Restlessness is the hardest hindrance for modern minds because modern life cultivates it. The Buddha's direct method in MN 20 (Vitakkasaṇṭhāna — the stilling of thoughts) is this:\n\nWhen restless thoughts arise in the sit, first try replacing them with a calmer object — the breath at the tip of the nose, counted one to ten. If that fails, notice the danger in following them: \"if I follow this, where does it end?\" If that fails, try simply not attending to them, the way you'd ignore a noise. If that fails, examine them at their root — where is this coming from, what is it actually made of? And if all four fail, the Buddha's last instruction is strikingly physical: \"with teeth clenched and tongue pressed to the roof of the mouth, beat down mind with mind, constrain it, crush it.\" Meaning: this is the one hindrance where a little effort of will is appropriate.\n\nFor your first week, try just the first method: breath counted to ten. When the count gets away from you, restart at one. Don't add shame. Restarting is the practice."
+  },
+  "doubt": {
+    "trigger": "high",
+    "threshold": 6,
+    "factor": "doubt",
+    "title": "For doubt about the path",
+    "suttaRef": "SN 46.51 • AN 10.51",
+    "teaching": "Doubt (vicikicchā) is listed as a hindrance not because questioning is bad but because paralysis is. The Buddha told Ānanda in SN 46.51 that the food that feeds doubt is careless attention to confusing things — and the food that starves it is two things: wise attention, and spending time with good friends (kalyāṇamittā) who have walked further.\n\nFor the next week, do three things:\n1. Don't change your practice. No new methods. Do exactly what you said you would, even small. Doubt loves constant switching.\n2. Pick one sutta you can actually read — MN 10 (Satipaṭṭhāna) or SN 56.11 (the First Sermon) are good starters — and read it once. Not to analyze. To be reminded.\n3. If you know even one real practitioner, talk to them this week about anything. Their steadiness is contagious. If you don't, Ajahn Chah's talks on YouTube or the Bhikkhu Bodhi lectures are the next closest thing.\n\nThe doubt doesn't need to go away. It needs to not stop you."
+  },
+  "low_energy": {
+    "trigger": "low",
+    "threshold": 4,
+    "factor": "energy",
+    "title": "For low energy",
+    "suttaRef": "AN 6.55 • AN 4.13",
+    "teaching": "The Buddha gave the simile of the lute strings to Sona, a monk whose energy was depleted from overstriving: if the strings are too tight, the lute won't play; if too loose, it also won't play. The middle tuning is where music comes from.\n\nFor two weeks, don't try to increase your practice. Try this instead: shorten your sits if you need to (10 minutes is fine), but do them without fail. Walk for 15 minutes each day in silence. Eat and sleep enough. Notice when you are pushing from fear of falling behind rather than from actual interest — and when you notice, rest.\n\nRight effort (sammā-vāyāma) in AN 4.13 is not maximum effort. It is the effort appropriate to the moment. Energy returns when the strings are at the right tension, and it returns on its own schedule."
+  },
+  "low_purpose": {
+    "trigger": "low",
+    "threshold": 4,
+    "factor": "purpose",
+    "title": "When the \"why\" feels unclear",
+    "suttaRef": "MN 26 • AN 10.60",
+    "teaching": "The Buddha's own story in MN 26 (Ariyapariyesanā — the Noble Search) begins with him asking: \"why am I, being myself subject to aging, sickness, death, and sorrow, seeking what is also subject to these things?\" That question was the beginning of his path.\n\nFor the next week, don't try to find a new \"why.\" Try sitting with one question at the start of each sit, quietly: \"What is this human life actually going to give me, if I don't wake up to it?\" Not as despair. As the same question the Bodhisatta asked. Most of the time, the question itself restores the purpose more than any answer could.\n\nIf that feels too large, a smaller version works: \"What am I actually building with my days?\" Sit with that. Don't rush to answer."
+  }
+}

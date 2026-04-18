@@ -1,0 +1,20 @@
+{
+  "steady": {
+    "name": "Steady",
+    "icon": "⚖️",
+    "description": "Your duration stays exactly the same throughout the quest. Locked in. The most honest option for many practitioners — consistency, not escalation, is the path.",
+    "suttaHint": "The Buddha taught the same breath instructions to beginners and arahants. The depth changes; the form stays."
+  },
+  "progressive": {
+    "name": "Adaptive & Progressive",
+    "icon": "📈",
+    "description": "Hit your current duration 7 days in a row, and the system offers a small bump (+3 to +5 minutes). You can always decline. Growth at the pace your practice can hold.",
+    "suttaHint": "The Buddha called the path \"gradual training\" (anupubbasikkhā) — never sudden, always one supportable step at a time."
+  },
+  "mixed": {
+    "name": "Mixed Days",
+    "icon": "📅",
+    "description": "Different days have different lengths. Perfect for an Uposatha rhythm: shorter weekday sits, longer practice on Sunday. You define the schedule.",
+    "suttaHint": "The Uposatha days are themselves an ancient rhythm: ordinary days build the chain, the eighth and full-moon days deepen it."
+  }
+}

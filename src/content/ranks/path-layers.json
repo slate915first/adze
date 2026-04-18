@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "key": "hindrances",
+    "title": "The Five Hindrances",
+    "pali": "Pañca nīvaraṇāni",
+    "suttaRef": "MN 10 · AN 5.51 · SN 46.55",
+    "teaser": "The preliminary work. What blocks samādhi from arising.",
+    "opens": "from the start",
+    "gateDescription": "Reliable suppression, not uprooting. Three legs: low hindrance scores sustained in the daily check-in, consistent sits logged, and journal entries that actually name the hindrances as they arise.",
+    "graduation": "When the hindrances no longer derail your daily practice — when you recognize them fast and are not swept away — this layer has done its teaching. The work on them continues, but now Layer 2 opens."
+  },
+  {
+    "id": 2,
+    "key": "armies",
+    "title": "Māra's Ten Armies",
+    "pali": "Māra-senā",
+    "suttaRef": "Sn 3.2 (Padhāna Sutta)",
+    "teaser": "The deeper defilements. The ones the Buddha faced under the Bodhi tree.",
+    "opens": "after Layer 1 gate passes",
+    "gateDescription": "Each army weakens through sustained practice over long timeframes. No 3-day challenges. The canonical word for the work is padhāna — persistent effort — and some of these armies are only fully defeated at arahantship.",
+    "graduation": "The armies are not an arcade. Kāmā and Taṇhā will still move in you even when Layer 3 is open. What changes is your relationship to them: they are no longer \"you\". Layer 3 is about what still remains."
+  },
+  {
+    "id": 3,
+    "key": "fetters",
+    "title": "The Ten Fetters",
+    "pali": "Saṃyojana",
+    "suttaRef": "SN 45.179 · AN 10.13 · MN 64",
+    "teaser": "The actual awakening markers. Named honestly, claimed by no one.",
+    "opens": "after Layer 2 work is well established",
+    "gateDescription": "This layer does not have a gate. The four noble persons — sotāpanna, sakadāgāmī, anāgāmī, arahant — are marked by specific fetters falling away, and no self-report system can verify that. The game maps the territory; the walking is yours and your teacher's.",
+    "graduation": "Here the game says plainly what it cannot do. Close the app. Find a teacher in the living tradition. This tool was scaffolding. You are beyond scaffolding now."
+  }
+]

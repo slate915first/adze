@@ -1,0 +1,18 @@
+[
+  {
+    "id": "always",
+    "label": "Every time"
+  },
+  {
+    "id": "often",
+    "label": "Often"
+  },
+  {
+    "id": "sometimes",
+    "label": "Sometimes"
+  },
+  {
+    "id": "once",
+    "label": "Just once"
+  }
+]

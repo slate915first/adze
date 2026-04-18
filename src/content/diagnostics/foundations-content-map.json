@@ -1,0 +1,112 @@
+{
+  "right_view": {
+    "suttas": [
+      "MN 9 — Sammādiṭṭhi Sutta",
+      "SN 56.11 — Dhammacakkappavattana",
+      "SN 12.2 — Paṭiccasamuppāda"
+    ],
+    "monthly": [
+      3
+    ],
+    "weekly": [
+      11
+    ],
+    "prescriptions": [
+      "doubt"
+    ]
+  },
+  "right_intention": {
+    "suttas": [
+      "MN 19 — Dvedhāvitakka",
+      "AN 6.63 — Nibbedhika"
+    ],
+    "monthly": [
+      4
+    ],
+    "weekly": [
+      3,
+      12
+    ],
+    "prescriptions": [
+      "illwill"
+    ]
+  },
+  "right_speech": {
+    "suttas": [
+      "AN 5.198 — Vācā",
+      "AN 10.176 — Cunda Kammāraputta"
+    ],
+    "monthly": [
+      1
+    ],
+    "daily_themes": [
+      "sila"
+    ]
+  },
+  "right_action": {
+    "suttas": [
+      "AN 8.39 — Abhisanda",
+      "AN 10.176"
+    ],
+    "monthly": [
+      1
+    ],
+    "daily_themes": [
+      "sila"
+    ]
+  },
+  "right_livelihood": {
+    "suttas": [
+      "AN 5.177 — Vaṇijjā",
+      "AN 8.54 — Dīghajāṇu"
+    ],
+    "monthly": [
+      1
+    ]
+  },
+  "right_effort": {
+    "suttas": [
+      "AN 4.13 — Padhāna",
+      "AN 6.55 — Soṇa",
+      "MN 20 — Vitakkasaṇṭhāna"
+    ],
+    "weekly": [],
+    "daily_themes": [
+      "effort"
+    ],
+    "prescriptions": [
+      "sloth",
+      "low_energy",
+      "restless"
+    ]
+  },
+  "right_mindfulness": {
+    "suttas": [
+      "MN 10 — Satipaṭṭhāna",
+      "MN 119 — Kāyagatāsati",
+      "SN 47.19 — Sedaka"
+    ],
+    "monthly": [
+      2
+    ],
+    "weekly": [
+      1
+    ],
+    "flows": [
+      "basic_meditation"
+    ]
+  },
+  "right_concentration": {
+    "suttas": [
+      "MN 36 — Mahāsaccaka",
+      "MN 119 — Kāyagatāsati",
+      "AN 5.28 — Pañcaṅgika"
+    ],
+    "flows": [
+      "jhana_intro"
+    ],
+    "prescriptions": [
+      "restless"
+    ]
+  }
+}

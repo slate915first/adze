@@ -1,0 +1,72 @@
+{
+  "sliders": [
+    {
+      "id": "energy",
+      "question": "Overall energy this month",
+      "labels": [
+        "Depleted",
+        "Vital"
+      ]
+    },
+    {
+      "id": "concentration",
+      "question": "Concentration / samadhi this month",
+      "labels": [
+        "Scattered",
+        "Collected"
+      ]
+    },
+    {
+      "id": "sila",
+      "question": "Ethical ground this month",
+      "labels": [
+        "Slipping",
+        "Steady"
+      ]
+    },
+    {
+      "id": "mettaWarmth",
+      "question": "Warmth and goodwill this month",
+      "labels": [
+        "Cold",
+        "Warm"
+      ]
+    },
+    {
+      "id": "restless",
+      "question": "Restlessness (average) this month",
+      "labels": [
+        "Settled",
+        "Agitated"
+      ]
+    },
+    {
+      "id": "doubt",
+      "question": "Doubt (average) this month",
+      "labels": [
+        "Confident",
+        "Uncertain"
+      ]
+    },
+    {
+      "id": "purpose",
+      "question": "Clarity of purpose this month",
+      "labels": [
+        "Lost",
+        "Clear"
+      ]
+    }
+  ],
+  "writings": [
+    {
+      "id": "month_strongest",
+      "question": "What was the strongest lesson or shift this month — good or hard?",
+      "hint": "Keep it short. One honest paragraph."
+    },
+    {
+      "id": "month_next",
+      "question": "What, if anything, do you want to adjust in your practice next month?",
+      "hint": "Small adjustments only. The path rewards steadiness, not reinvention."
+    }
+  ]
+}

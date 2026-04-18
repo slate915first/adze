@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adze — The Path of Awakening</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+
+<div id="app" class="max-w-6xl mx-auto p-4 md:p-6"></div>
+<div id="modal-root"></div>
+
+<!-- Floating beta-feedback button. Fixed bottom-right, always visible so a
+     tester can report without hunting for Settings. Short tap = feedback
+     menu; toggling feedback mode lets any on-screen element be tapped to
+     report it specifically. -->
+<button id="feedback-fab"
+        class="feedback-fab"
+        onclick="handleFeedbackFabTap()"
+        title="Tap: feedback menu · Shift-tap: toggle element mode">
+  💬
+</button>
+
+<!-- Banner that appears when element feedback mode is on. -->
+<div id="feedback-banner" class="feedback-banner" style="display:none">
+  <b>BETA FEEDBACK MODE</b> · tap any highlighted element to report what's wrong with it ·
+  <button onclick="setFeedbackMode(false)" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:2px 8px;border-radius:4px;margin-left:8px;cursor:pointer;font-size:11px;">exit</button>
+</div>
+
+<!-- ========================================================================
+     Script load order (classic scripts; all share global scope).
+
+     1. engine/ and config.js define primitives and hardcoded constants.
+     2. data/loaders.js exposes an async window.loadAllData() — it does not
+        run at script-parse time; bootstrap.js awaits it later.
+     3. systems/, render/, modals/ each define functions that close over
+        `state` and `view`. They're declared but not called at load time.
+     4. main.js defines render() and renderModal() dispatchers.
+     5. bootstrap.js is last: it awaits loadAllData(), initializes state/view,
+        and calls render(). The app comes alive here and only here.
+     ======================================================================== -->
+
+<!-- ─── Engine primitives ─── -->
+<script src="engine/i18n.js"></script>
+<script src="engine/srs.js"></script>
+<script src="engine/diagnostic.js"></script>
+<script src="engine/rank-gate.js"></script>
+
+<!-- ─── Static config (constants formerly inline in app.html) ─── -->
+<script src="config.js"></script>
+
+<!-- ─── Data loader (fetches JSON sidecars at boot) ─── -->
+<script src="data/loaders.js"></script>
+
+<!-- ─── Systems ─── -->
+<script src="systems/state.js"></script>
+<script src="systems/utils.js"></script>
+<script src="systems/scoring.js"></script>
+<script src="systems/reflection.js"></script>
+<script src="systems/diagnostics.js"></script>
+<script src="systems/hindrances.js"></script>
+<script src="systems/factors.js"></script>
+<script src="systems/armies.js"></script>
+<script src="systems/prescription.js"></script>
+<script src="systems/feedback.js"></script>
+<script src="systems/feedback-builder.js"></script>
+<script src="systems/quotes.js"></script>
+<script src="systems/trends.js"></script>
+<script src="systems/level-check.js"></script>
+<script src="systems/quest-lifecycle.js"></script>
+<script src="systems/shadow.js"></script>
+<script src="systems/habits-ui.js"></script>
+<script src="systems/preferences.js"></script>
+<script src="systems/abilities.js"></script>
+<script src="systems/setup-flow.js"></script>
+<script src="systems/suttas.js"></script>
+<script src="systems/rank-events.js"></script>
+<script src="systems/modal-openers.js"></script>
+<script src="systems/practice-history.js"></script>
+<script src="systems/liberation.js"></script>
+<script src="systems/sound.js"></script>
+<script src="systems/sit-timer.js"></script>
+<script src="systems/habits.js"></script>
+<script src="systems/sangha.js"></script>
+<script src="systems/export-import.js"></script>
+<script src="systems/foundations.js"></script>
+<script src="systems/guided-flow.js"></script>
+<script src="systems/path.js"></script>
+<script src="systems/evening-close.js"></script>
+<script src="systems/tisikkha.js"></script>
+<script src="systems/wisdom.js"></script>
+<script src="systems/navigation.js"></script>
+
+<!-- ─── Render ─── -->
+<script src="render/helpers.js"></script>
+<script src="render/setup.js"></script>
+<script src="render/diagnostic.js"></script>
+<script src="render/welcome.js"></script>
+<script src="render/header.js"></script>
+<script src="render/today.js"></script>
+<script src="render/review.js"></script>
+<script src="render/study.js"></script>
+<script src="render/wisdom.js"></script>
+<script src="render/quest.js"></script>
+<script src="render/path.js"></script>
+<script src="render/sangha.js"></script>
+<script src="render/reflection.js"></script>
+<script src="render/habit-manager.js"></script>
+<script src="render/settings.js"></script>
+
+<!-- ─── Modals ─── -->
+<script src="modals/meditation-timer.js"></script>
+<script src="modals/evening-close.js"></script>
+<script src="modals/path-viewer.js"></script>
+<script src="modals/rank-announcement.js"></script>
+<script src="modals/teaching-detail.js"></script>
+<script src="modals/rules-card.js"></script>
+<script src="modals/sutta-study.js"></script>
+<script src="modals/sutta-view.js"></script>
+<script src="modals/feedback.js"></script>
+<script src="modals/privacy-detail.js"></script>
+<script src="modals/rank-intro.js"></script>
+<script src="modals/liberation-offer.js"></script>
+<script src="modals/shadow-explainer.js"></script>
+<script src="modals/tisikkha-explainer.js"></script>
+<script src="modals/resume-quest.js"></script>
+<script src="modals/pause-quest.js"></script>
+<script src="modals/sutta-subcategory.js"></script>
+<script src="modals/struggle-suggestion.js"></script>
+<script src="modals/oneline-journal.js"></script>
+<script src="modals/setback-recovery.js"></script>
+<script src="modals/first-guidance.js"></script>
+<script src="modals/monthly-reflection.js"></script>
+<script src="modals/add-habit.js"></script>
+<script src="modals/defeat.js"></script>
+<script src="modals/element-feedback.js"></script>
+<script src="modals/feedback-fab-menu.js"></script>
+<script src="modals/victory.js"></script>
+<script src="modals/evening-reflection.js"></script>
+
+<!-- ─── Top-level dispatchers (no auto-init) ─── -->
+<script src="main.js"></script>
+
+<!-- ─── Stage 2: Supabase auth + client-side E2E encryption ─── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="systems/crypto.js"></script>
+<script src="systems/auth.js"></script>
+<script src="systems/passphrase.js"></script>
+<script src="modals/auth.js"></script>
+
+<!-- ─── Bootstrap: awaits data, wires state, renders ─── -->
+<script src="bootstrap.js"></script>
+
+</body>
+</html>

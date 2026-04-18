@@ -1,0 +1,91 @@
+[
+  {
+    "id": 0,
+    "name": "The Going Forth",
+    "subtitle": "Pabbajja",
+    "suttaRef": "MN 26",
+    "icon": "🚪",
+    "description": "You see, as the Bodhisatta saw, that the household life is dusty and constraining. Something in you turns toward freedom. The first step is the hardest — establishing one true practice and showing up for it daily.",
+    "armies": [
+      1
+    ],
+    "unlocks": [
+      "Daily sit (10 min)"
+    ],
+    "minDays": 7,
+    "requiredKeyHabitDays": 5
+  },
+  {
+    "id": 1,
+    "name": "The Forest of Fear",
+    "subtitle": "Bhayabherava",
+    "suttaRef": "MN 4",
+    "icon": "🌲",
+    "description": "The Bodhisatta went to remote forests where fear and dread arose in the night. He chose to sit through the fear instead of running from it. As your practice deepens, the easy days end. The shadows grow restless. This is normal. This is the path.",
+    "armies": [
+      2,
+      6
+    ],
+    "unlocks": [
+      "Body scan (5 min)",
+      "Note feeling-tone"
+    ],
+    "minDays": 14,
+    "requiredKeyHabitDays": 10
+  },
+  {
+    "id": 2,
+    "name": "The Two Teachers",
+    "subtitle": "Āḷāra and Uddaka",
+    "suttaRef": "MN 26",
+    "icon": "🧘",
+    "description": "The Bodhisatta studied with the two greatest meditation teachers of his time. He mastered what they taught — and found it was not yet liberation. You will face the temptation of false summits: techniques that feel like progress but stop short. Keep walking.",
+    "armies": [
+      3,
+      5,
+      7
+    ],
+    "unlocks": [
+      "Walking meditation",
+      "Mindfulness of mental states"
+    ],
+    "minDays": 21,
+    "requiredKeyHabitDays": 15
+  },
+  {
+    "id": 3,
+    "name": "The Middle Way",
+    "subtitle": "Majjhimā Paṭipadā",
+    "suttaRef": "MN 36, MN 118",
+    "icon": "☯️",
+    "description": "After years of extreme asceticism, the Bodhisatta nearly died — and remembered the natural calm under the rose-apple tree as a child. He took food. He found the middle way: neither indulgence nor harshness. The sixteen steps of ānāpānasati open before you.",
+    "armies": [
+      4,
+      8
+    ],
+    "unlocks": [
+      "Ānāpānasati (16 steps)",
+      "Loving-kindness practice"
+    ],
+    "minDays": 28,
+    "requiredKeyHabitDays": 20
+  },
+  {
+    "id": 4,
+    "name": "Beneath the Bodhi Tree",
+    "subtitle": "Bodhirukkha",
+    "suttaRef": "MN 26, Sn 3.2",
+    "icon": "🌳",
+    "description": "The Bodhisatta sat down beneath the Bodhi tree and made his vow: \"Let only skin, sinew, and bone remain. Let the flesh and blood dry up. I will not rise from this seat until I have reached awakening.\" Mara's full army arrives. The final test. Hold the seat.",
+    "armies": [
+      9,
+      10
+    ],
+    "unlocks": [
+      "Full sit (45 min)",
+      "The four foundations of mindfulness"
+    ],
+    "minDays": 21,
+    "requiredKeyHabitDays": 18
+  }
+]

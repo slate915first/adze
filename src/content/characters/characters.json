@@ -1,0 +1,90 @@
+{
+  "ananda": {
+    "name": "Ānanda",
+    "title": "The Beloved Attendant",
+    "icon": "🪷",
+    "color": "#a78bfa",
+    "bio": "The Buddha's cousin and personal attendant for 25 years. Known for memorizing every discourse the Buddha gave. Embodiment of devoted service and unbroken attention.",
+    "ability": "Perfect Memory",
+    "abilityDesc": "Ānanda remembered every teaching the Buddha gave. As a player with this gift, when your quest advances a stage, you collect two wisdom scrolls instead of one — the normal reward plus an extra teaching on the same theme.",
+    "abilityEffect": "+1 extra wisdom scroll per stage",
+    "suttaRef": "SN 22.83"
+  },
+  "sariputta": {
+    "name": "Sāriputta",
+    "title": "General of the Dhamma",
+    "icon": "⚖️",
+    "color": "#3b82f6",
+    "bio": "The Buddha's chief disciple in wisdom. Could analyze any teaching to its root. Foremost in understanding the deepest points of dhamma.",
+    "ability": "Analytical Insight",
+    "abilityDesc": "Sāriputta turned every setback into understanding. Once per week, if you miss a key habit, you can write a short journal entry about what blocked you — and the Shadow does not grow from that miss. The loss becomes a teaching.",
+    "abilityEffect": "1×/week: journal a miss instead of Shadow damage",
+    "suttaRef": "AN 1.189"
+  },
+  "moggallana": {
+    "name": "Mahā Moggallāna",
+    "title": "Master of Powers",
+    "icon": "⚡",
+    "color": "#fbbf24",
+    "bio": "Sāriputta's closest friend and the Buddha's chief disciple in psychic power. Could see across realms and reach those in trouble.",
+    "ability": "Reach the Suffering",
+    "abilityDesc": "Moggallāna could reach anyone in trouble, anywhere. When a teammate is struggling and their personal Shadow is rising, you can transfer 10 of your own daily points to them as a rescue — reducing their Shadow and keeping their streak alive.",
+    "abilityEffect": "Gift 10 pts to a teammate to reduce their Shadow",
+    "suttaRef": "AN 1.190"
+  },
+  "mahakassapa": {
+    "name": "Mahā Kassapa",
+    "title": "Foremost in Ascetic Practice",
+    "icon": "🌑",
+    "color": "#94a3b8",
+    "bio": "The most rigorous of the disciples. Embodied the dhutaṅga practices — austerity, simplicity, contentment with little. Led the First Council after the Buddha's death.",
+    "ability": "Unshakeable Discipline",
+    "abilityDesc": "Kassapa was immovable in discipline. As a player with this gift, the Shadow has a harder time growing against you — your total Shadow level is reduced by 3 points at all times, making Mara slower to reach the danger zone.",
+    "abilityEffect": "Shadow level permanently -3",
+    "suttaRef": "SN 16.5"
+  },
+  "anuruddha": {
+    "name": "Anuruddha",
+    "title": "Divine Eye",
+    "icon": "👁️",
+    "color": "#06b6d4",
+    "bio": "The Buddha's cousin. Foremost in clairvoyance. Famous for once falling asleep during a teaching, vowing never to sleep again, and going blind from the effort — then developing the divine eye instead.",
+    "ability": "See What Comes",
+    "abilityDesc": "Anuruddha could see far ahead with his inner eye. As a player with this gift, you can preview the next stage's Māra armies before they arrive, so you know what challenges are coming and can prepare.",
+    "abilityEffect": "Preview next stage's armies in advance",
+    "suttaRef": "AN 1.192"
+  },
+  "upali": {
+    "name": "Upāli",
+    "title": "Master of Discipline",
+    "icon": "📿",
+    "color": "#10b981",
+    "bio": "Born a barber, became foremost in Vinaya — the monastic discipline. Memorized the entire code of training rules. Proof that the path is open to anyone willing to walk it.",
+    "ability": "Hold the Form",
+    "abilityDesc": "Upāli held the training rules with perfect steadiness. As a player with this gift, one missed day per week does not break your habit streaks — the streak continues as if the missed day never happened.",
+    "abilityEffect": "1 missed day/week doesn't break streaks",
+    "suttaRef": "AN 1.196"
+  },
+  "mahapajapati": {
+    "name": "Mahāpajāpatī",
+    "title": "First of the Bhikkhunīs",
+    "icon": "🌸",
+    "color": "#ec4899",
+    "bio": "The Buddha's aunt and foster mother. The first woman ordained, founder of the bhikkhunī sangha. Walked from Kapilavatthu to Vesāli with shaved head and bare feet to make the path open to women.",
+    "ability": "Mother's Strength",
+    "abilityDesc": "Mahāpajāpatī held the entire sangha up when times were hard. As a player with this gift, when the team Shadow rises above 60% (the danger zone), every teammate gains +20% points from all habits — helping the sangha recover together.",
+    "abilityEffect": "When team Shadow >60%: all teammates +20% points",
+    "suttaRef": "AN 8.51"
+  },
+  "khema": {
+    "name": "Khemā",
+    "title": "Foremost in Wisdom",
+    "icon": "💎",
+    "color": "#8b5cf6",
+    "bio": "A queen of remarkable beauty who once feared meeting the Buddha because she clung to her appearance. After meeting him, she awakened. Became the foremost in wisdom among the bhikkhunīs.",
+    "ability": "Penetrate Illusion",
+    "abilityDesc": "Khemā saw through Māra's deceptions with pure wisdom. As a player with this gift, once per stage you can instantly dismiss one Māra army challenge without having to complete its 3-day test — your seeing alone defeats it.",
+    "abilityEffect": "1×/stage: instantly dismiss one Māra army",
+    "suttaRef": "AN 1.236"
+  }
+}
