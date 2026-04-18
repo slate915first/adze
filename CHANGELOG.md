@@ -4,6 +4,11 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.1.1] — 2026-04-18 · Hotfix — recommendation crash for beginners
+
+### Fixed
+- `engine/diagnostic.js` called `.trim()` on `diag.physicalConcerns` and `diag.concerns`, which became arrays in v15.1 when those questions switched from textareas to chips. Any beginner ("Never sat" / "A little") clicking "See recommendation" silently crashed in `computeRecommendation`. Now handles arrays + the optional "Other" free-text + legacy string format.
+
 ## [15.1] — 2026-04-18 · Closed beta polish
 
 ### Added

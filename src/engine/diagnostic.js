@@ -269,10 +269,21 @@ function computeRecommendation(diag) {
     if (diag.posture && postureAdvice[diag.posture]) {
       beginnerCare.posture = postureAdvice[diag.posture];
     }
-    if (diag.physicalConcerns && diag.physicalConcerns.trim().length > 0) {
+    // v15.0 — physicalConcerns and concerns switched from textarea (string)
+    // to chips (array). Pre-v15.0 saved diags may still hold strings; handle
+    // both shapes so the engine doesn't crash mid-recommendation.
+    const hasChipsOrOther = (chipsField, otherField) => {
+      const chips = diag[chipsField];
+      const other = diag[otherField];
+      if (Array.isArray(chips) && chips.filter(k => k !== 'none').length > 0) return true;
+      if (typeof chips === 'string' && chips.trim().length > 0) return true; // legacy
+      if (typeof other === 'string' && other.trim().length > 0) return true;
+      return false;
+    };
+    if (hasChipsOrOther('physicalConcerns', 'physicalConcernsOther')) {
       beginnerCare.physicalNote = 'The body you mentioned matters. Adjust any posture to keep the pain manageable — if a sit makes pain worse, end the sit. The app is aware of this.';
     }
-    if (diag.concerns && diag.concerns.trim().length > 0) {
+    if (hasChipsOrOther('concerns', 'concernsOther')) {
       beginnerCare.reassurance = 'What you named is common. Thoughts do not stop — they are what the mind does. The practice is not to stop them but to notice when attention has left the breath and return. That return, repeated, is the meditation.';
     }
   }
