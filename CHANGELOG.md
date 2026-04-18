@@ -4,6 +4,15 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11.1] — 2026-04-19 · HOTFIX — fresh users land in passphrase-setup, not unlock
+
+### Fixed
+- Bootstrap used to unconditionally open the **passphrase-unlock** modal for any authed-but-locked session. For a brand-new user who had just confirmed their email or entered their first magic code, there was no remote ciphertext row to unlock — so the modal displayed "no encrypted data on server" and looked broken. First impression: failed.
+- Now async-checks `passphraseRemoteExists()` at boot and routes: **row exists → unlock** (returning user on a new device), **no row → setup** (first-time user). The user's first passphrase interaction matches what they actually need.
+
+### Also needs from you (one-time Supabase setting)
+- **Supabase dashboard → Authentication → Providers → Email → uncheck "Confirm email" → Save.** With confirm-email on, `signInWithOtp` sends the "Confirm signup" template (clickable link) for new users instead of the "Magic Link" template (6-digit code). The allowlist already gates access — email confirmation is redundant for the closed beta. With it off, every sign-in — first time or returning — uses the magic-link template with the 6-digit code, consistently.
+
 ## [15.11] — 2026-04-19 · Magic-link sign-in + allowlist gating
 
 ### Added

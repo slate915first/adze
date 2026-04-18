@@ -82,7 +82,26 @@ async function boot() {
   } else if (typeof authGetMode === 'function' && authGetMode() === 'authed'
       && !(typeof passphraseIsUnlocked === 'function' && passphraseIsUnlocked())
       && (!state || !state.setupComplete)) {
-    view.modal = { type: 'auth', step: 'passphrase-unlock', busy: false, error: null, consent: false, reset: false };
+    // v15.11.1 — Route by whether a remote ciphertext row exists:
+    //   - Row exists → returning user on a new device/clean browser:
+    //     passphrase-unlock (they have data to decrypt).
+    //   - No row → brand-new user who just signed in for the first time:
+    //     passphrase-setup (they're creating, not unlocking).
+    // Previously we always opened unlock, which showed "no encrypted data
+    // on server" errors to fresh users who hadn't set up a passphrase yet.
+    let hasRemoteRow = false;
+    try {
+      if (typeof passphraseRemoteExists === 'function') {
+        hasRemoteRow = await passphraseRemoteExists();
+      }
+    } catch (e) {
+      console.warn('Adze passphrase-remote-exists check skipped:', e);
+    }
+    view.modal = {
+      type: 'auth',
+      step: hasRemoteRow ? 'passphrase-unlock' : 'passphrase-setup',
+      busy: false, error: null, consent: false, reset: false
+    };
   }
 
   // 5. First-frame setup. Mirrors the INIT block that used to live at the
