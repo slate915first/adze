@@ -29,11 +29,22 @@ function renderWelcome() {
           </div>
         `}
 
-        <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="startSetup()">${t('welcome.begin_button')}</button>
-
-        <button class="mt-4 btn btn-ghost text-base px-8 py-2 w-full max-w-xs" onclick="openAuth('magic-request')">
-          Sign in with email
-        </button>
+        ${publicSignup
+          ? `
+            <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="startSetup()">${t('welcome.begin_button')}</button>
+            <button class="mt-4 btn btn-ghost text-base px-8 py-2 w-full max-w-xs" onclick="openAuth('magic-request')">
+              Sign in with email
+            </button>
+          `
+          : `
+            <!-- v15.11 — closed beta: magic-link sign-in is the only entry.
+                 Anonymous "Begin" reappears automatically when
+                 ADZE_PUBLIC_SIGNUP_ENABLED flips to true. -->
+            <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="openAuth('magic-request')">
+              ✉️  Sign in with email
+            </button>
+          `
+        }
 
         ${publicSignup ? '' : `
           <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
