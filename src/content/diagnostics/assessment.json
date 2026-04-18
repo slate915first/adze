@@ -119,10 +119,22 @@
   "phaseB_beginner": [
     {
       "id": "stoppedBefore",
-      "type": "textarea",
+      "type": "chips",
       "question": "Optional — what has stopped a daily practice from sticking before?",
-      "hint": "You can skip this. One or two lines — honest, not polished. If anything comes to mind, it helps the engine set the bar realistically.",
-      "placeholder": "e.g. \"I forget in the morning\" or \"10 minutes always feels too long\""
+      "hint": "Pick any that feel familiar. None of this is wrong; the engine just uses what you recognize to shape your early days.",
+      "chips": [
+        { "key": "forget",      "label": "Forgetting to do it" },
+        { "key": "no_time",     "label": "No time / busy life" },
+        { "key": "doubt_works", "label": "Doubted it was working" },
+        { "key": "dry_boring",  "label": "Felt dry, boring" },
+        { "key": "missed_day",  "label": "Fell off after missing a day" },
+        { "key": "discomfort",  "label": "Physical discomfort" },
+        { "key": "busy_mind",   "label": "Mind too busy, couldn't settle" },
+        { "key": "emotions",    "label": "Uncomfortable feelings came up" },
+        { "key": "never_started","label": "Never really started" }
+      ],
+      "hasOther": true,
+      "otherPlaceholder": "Something else — one line, stored for your own reflection"
     },
     {
       "id": "realisticMinutes",
@@ -215,17 +227,40 @@
     },
     {
       "id": "physicalConcerns",
-      "type": "textarea",
-      "question": "Optional — any physical concerns to be aware of? Back, knees, pain, sleep?",
-      "hint": "You can skip this. The engine will soften advice around anything you mention — no posture suggestion that makes an existing pain worse.",
-      "placeholder": "e.g. \"bad knees, can't sit cross-legged\" or \"chronic back pain\""
+      "type": "chips",
+      "question": "Optional — any physical concerns to be aware of?",
+      "hint": "Pick any that apply. The engine uses these to soften posture and duration advice — nothing that would make an existing pain worse.",
+      "chips": [
+        { "key": "back",         "label": "Back pain" },
+        { "key": "knees",        "label": "Knees" },
+        { "key": "hips",         "label": "Hips / sciatica" },
+        { "key": "shoulders",    "label": "Shoulders / neck" },
+        { "key": "chronic_pain", "label": "Chronic / persistent pain" },
+        { "key": "sleep_energy", "label": "Sleep issues / low energy" },
+        { "key": "injury",       "label": "Recovering from injury" },
+        { "key": "none",         "label": "No concerns" }
+      ],
+      "hasOther": true,
+      "otherPlaceholder": "Something specific to your body — stays on this device"
     },
     {
       "id": "concerns",
-      "type": "textarea",
+      "type": "chips",
       "question": "Optional — anything about starting a meditation practice that makes you nervous or unsure?",
-      "hint": "You can skip this. Nothing is too small or too much. The reassurance on your first screens will be shaped by what you name here.",
-      "placeholder": "e.g. \"I can't stop thinking\" or \"I've tried and failed before\""
+      "hint": "Tick whatever rings true. The reassurance on your first screens will be shaped by what you name here.",
+      "chips": [
+        { "key": "doing_right",    "label": "Am I doing it right?" },
+        { "key": "thoughts_stop",  "label": "What if my thoughts won't stop?" },
+        { "key": "fall_asleep",    "label": "Falling asleep during practice" },
+        { "key": "time_commit",    "label": "Time commitment" },
+        { "key": "religious",      "label": "Is this religious / am I committing to a path?" },
+        { "key": "emotions_up",    "label": "Emotions that might come up" },
+        { "key": "missing_days",   "label": "Missing days and feeling like a failure" },
+        { "key": "not_spiritual",  "label": "Not being \"spiritual enough\"" },
+        { "key": "none",           "label": "None really" }
+      ],
+      "hasOther": true,
+      "otherPlaceholder": "Something else on your mind — only you will see this"
     }
   ],
   "phaseB_experienced": [

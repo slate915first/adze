@@ -308,6 +308,43 @@ function renderDiagnosticPhaseB() {
             </div>
           `;
         }
+        if (q.type === 'chips') {
+          // Multi-select chip grid. Selections stored as array in diag[q.id];
+          // optional free-text "other" stored separately in diag[q.id + 'Other'].
+          // Chip taxonomy + diagnostic interpretation lives in:
+          //   src/systems/chip-interpretation.js
+          //   docs/CHIP-INTERPRETATION.md
+          const selected = Array.isArray(diag[q.id]) ? diag[q.id] : [];
+          const otherVal = diag[q.id + 'Other'] || '';
+          const showOther = !!q.hasOther && (selected.length > 0 || otherVal.length > 0);
+          return `
+            <div class="parchment rounded-xl p-4 mb-3">
+              <div class="text-sm font-bold text-amber-100 mb-1">${q.question}</div>
+              <div class="text-xs text-amber-100/55 italic mb-3">${q.hint || ''}</div>
+              <div class="flex flex-wrap gap-2">
+                ${q.chips.map(c => {
+                  const sel = selected.includes(c.key);
+                  return `
+                    <button type="button"
+                      onclick="toggleDiagnosticBChip('${q.id}', '${c.key}')"
+                      class="px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${sel ? 'bg-amber-400/20 border-amber-400/70 text-amber-100' : 'bg-amber-950/20 border-amber-800/40 text-amber-100/75 hover:border-amber-700/60'}">
+                      ${sel ? '✓ ' : ''}${c.label}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+              ${q.hasOther ? `
+                <div class="mt-3 ${showOther ? '' : 'opacity-60'}">
+                  <label class="text-[11px] uppercase tracking-wider text-amber-300/70 block mb-1">Other (optional, stored only — not interpreted)</label>
+                  <input type="text" placeholder="${q.otherPlaceholder || ''}"
+                    class="w-full bg-amber-950/30 border border-amber-900/40 rounded p-2 text-sm text-amber-100"
+                    value="${(otherVal || '').replace(/"/g, '&quot;')}"
+                    oninput="setDiagnosticB('${q.id}Other', this.value)"/>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }
         return '';
       }).join('')}
 
@@ -327,6 +364,26 @@ function toggleDiagnosticBMulti(key, optionKey) {
   if (idx >= 0) diag[key].splice(idx, 1);
   else diag[key].push(optionKey);
   renderModal();
+}
+
+// v15.0 — toggle a chip (setup Phase B: stoppedBefore / physicalConcerns /
+// concerns). Updates state + repaints just the clicked chip's styling in
+// place, so the "Other" free-text input keeps its value and caret position.
+function toggleDiagnosticBChip(key, chipKey) {
+  const diag = view.setupData.diagnostic;
+  if (!Array.isArray(diag[key])) diag[key] = [];
+  const idx = diag[key].indexOf(chipKey);
+  const willSelect = idx < 0;
+  if (willSelect) diag[key].push(chipKey);
+  else            diag[key].splice(idx, 1);
+  // Find the clicked chip button and flip its classes + leading "✓".
+  const btn = document.querySelector(`button[onclick="toggleDiagnosticBChip('${key}', '${chipKey}')"]`);
+  if (btn) {
+    const sel = willSelect;
+    btn.className = `px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${sel ? 'bg-amber-400/20 border-amber-400/70 text-amber-100' : 'bg-amber-950/20 border-amber-800/40 text-amber-100/75 hover:border-amber-700/60'}`;
+    const label = btn.textContent.replace(/^✓\s*/, '');
+    btn.textContent = sel ? '✓ ' + label : label;
+  }
 }
 
 function renderDiagnosticPhaseC() {

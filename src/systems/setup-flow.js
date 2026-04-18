@@ -147,6 +147,12 @@ function setupToggleMulti(key, optionId) {
 }
 
 function computeAndShowRecommendation() {
+  // Interpret chip selections (Phase 2 optional questions) into diagnostic
+  // factor bumps + practical flags. See docs/CHIP-INTERPRETATION.md for the
+  // mapping rationale. Pure, local, deterministic — no network, no LLM.
+  if (typeof interpretChipSelections === 'function') {
+    view.setupData.chipInterpretation = interpretChipSelections(view.setupData.diagnostic);
+  }
   view.setupData.recommendation = computeRecommendation(view.setupData.diagnostic);
   view.setupStep = 6;
   view._resetModalScroll = true;
@@ -605,7 +611,15 @@ function finishSetup() {
             currentEdge: diag.currentEdge,
             wantFromTool: diag.wantFromTool,
             stoppedBefore: diag.stoppedBefore,
-            realisticMinutes: diag.realisticMinutes
+            stoppedBeforeOther: diag.stoppedBeforeOther,
+            physicalConcerns: diag.physicalConcerns,
+            physicalConcernsOther: diag.physicalConcernsOther,
+            concerns: diag.concerns,
+            concernsOther: diag.concernsOther,
+            realisticMinutes: diag.realisticMinutes,
+            // Chip interpretation (v15.0): factor bumps + flags derived from
+            // Phase 2 chip selections. See docs/CHIP-INTERPRETATION.md.
+            chipInterpretation: view.setupData.chipInterpretation || null
           }
         };
         // Also persist the recommendation so it can be shown later / referenced
