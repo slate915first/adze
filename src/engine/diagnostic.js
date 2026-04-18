@@ -31,7 +31,13 @@ const EIGHTFOLD_NAMES = {
 
 const EIGHTFOLD_CORRECT = ['view', 'intention', 'speech', 'action', 'livelihood', 'effort', 'mindfulness', 'concentration'];
 
-function computeRecommendation(diag) {
+function computeRecommendation(diag, chipInterp) {
+  // v15.2 — chipInterp is the result of interpretChipSelections(diag) from
+  // systems/chip-interpretation.js. Caller may or may not pass it; engine
+  // tolerates both. Use chipInterp.flags to enrich beginnerCare copy below.
+  const flags = (chipInterp && Array.isArray(chipInterp.flags)) ? chipInterp.flags : [];
+  const hasFlag = (f) => flags.indexOf(f) >= 0;
+
   const exp = diag.experience || 'none';
   let level, morningMin, eveningMin, rationale, levelDisplay;
 
@@ -281,10 +287,48 @@ function computeRecommendation(diag) {
       return false;
     };
     if (hasChipsOrOther('physicalConcerns', 'physicalConcernsOther')) {
-      beginnerCare.physicalNote = 'The body you mentioned matters. Adjust any posture to keep the pain manageable — if a sit makes pain worse, end the sit. The app is aware of this.';
+      // Generic intro — true for any physical concern.
+      const lines = ['The body you mentioned matters. Adjust any posture to keep the pain manageable — if a sit makes pain worse, end the sit. The app is aware of this.'];
+      // v15.2 — chip-flag-driven specifics. Each flag adds one short, targeted
+      // line. Mapped from systems/chip-interpretation.js + docs/CHIP-INTERPRETATION.md.
+      if (hasFlag('posture.back')) {
+        lines.push('<b>Back:</b> a chair with a small lumbar pillow often beats a cushion. Spine long but not stiff; let the support do its job.');
+      }
+      if (hasFlag('posture.lower_body')) {
+        lines.push('<b>Knees / hips:</b> a chair, a bench, or even lying down — all honorable. Comfort first; the Buddha sat under a tree, not on a cushion.');
+      }
+      if (hasFlag('posture.upper_body')) {
+        lines.push('<b>Shoulders / neck:</b> drop the shoulders away from the ears at the start of every sit. Chin slightly tucked. The mind eases when the upper body unclenches.');
+      }
+      if (hasFlag('posture.general')) {
+        lines.push('<b>Chronic pain:</b> walking meditation may serve you better than seated, especially in the early weeks. The whole path is available without a single seated minute.');
+      }
+      if (hasFlag('bias.morning_sits')) {
+        lines.push('<b>Energy / sleep:</b> morning sits before fatigue settles tend to land more cleanly than evening sits when sleep has been thin.');
+      }
+      if (hasFlag('posture.injury_temporary')) {
+        lines.push('<b>While the injury heals:</b> keep sits short and gentle. The practice will be there when the body is.');
+      }
+      beginnerCare.physicalNote = lines.length === 1 ? lines[0] : lines[0] + '<br><br>' + lines.slice(1).join('<br>');
     }
     if (hasChipsOrOther('concerns', 'concernsOther')) {
-      beginnerCare.reassurance = 'What you named is common. Thoughts do not stop — they are what the mind does. The practice is not to stop them but to notice when attention has left the breath and return. That return, repeated, is the meditation.';
+      const lines = ['What you named is common. Thoughts do not stop — they are what the mind does. The practice is not to stop them but to notice when attention has left the breath and return. That return, repeated, is the meditation.'];
+      if (hasFlag('misconception.thoughts')) {
+        lines.push('<b>On thoughts not stopping:</b> the instruction is not "no thoughts" — it is "notice when attention has wandered, return." That return is the meditation.');
+      }
+      if (hasFlag('framing.secular_preferred')) {
+        lines.push('<b>On the framing:</b> nothing here requires belief. The Buddha said come and see. Test the practice; keep what works.');
+      }
+      if (hasFlag('friction.perfectionism')) {
+        lines.push('<b>On missing days:</b> a five-minute thread that holds for years is stronger than any seven-day intensive that breaks. Permission to miss is part of the path.');
+      }
+      if (hasFlag('self_image.nervous')) {
+        lines.push('<b>On "spiritual enough":</b> there is no such thing to be. The early texts describe the Buddha\'s own students with all their fears and failures. You are exactly the right kind of person for this practice.');
+      }
+      if (hasFlag('friction.time')) {
+        lines.push('<b>On time:</b> shorter sits done daily build more momentum than longer sits done occasionally. Five minutes counts as a real sit.');
+      }
+      beginnerCare.reassurance = lines.length === 1 ? lines[0] : lines[0] + '<br><br>' + lines.slice(1).join('<br>');
     }
   }
 

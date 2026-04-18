@@ -4,6 +4,26 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.2] — 2026-04-18 · Chip flags shape recommendation copy
+
+### Added
+- `engine/diagnostic.js` `computeRecommendation` now accepts a `chipInterp` second argument (the result of `interpretChipSelections`). When the user selected a chip in Phase 2 with a known mapping, the beginnerCare copy on the recommendation card now includes a targeted line:
+  - **`posture.back`** → "Back: a chair with a small lumbar pillow often beats a cushion…"
+  - **`posture.lower_body`** → "Knees / hips: a chair, a bench, or even lying down — all honorable…"
+  - **`posture.upper_body`** → "Shoulders / neck: drop the shoulders away from the ears…"
+  - **`posture.general`** → "Chronic pain: walking meditation may serve you better than seated…"
+  - **`bias.morning_sits`** → "Energy / sleep: morning sits before fatigue settles tend to land more cleanly…"
+  - **`posture.injury_temporary`** → "While the injury heals: keep sits short and gentle…"
+  - **`misconception.thoughts`** → "On thoughts not stopping: the instruction is not 'no thoughts'…"
+  - **`framing.secular_preferred`** → "On the framing: nothing here requires belief…"
+  - **`friction.perfectionism`** → "On missing days: a five-minute thread that holds for years is stronger…"
+  - **`self_image.nervous`** → "On 'spiritual enough': there is no such thing to be…"
+  - **`friction.time`** → "On time: shorter sits done daily build more momentum…"
+- The full chip → flag → copy chain is now end-to-end. Tester picks "Knees" → engine knows `posture.lower_body` → recommendation card mentions chair / bench / lying-down. No more "stored but never used" flags.
+
+### Changed
+- Both call sites of `computeRecommendation` (in `setup-flow.js` and `render/setup.js`) now pass `chipInterpretation`. The render-side path computes it lazily if missing.
+
 ## [15.1.1] — 2026-04-18 · Hotfix — recommendation crash for beginners
 
 ### Fixed

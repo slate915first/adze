@@ -226,7 +226,12 @@ function computeAndShowRecommendation() {
   if (typeof interpretChipSelections === 'function') {
     view.setupData.chipInterpretation = interpretChipSelections(view.setupData.diagnostic);
   }
-  view.setupData.recommendation = computeRecommendation(view.setupData.diagnostic);
+  // v15.2 — pass chipInterpretation so the engine can enrich beginnerCare
+  // copy with chip-flag-specific lines (back / knees / thoughts-stop / etc.).
+  view.setupData.recommendation = computeRecommendation(
+    view.setupData.diagnostic,
+    view.setupData.chipInterpretation
+  );
   view.setupStep = 6;
   view._resetModalScroll = true;
   renderModal();

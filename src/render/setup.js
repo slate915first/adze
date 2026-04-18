@@ -503,8 +503,13 @@ function renderRecommendationCard() {
   const diag = view.setupData.diagnostic;
   const rec = view.setupData.recommendation;
   if (!rec) {
-    // Compute on the fly if somehow missing
-    view.setupData.recommendation = computeRecommendation(diag);
+    // Compute on the fly if somehow missing. v15.2 — pass chipInterpretation
+    // (computed lazily here if not already present) so beginnerCare copy
+    // matches what computeAndShowRecommendation would have produced.
+    if (!view.setupData.chipInterpretation && typeof interpretChipSelections === 'function') {
+      view.setupData.chipInterpretation = interpretChipSelections(diag);
+    }
+    view.setupData.recommendation = computeRecommendation(diag, view.setupData.chipInterpretation);
     return renderRecommendationCard();
   }
   const r = rec;
