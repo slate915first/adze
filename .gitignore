@@ -4,6 +4,8 @@
 *.swp
 *.swo
 node_modules/
+coverage/
+.vitest-cache/
 .env
 .env.local
 
