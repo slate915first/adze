@@ -1,0 +1,27 @@
+{
+  "name": "Adze — The Path of Awakening",
+  "short_name": "Adze",
+  "description": "A meditation companion rooted in the Theravāda tradition. End-to-end encrypted.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0612",
+  "theme_color": "#1a1530",
+  "lang": "en",
+  "categories": ["lifestyle", "health"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

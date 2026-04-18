@@ -136,3 +136,18 @@ boot().catch(err => {
       '</div>';
   }
 });
+
+// ---------------------------------------------------------------------------
+// v15.4 — Service Worker registration. Makes Adze installable + offline-
+// capable. Skipped when the page is loaded via file:// (registration would
+// throw) and when running on localhost without HTTPS in some browsers.
+// Registration failure is non-fatal: the app still works, just without
+// offline / install affordances.
+// ---------------------------------------------------------------------------
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((err) => {
+      console.warn('Adze service worker registration failed:', err && err.message);
+    });
+  });
+}
