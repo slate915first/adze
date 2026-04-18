@@ -17,13 +17,44 @@ function ensureAudioCtx() {
   return _audioCtx;
 }
 
+// v15.4 — bell variants can specify EITHER a `play(ctx)` synth function
+// (oscillator-based, kept as fallback) OR a `sample` path to a real
+// recorded MP3. _playSampleBell uses an HTMLAudioElement so we don't
+// have to decode through Web Audio (faster start, simpler error path).
+// Cached per-variant so previewing isn't a fresh fetch each time.
+const _bellAudioCache = {};
+function _playSampleBell(samplePath) {
+  let audio = _bellAudioCache[samplePath];
+  if (!audio) {
+    audio = new Audio(samplePath);
+    audio.preload = 'auto';
+    _bellAudioCache[samplePath] = audio;
+  }
+  try {
+    audio.currentTime = 0;
+    const playPromise = audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
+  } catch (e) { /* fail silently */ }
+}
+
+function _playVariant(variant, fallback) {
+  const v = BELL_VARIANTS[variant] || BELL_VARIANTS[fallback];
+  if (!v) return;
+  if (v.sample) {
+    _playSampleBell(v.sample);
+    return;
+  }
+  if (typeof v.play === 'function') {
+    const ctx = ensureAudioCtx();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
+    try { v.play(ctx); } catch (e) { /* fail silently */ }
+  }
+}
+
 function playBell() {
-  const ctx = ensureAudioCtx();
-  if (!ctx) return;
-  if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
   const variant = state?.prefs?.bellSound || 'warm';
-  const fn = BELL_VARIANTS[variant]?.play || BELL_VARIANTS.warm.play;
-  try { fn(ctx); } catch(e) { /* fail silently */ }
+  _playVariant(variant, 'warm');
 }
 
 function setBellSound(variant) {
@@ -35,9 +66,5 @@ function setBellSound(variant) {
 }
 
 function previewBellSound(variant) {
-  const ctx = ensureAudioCtx();
-  if (!ctx) return;
-  if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
-  const fn = BELL_VARIANTS[variant]?.play;
-  if (fn) { try { fn(ctx); } catch(e) {} }
+  _playVariant(variant, variant);
 }

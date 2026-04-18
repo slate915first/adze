@@ -168,10 +168,16 @@ let _audioCtx = null;
 // Bell sound variants for the meditation timer. Each variant exposes a
 // `play(ctx)` function that schedules oscillators on the provided AudioContext.
 // ---------------------------------------------------------------------------
+// v15.4 — variants now prefer real CC0 recorded samples (BigSoundBank,
+// public-domain Tibetan bowls). Synthesized oscillator implementations
+// remain as a fallback (used when sample fails to load) and as the only
+// option for sounds we don't have a recording for yet (wood block).
+// See content/sounds/bells/CREDITS.md for licensing.
 const BELL_VARIANTS = {
   warm: {
     label: 'Warm bell',
-    description: 'Default. Low, round, Western meditation-bell feel.',
+    description: 'Real Tibetan bowl strike, low and round. Default.',
+    sample: 'content/sounds/bells/tibetan-bowl-struck-1.mp3',
     play(ctx) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration) => {
@@ -191,8 +197,9 @@ const BELL_VARIANTS = {
     }
   },
   goenka: {
-    label: 'Goenka bell (rising-falling)',
-    description: 'Long attack and slow decay, reminiscent of the bell used in Goenka courses.',
+    label: 'Long-decay bowl',
+    description: 'Real Tibetan bowl strike with extended sustain. Closest match to the rising-falling feel of a Burmese practice bell while remaining CC0.',
+    sample: 'content/sounds/bells/tibetan-bowl-struck-4.mp3',
     play(ctx) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration, attack) => {
@@ -213,7 +220,8 @@ const BELL_VARIANTS = {
   },
   singing: {
     label: 'Tibetan singing bowl',
-    description: 'Rich overtones, slow sustain. Long tail.',
+    description: 'Real friction-rung Tibetan singing bowl. Long sustained tone.',
+    sample: 'content/sounds/bells/tibetan-bowl-singing.mp3',
     play(ctx) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration, detune) => {
@@ -237,7 +245,7 @@ const BELL_VARIANTS = {
   },
   wood: {
     label: 'Wood block',
-    description: 'Short, dry, percussive. Zen-style kotsu.',
+    description: 'Short, dry, percussive. Zen-style kotsu. (Synthesized — replace with a real recording when one is sourced.)',
     play(ctx) {
       const now = ctx.currentTime;
       const o = ctx.createOscillator();
@@ -261,8 +269,9 @@ const BELL_VARIANTS = {
     }
   },
   thai: {
-    label: 'Thai forest bell',
-    description: 'Brighter, higher tone. Forest monastery feel.',
+    label: 'Bright bowl strike',
+    description: 'Real Tibetan bowl strike, smaller bowl, brighter tone — closest match for a Thai forest bell while CC0.',
+    sample: 'content/sounds/bells/tibetan-bowl-struck-3.mp3',
     play(ctx) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration) => {

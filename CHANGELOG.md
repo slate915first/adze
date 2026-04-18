@@ -4,6 +4,25 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.4] — 2026-04-18 · Installable PWA + real bell recordings
+
+### Added
+- **Progressive Web App.** Adze is now installable on iOS (Safari Share → Add to Home Screen), Android (Chrome auto-prompt), and desktop. Opens without browser chrome with its own ☸️ dharmachakra icon. New files: `src/manifest.json`, `src/icon.svg` (gold dharmachakra on parchment-dark), `src/sw.js` (service worker).
+- **Offline-capable.** Service worker caches the app shell (cache-first), `/content/*` JSON (network-first with cache fallback), and lets Supabase calls pass through (never cached — preserves the E2E story). After first visit, Adze opens instantly and works without network.
+- **Real recorded bell sounds** replacing the synthesized oscillator versions for four of the five variants. Five CC0 Tibetan bowl recordings from BigSoundBank (CC0 1.0 Public Domain, recorded by Joseph SARDIN with Tascam DR-40 + Sennheiser ME66) live in `src/content/sounds/bells/`. Credits + provenance + how to add new bells: `src/content/sounds/bells/CREDITS.md`.
+- `BELL_VARIANTS` schema extended: each variant can specify `sample: 'path/to/file.mp3'` for a recorded bell, `play(ctx)` for synthesized fallback, or both. `systems/sound.js` prefers the sample; falls back to synth if the sample fails. Audio is cached per-variant after first play for instant preview.
+
+### Changed
+- **`warm`** variant — was synthesized 3-tone sine. Now: real Tibetan bowl strike (low and round). The default.
+- **`goenka`** variant — was 3-tone sine that sounded "creepy" (user feedback). Now: real Tibetan bowl strike with extended decay. Closest CC0 match for a Burmese-style ritual bell. The actual VRI bell is copyrighted; this is the privacy-respecting substitute. Variant renamed in UI to "Long-decay bowl" to avoid implying authorization from VRI.
+- **`singing`** variant — was 5-tone sine with beat frequencies. Now: real friction-rung Tibetan singing bowl, 44 seconds.
+- **`thai`** variant — was 4-tone sine. Now: real bright Tibetan bowl strike. Renamed to "Bright bowl strike" — same reason as goenka.
+- **`wood`** variant — kept synthesized (no CC0 wood-block recording sourced yet). Description notes the gap.
+
+### Notes for future
+- iOS apple-touch-icon currently uses the SVG; iOS may rasterize fuzzily on some devices. To get crisp PNG variants (180/192/512), drop `src/icon.svg` into [realfavicongenerator.net](https://realfavicongenerator.net) and add the resulting PNGs to the manifest.
+- Cache size: bells add ~3.6 MB. Cached lazily on first listen, not at install — initial PWA install stays under 100 KB.
+
 ## [15.3] — 2026-04-18 · Production hygiene + password reset
 
 ### Added
