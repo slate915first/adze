@@ -44,6 +44,7 @@ Open [http://localhost:8000](http://localhost:8000). No build, no install, no de
 - [`docs/CHIP-INTERPRETATION.md`](docs/CHIP-INTERPRETATION.md) — how the chip-based diagnostic interpretation maps to factor bumps and flags.
 - [`docs/BETA-GUIDE.md`](docs/BETA-GUIDE.md) — for beta testers.
 - [`docs/REVIEW.md`](docs/REVIEW.md) — production-readiness audit.
+- [`docs/POSTMORTEMS.md`](docs/POSTMORTEMS.md) — honest record of bugs that reached users and the practices we adopted to stop them recurring.
 - [`CHANGELOG.md`](CHANGELOG.md) — what shipped in each release.
 
 ## Contributing
