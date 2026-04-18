@@ -81,6 +81,9 @@ function migrateState(s) {
   }
   s._v136TimerModeReset = true;
 
+  // v15.0 — beta-guide modal seen flag
+  if (typeof s.seenBetaGuide !== 'boolean') s.seenBetaGuide = false;
+
   // v9: per-member path tracking
   if (!s.path || typeof s.path !== 'object') s.path = {};
 

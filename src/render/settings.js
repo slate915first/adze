@@ -94,8 +94,24 @@ function renderSettings() {
       </div>
     </div>
   `;
+  // v15.0 — Beta guide entry. Re-openable anytime; the "(unread)" badge only
+  // shows for users who haven't dismissed the modal yet.
+  const betaGuideUnread = state && state.seenBetaGuide === false;
+  const betaCard = `
+    <div class="parchment rounded-xl p-4 mb-4 border border-amber-700/40">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex-1 min-w-0">
+          <div class="text-[10px] uppercase tracking-widest text-amber-300/70 mb-0.5">For testers</div>
+          <h3 class="font-bold text-amber-100">About Adze · Beta guide</h3>
+          <p class="text-xs text-amber-100/65 mt-1 leading-relaxed">What this is, what's beta-rough, how to feed back, why it matters.</p>
+        </div>
+        <button class="btn ${betaGuideUnread ? 'btn-gold' : 'btn-ghost'} text-sm whitespace-nowrap" onclick="openBetaGuide()">${betaGuideUnread ? 'Read' : 'Re-open'}</button>
+      </div>
+    </div>
+  `;
   return `
     ${authCard}
+    ${betaCard}
 
     <div class="parchment rounded-xl p-5 mb-4">
       <h2 class="text-xl font-bold gold-text mb-3">${t('settings.overview.heading')}</h2>

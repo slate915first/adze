@@ -62,6 +62,8 @@ function render() {
   maybeTriggerRankAnnouncement();
   // v9.4: end-game liberation offer
   maybeTriggerLiberationOffer();
+  // v15.0: one-time beta tester guide after first onboarding completes
+  if (typeof maybeShowBetaGuide === 'function') maybeShowBetaGuide();
 }
 
 function renderModal() {
@@ -1082,6 +1084,9 @@ function renderModal() {
   }
   else if (m.type === 'auth') {
     content = renderAuthModal(m);
+  }
+  else if (m.type === 'beta_guide') {
+    content = renderBetaGuideModal(m);
   }
 
   // Inject wrapped content into #modal-root. Scroll position is preserved
