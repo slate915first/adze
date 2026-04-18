@@ -37,52 +37,72 @@ async function authInit() {
     console.warn('Supabase SDK not loaded — staying in local mode.');
     return;
   }
+
+  // v15.0 — Capture the invite/recovery signal from the URL BEFORE creating
+  // the Supabase client. With the implicit flow (default for our project),
+  // Supabase's verify endpoint redirects back to our Site URL with tokens in
+  // the URL HASH:
+  //   https://adze.life/#access_token=X&refresh_token=Y&type=invite
+  // The Supabase SDK's detectSessionInUrl=true auto-processes that hash and
+  // strips it from the URL inside createClient(), so by the time the client
+  // is built we can no longer see what type the email was. We read the hash
+  // (and the query, defensively) here first to remember whether this load is
+  // an invite/recovery — that drives the boot sequence to prompt for a
+  // password set BEFORE asking the user for an encryption passphrase.
+  let urlPasswordSetHint = false;
+  try {
+    const hashStr = (window.location.hash || '').replace(/^#/, '');
+    const queryStr = (window.location.search || '').replace(/^\?/, '');
+    const hashParams = new URLSearchParams(hashStr);
+    const queryParams = new URLSearchParams(queryStr);
+    const type = hashParams.get('type') || queryParams.get('type');
+    if (type === 'invite' || type === 'recovery') {
+      urlPasswordSetHint = true;
+    }
+  } catch (e) { /* if URL parsing throws, fall through; it's a hint only */ }
+
   _supabase = supabase.createClient(ADZE_SUPABASE_URL, ADZE_SUPABASE_ANON_KEY, {
     auth: { persistSession: true, autoRefreshToken: true }
   });
 
-  // v15.0 — Process invite / recovery tokens that arrive in the URL when a
-  // user clicks the link from a Supabase-sent email. The link looks like
-  //   https://adze.life/?token_hash=XXX&type=invite
-  // We verify the token, which establishes a session, and remember that the
-  // user has no password yet so the boot sequence can prompt for one.
+  // Defensive PKCE-flow handling: if Supabase ever switches us to the newer
+  // ?token_hash=...&type=invite query pattern, verify it here. Skipped if
+  // the hint already says we're invite/recovery (the SDK auto-handles it).
   try {
     const params = new URLSearchParams(window.location.search);
     const tokenHash = params.get('token_hash');
-    const type = params.get('type');
-    if (tokenHash && type) {
-      const { data, error } = await _supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    const queryType = params.get('type');
+    if (tokenHash && queryType && !urlPasswordSetHint) {
+      const { data, error } = await _supabase.auth.verifyOtp({ token_hash: tokenHash, type: queryType });
       if (!error && data && data.session && data.session.user) {
         _userId = data.session.user.id;
         _userEmail = data.session.user.email;
         _authMode = 'authed';
-        // 'invite' and 'recovery' both land the user with a session but no
-        // password (or, for recovery, with a password they want to change).
-        // Either way we ask them to set/choose a password before continuing.
-        if (type === 'invite' || type === 'recovery') {
+        if (queryType === 'invite' || queryType === 'recovery') {
           _pendingPasswordSet = true;
         }
-        // Strip the query params so a refresh doesn't try to re-verify the
-        // single-use token (which would error).
         const cleanUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, document.title, cleanUrl);
         return;
       }
-      if (error) {
-        console.warn('Adze invite/recovery token verify failed:', error.message);
-      }
+      if (error) console.warn('Adze invite/recovery token verify failed:', error.message);
     }
   } catch (e) {
-    console.warn('Adze invite/recovery URL processing skipped:', e);
+    console.warn('Adze PKCE URL processing skipped:', e);
   }
 
-  // Rehydrate a session if one exists. The passphrase is NOT rehydrated — it
-  // lives only in memory. Bootstrap decides whether to prompt unlock/setup.
+  // Rehydrate a session if one exists (either persisted from a prior login,
+  // or freshly created by the SDK from the URL hash above). The passphrase
+  // is NOT rehydrated — it lives only in memory. Bootstrap decides whether
+  // to prompt unlock/setup.
   const { data: { session } } = await _supabase.auth.getSession();
   if (session && session.user) {
     _userId = session.user.id;
     _userEmail = session.user.email;
     _authMode = 'authed';
+    if (urlPasswordSetHint) {
+      _pendingPasswordSet = true;
+    }
   }
 }
 
