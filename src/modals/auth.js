@@ -62,7 +62,7 @@ function renderMagicRequest(m) {
       <div class="text-center mb-3">
         <div class="text-4xl mb-1">✉️</div>
         <h2 class="text-xl font-bold gold-text">Sign in with email</h2>
-        <p class="text-xs text-amber-100/70 mt-1 serif">We'll send a 6-digit code to your inbox.</p>
+        <p class="text-xs text-amber-100/70 mt-1 serif">We'll send a code to your inbox.</p>
       </div>
       ${err}
       <div class="space-y-3 mb-4">
@@ -85,17 +85,25 @@ function renderMagicRequest(m) {
 function renderMagicVerify(m) {
   const err = renderAuthError(m);
   const email = m.email || '';
+  const justSent = m.justSent === true;
   return `
     <div class="fade-in">
       <div class="text-center mb-3">
-        <div class="text-4xl mb-1">🔑</div>
-        <h2 class="text-xl font-bold gold-text">Enter the code</h2>
-        <p class="text-xs text-amber-100/70 mt-1">Sent to ${escapeHtml(email)}</p>
+        <div class="text-4xl mb-1">📬</div>
+        <h2 class="text-xl font-bold gold-text">Check your inbox</h2>
+        <p class="text-xs text-amber-100/70 mt-2 leading-relaxed">
+          We sent a code to<br><b class="text-amber-100">${escapeHtml(email)}</b>
+        </p>
       </div>
+      ${justSent ? `
+        <div class="mb-3 rounded-lg p-2 border border-emerald-700/50 bg-emerald-900/20 text-[11px] text-emerald-200 text-center">
+          ✓ Email sent. Check your inbox (and spam, just in case).
+        </div>
+      ` : ''}
       ${err}
       <div class="space-y-3 mb-4">
         <div>
-          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Code from email</label>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Paste the code here</label>
           <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
@@ -120,7 +128,16 @@ async function authDoRequestMagicCode() {
     view.modal.email = String(email).trim().toLowerCase();
     view.modal.busy = false;
     view.modal.error = null;
+    view.modal.justSent = true;
     renderModal();
+    // Drop the "✓ Email sent" banner after a few seconds so it doesn't
+    // become stale visual noise if the user reads slowly.
+    setTimeout(() => {
+      if (view.modal && view.modal.type === 'auth' && view.modal.step === 'magic-verify') {
+        view.modal.justSent = false;
+        renderModal();
+      }
+    }, 4000);
   } catch (e) {
     authSetAuthError(e && e.message ? e.message : String(e));
   }
