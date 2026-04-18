@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.10.1] — 2026-04-19 · HOTFIX — CSP was blocking every inline onclick handler
+
+### Fixed
+- **`_headers` CSP was missing `'unsafe-inline'` in the `script-src` directive.** Adze uses inline `onclick="..."` handlers on every button (100+ of them across modals, render files, welcome). Browsers refuse to execute inline handlers unless `'unsafe-inline'`, a hash, or a nonce is present in CSP. Since v15.3 shipped the first `_headers` file, **every button in the live app has been silently unclickable for every user on every device**. The console logs a specific CSP violation for each click; no JS error, just silent no-op.
+- Added `'unsafe-inline'` to `script-src`. Inline handlers now execute. The CSP remains strict on other vectors (frame-ancestors, connect-src, img-src, etc.).
+
+### Added
+- **`tests/e2e/_live-diag.spec.js`** — live-deploy smoke test (ignored from the per-PR run, run via `npm run test:e2e:live` after each deploy). Asserts the welcome page loads with zero CSP/JS errors AND that clicking Begin actually opens a modal. This single test would have caught the v15.3→v15.10 regression in under 5 seconds if it had existed.
+- `test:e2e:live` npm script now targets this spec specifically.
+
+### Root cause
+- The per-PR e2e suite runs against localhost's `python3 -m http.server`, which **does not apply Cloudflare's `_headers` file**. So the CSP restriction only existed on the live deploy, invisible to my local test runs. Every v15.x release since v15.3 has been effectively broken for all users even though CI was green.
+
+### Lesson
+- Any CSP / server-header change needs a live-smoke test that runs against the actual Cloudflare deploy, not just localhost. `_live-diag.spec.js` is that test now.
+
 ## [15.10] — 2026-04-18 · 6-digit invite code (the Slack/Notion/Linear pattern)
 
 ### Added
