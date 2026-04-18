@@ -156,3 +156,34 @@ async function authResetPassword(email) {
   const { error } = await _supabase.auth.resetPasswordForEmail(email);
   if (error) throw error;
 }
+
+// v15.6 — Hard-delete the current user's account (GDPR right to erasure).
+// Calls the `delete-account` Edge Function, which uses service-role to
+// remove the auth.users row; user_state cascades via FK. Then clears
+// every trace from this device: signs out the Supabase session, locks the
+// passphrase, drops localStorage, and resets the in-memory state. The
+// caller is responsible for re-rendering after this resolves.
+async function authDeleteAccount() {
+  if (!_supabase) throw new Error('Supabase client not initialized');
+  if (_authMode !== 'authed' || !_userId) throw new Error('You are not signed in.');
+  const { data, error } = await _supabase.functions.invoke('delete-account', {
+    method: 'POST'
+  });
+  if (error) throw error;
+  if (!data || !data.success) throw new Error((data && data.error) || 'Server did not confirm the deletion.');
+  // Server side is gone. Now clean up locally.
+  try { await _supabase.auth.signOut(); } catch (e) { /* ignore */ }
+  if (typeof passphraseLock === 'function') passphraseLock();
+  _userId = null;
+  _userEmail = null;
+  _authMode = 'local';
+  // Drop the in-browser cache so a refresh doesn't resurrect anything.
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  // Reset in-memory state to a fresh slate. The caller (deletion modal)
+  // will re-render which will re-show the welcome screen.
+  state = (typeof newState === 'function') ? newState() : null;
+  view.modal = null;
+  view.setupStep = 0;
+  view.setupData = {};
+  view.currentMember = null;
+}

@@ -4,6 +4,17 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.6] — 2026-04-18 · Account deletion (GDPR right to erasure)
+
+### Added
+- **Delete my account** flow in Settings → Account & sync → Danger zone. Two-step confirmation: open the modal, type the exact phrase `delete my account`, click the button (only enabled when the phrase matches). On confirm, the server-side Edge Function `delete-account` deletes the `auth.users` row using the service role; `user_state` cascades via the FK. Then the client signs out, locks the passphrase, wipes localStorage, and resets in-memory state. The user lands back on the welcome screen with no trace.
+- Supabase Edge Function `delete-account` deployed to project `zpawwkvdgocsrwwalhxu`. Verifies the caller's JWT (so a user can only delete their own account), uses service role for the actual delete, returns `{success:true,deletedUserId}` on success.
+
+### Notes
+- Satisfies GDPR Article 17 (right to erasure) which is *legally required* for EU users — Adze has German testers (Leipzig) so this isn't optional.
+- No 30-day grace period, no soft delete, no shadow row. The user asked to disappear; they disappear. The privacy promise depends on it.
+- Anonymous users (no Supabase account) don't see a "Delete account" button — there's no account to delete. They can use the existing "Reset everything" in Settings to wipe localStorage.
+
 ## [15.5] — 2026-04-18 · Custom bell upload + unit-test infra
 
 ### Added

@@ -92,6 +92,13 @@ function renderSettings() {
         ${authButton}
         <button class="text-[11px] text-amber-300/80 hover:text-amber-200 underline ml-auto" onclick="openPrivacyDetail()">How encryption works →</button>
       </div>
+      ${authMode === 'authed' ? `
+        <div class="mt-4 pt-3 border-t border-amber-800/30">
+          <div class="text-[10px] uppercase tracking-wider text-red-300/70 mb-1">Danger zone</div>
+          <button class="text-[11px] text-red-300/80 hover:text-red-200 underline" onclick="openAuth('delete-account-confirm')">Delete my account permanently</button>
+          <p class="text-[10px] text-amber-100/50 mt-1 leading-relaxed">Removes your account, your synced data, and the local copy on this device. Cannot be undone.</p>
+        </div>
+      ` : ''}
     </div>
   `;
   // v15.0 — Beta guide entry. Re-openable anytime; the "(unread)" badge only

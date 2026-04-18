@@ -40,7 +40,96 @@ function renderAuthModal(m) {
   if (m.step === 'set-initial-password')    return renderSetInitialPassword(m);
   if (m.step === 'forgot-password')         return renderForgotPassword(m);
   if (m.step === 'forgot-password-sent')    return renderForgotPasswordSent(m);
+  if (m.step === 'delete-account-confirm')  return renderDeleteAccountConfirm(m);
+  if (m.step === 'delete-account-success')  return renderDeleteAccountSuccess(m);
   return `<div class="text-amber-200">Unknown auth step: ${escapeHtml(m.step)}</div>`;
+}
+
+// v15.6 — Account deletion (GDPR right to erasure). Two-step flow:
+// 1) Scary confirmation modal that requires the user to type a confirmation
+//    phrase. Avoids accidental clicks.
+// 2) Success screen briefly, then the modal closes and the welcome page
+//    appears (state already wiped server- and client-side).
+const DELETE_ACCOUNT_PHRASE = 'delete my account';
+
+function renderDeleteAccountConfirm(m) {
+  const err = renderAuthError(m);
+  const email = (typeof authGetEmail === 'function') ? authGetEmail() : '';
+  const phraseTyped = m.phraseTyped || '';
+  const ready = phraseTyped.trim().toLowerCase() === DELETE_ACCOUNT_PHRASE && !m.busy;
+  return `
+    <div class="fade-in">
+      <div class="text-center mb-3">
+        <div class="text-4xl mb-1">⚠️</div>
+        <h2 class="text-xl font-bold text-red-300">Delete your account</h2>
+        <p class="text-xs text-amber-100/70 mt-1">${escapeHtml(email)}</p>
+      </div>
+      ${err}
+      <div class="parchment rounded-xl p-3 mb-3 border border-red-700/60 bg-red-900/15 text-sm text-amber-100/90 serif leading-relaxed">
+        <p class="mb-2"><b class="text-red-300">This is permanent.</b> The following will happen the moment you confirm:</p>
+        <ul class="text-xs space-y-1 list-disc pl-5 text-amber-100/85 mb-2">
+          <li>Your account is deleted from the server.</li>
+          <li>Your synced practice data (the encrypted ciphertext) is deleted with it.</li>
+          <li>Your encryption passphrase becomes meaningless — there is nothing left to decrypt.</li>
+          <li>Your local browser data is also wiped from this device.</li>
+          <li><b>There is no recovery.</b> No 30-day grace period. No undo.</li>
+        </ul>
+        <p class="text-xs text-amber-100/70 italic">If you only want to take a break, just close the app — your data stays as it is. This is for actually leaving.</p>
+      </div>
+      <div class="space-y-3 mb-3">
+        <div>
+          <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">To confirm, type: <code class="text-red-300">${DELETE_ACCOUNT_PHRASE}</code></label>
+          <input id="del-phrase" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" oninput="authUpdateDeletePhrase(this.value)" ${m.busy ? 'disabled' : ''}/>
+        </div>
+      </div>
+      <div class="flex justify-between gap-2">
+        <button class="btn btn-ghost" onclick="closeModal()" ${m.busy ? 'disabled' : ''}>Cancel</button>
+        <button id="del-submit" class="btn ${ready ? 'btn-gold' : 'btn-ghost'}" onclick="authDoDeleteAccount()" ${ready ? '' : 'disabled'}>${m.busy ? 'Deleting…' : 'Delete account permanently'}</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderDeleteAccountSuccess(m) {
+  return `
+    <div class="fade-in text-center py-6">
+      <div class="text-6xl mb-3">🌱</div>
+      <h2 class="text-xl font-bold gold-text mb-2">Your account has been deleted</h2>
+      <p class="text-sm text-amber-100/85 serif leading-relaxed mb-4 px-3">
+        Your account, your synced data, and the local copy on this device are all gone. The path remains. We hope it was useful while it was.
+      </p>
+      <p class="text-[11px] text-amber-100/55 italic">— Dirk</p>
+    </div>
+  `;
+}
+
+// Live-update the submit button as the user types the confirmation phrase.
+// In-place patch (no full re-render) so the input doesn't lose focus.
+function authUpdateDeletePhrase(value) {
+  if (!(view.modal && view.modal.type === 'auth' && view.modal.step === 'delete-account-confirm')) return;
+  view.modal.phraseTyped = value;
+  const ready = (value || '').trim().toLowerCase() === DELETE_ACCOUNT_PHRASE && !view.modal.busy;
+  const btn = document.getElementById('del-submit');
+  if (btn) {
+    btn.disabled = !ready;
+    btn.classList.toggle('btn-gold', ready);
+    btn.classList.toggle('btn-ghost', !ready);
+  }
+}
+
+async function authDoDeleteAccount() {
+  if (!(view.modal && view.modal.type === 'auth' && view.modal.step === 'delete-account-confirm')) return;
+  authSetAuthBusy(true);
+  try {
+    await authDeleteAccount();
+    // authDeleteAccount has already wiped state + signed out. Show the
+    // success screen briefly, then close to welcome.
+    view.modal = { type: 'auth', step: 'delete-account-success' };
+    renderModal();
+    setTimeout(() => { closeModal(); render(); }, 2200);
+  } catch (e) {
+    authSetAuthError(e && e.message ? e.message : String(e));
+  }
 }
 
 // v15.3 — "Forgot password?" entry. Sends a Supabase recovery email; the
