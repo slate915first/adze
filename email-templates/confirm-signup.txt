@@ -1,0 +1,33 @@
+Adze — The Path of Awakening
+
+Welcome.
+
+You've joined a small circle using Adze to support their meditation
+practice. Before anything else, please confirm the email you just
+signed up with — it's the one thing the app needs to keep your
+account safe.
+
+Confirm your email:
+{{ .ConfirmationURL }}
+
+WHAT HAPPENS NEXT
+
+After you confirm, come back to Adze and sign in. You'll be asked to
+set an encryption passphrase — separate from your account password.
+The passphrase never leaves your browser. It's what keeps your
+reflections, your journal, and your practice data readable only to you.
+
+If you lose that passphrase, your synced data can't be recovered.
+Write it somewhere safe.
+
+PRIVACY
+
+Adze stores your practice data end-to-end encrypted. Nobody — not
+even the maintainer — can read it on the server.
+
+—
+
+If you didn't create an Adze account, ignore this email; nothing
+will happen.
+
+Sent with care by Adze · The Path of Awakening
