@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.7] — 2026-04-18 · Playwright e2e + path-viewer syntax fix
+
+### Added
+- **Playwright end-to-end test suite** with 9 chromium tests + 1 mobile-chrome viewport test:
+  - `welcome.spec.js` — heading/CTA/sign-in/closed-beta-pill render; no JS console errors on first paint; sign-in modal hides "Create an account" while signups are off; mobile viewport (Pixel 5) fits primary content without scrolling.
+  - `anonymous-onboarding.spec.js` — clicking Begin opens the setup modal without throwing. (The integration-level guard for the v15.1.1 chip-array crash class.)
+  - `feedback-fab.spec.js` — FAB exists, positioned bottom-right, ≥40 px tap target. Catches the v15.x missing-`}` regression that nuked all feedback-mode CSS.
+  - `pwa.spec.js` — `manifest.json` resolves with the right shape, service worker registers within 10 s, `icon.svg` resolves.
+- `.github/workflows/test.yml` extended with an `e2e` job: installs Chromium, runs the suite, uploads Playwright traces on failure for 7-day debugging.
+- New npm scripts: `test:e2e`, `test:e2e:ui` (interactive), `test:e2e:live` (run welcome + PWA tests against the live `https://adze.life` deploy).
+
+### Fixed
+- **`src/modals/path-viewer.js`** had an extra orphan `}` at line 462 — leftover from when the renderModal-injection code was extracted out to `main.js` weeks ago. Browsers parsed everything up to the orphan brace as `renderPathViewerModal`, then hit the function's real `return content;` at top-level scope and threw "Illegal return statement" on every page load. The Welcome page rendered (the error fired late and silently for most users), but every modal that depended on globals defined later in the script-tag chain was potentially affected. The new e2e console-errors test caught it on the first run.
+
 ## [15.6] — 2026-04-18 · Account deletion (GDPR right to erasure)
 
 ### Added

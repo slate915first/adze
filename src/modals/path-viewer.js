@@ -459,7 +459,6 @@ function renderPathViewerModal(m) {
         </div>
       `;
     }
-  }
 
   return content;
 }
