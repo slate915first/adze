@@ -121,6 +121,10 @@ function renderSettings() {
         <div><span class="text-amber-100/60">${t('settings.overview.members_label')}</span> <span class="text-amber-100">${state.members.length}</span></div>
         <div><span class="text-amber-100/60">${t('settings.overview.habits_label')}</span> <span class="text-amber-100">${state.habits.length}</span></div>
         ${state.questAttempts ? `<div><span class="text-amber-100/60">${t('settings.overview.attempts_label')}</span> <span class="text-amber-100">${state.questAttempts}</span></div>` : ''}
+        <div class="pt-2 mt-2 border-t border-amber-800/30 flex items-center justify-between">
+          <span class="text-amber-100/60">Version</span>
+          <a href="https://github.com/slate915first/adze/blob/main/CHANGELOG.md" target="_blank" class="text-amber-300/85 underline text-xs">v${typeof APP_VERSION === 'string' ? APP_VERSION : '?'} · changelog →</a>
+        </div>
       </div>
     </div>
 

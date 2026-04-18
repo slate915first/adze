@@ -4,6 +4,39 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.1] — 2026-04-18 · Closed beta polish
+
+### Added
+- **Beta tester guide** — six-card swipeable modal fires once after onboarding (`modals/beta-guide.js`); re-openable anytime from Settings → "About Adze · Beta guide". Covers what Adze is, what's still rough, the 💬 button, testing the recommendations against your own judgment, and three motivational reasons your feedback matters.
+- Long-form companion: `docs/BETA-GUIDE.md` — same content for sharing as a public link.
+- **Phase 2 chip taxonomy** for the three optional onboarding questions (`stoppedBefore`, `physicalConcerns`, `concerns`). Replaces blank textareas with curated multi-select chips, each mapped deterministically and locally to diagnostic factor bumps + practical flags. See `docs/CHIP-INTERPRETATION.md` for the full rationale.
+- **Phase 3 mindful redesign** — diagnostic Phase C now shows one slider per step with progress dots and a "Skip this one" secondary, replacing the all-five-on-one-page layout.
+- **Encryption transparency** in the privacy modal — algorithm specifics (PBKDF2-SHA256 @ 600k, AES-GCM-256, non-extractable, Web Crypto) plus links to source code and reference specs.
+- **Closed-beta gating** — auth modal and welcome page hide self-signup when `ADZE_PUBLIC_SIGNUP_ENABLED=false` (default during beta) and surface `hello@adze.life` for invitation requests.
+- **Three Adze-styled email templates** in `email-templates/`: `invite.html`, `confirm-signup.html`, `reset-password.html`. Plus a README with Supabase + Resend SMTP setup steps.
+- **Passphrase strength meter** on the setup modal — length + character-variety score, colored bar, actionable label ("Add upper/lowercase, numbers, symbols").
+- **Custom domain** `adze.life` connected via Cloudflare Workers + `wrangler.toml`.
+- **Cloudflare Email Routing** for receiving inbound mail at `hello@`, `feedback@`, `beta@adze.life`.
+- `docs/FEEDBACK.md` scaffold for tracking beta tester reports.
+- `docs/VERSIONING.md` documenting the release workflow.
+
+### Changed
+- Welcome page redesigned to a single screenful with "I already have an account" entry for returning users; gains a "Closed beta · by invitation" pill.
+- Settings → Account & sync card has three states (local / authed+unlocked / authed+locked) and a "How encryption works" link.
+- Feedback FAB now sends to `feedback@adze.life` (was `adze.feedback@gmail.com`).
+- All `.btn` elements get `min-height: 44px` (Apple HIG minimum tap target).
+- FAB respects `env(safe-area-inset-bottom)` on notched iPhones.
+- Phase A radio + multi-select interactions now patch the DOM in place instead of full re-renders, eliminating selection flicker.
+- Habit-mode card switching uses the same in-place pattern.
+- All passphrase / initial-password inputs disabled during the encrypting/saving busy state.
+
+### Fixed
+- Supabase invite-link sign-in flow: detects implicit-flow tokens in the URL hash (`#access_token=…&type=invite`) before the SDK consumes them, so invitees land on a "Set your password" modal instead of being routed to passphrase-unlock with no passphrase.
+- Phase A Continue button stuck disabled on mobile after radio selections (regression from the in-place flicker polish).
+- Passphrase-setup checkbox no longer triggers a full modal re-render (was wiping passphrase fields and pre-firing Safari's save-password dialog).
+- `pauseSetupForCare` reset shape now matches the v15.x diagnostic model (chip arrays, Other free-text, phaseCStep).
+- After sign-in / passphrase-set / passphrase-unlock, users now land in onboarding or the main app based on `state.setupComplete` — no more "stuck on welcome page after signing in".
+
 ## [15.0] — 2026-04-18 · End-to-end encrypted sync
 
 ### Added
