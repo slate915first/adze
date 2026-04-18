@@ -88,7 +88,10 @@ function renderSettings() {
       <h3 class="font-bold text-amber-100 mb-1">Account &amp; sync</h3>
       <p class="text-xs text-amber-100/65 mb-3 leading-relaxed">${authBlurb}</p>
       ${syncErr ? `<div class="mb-3 rounded-lg p-2 border border-red-700/50 bg-red-900/20 text-[11px] text-red-200">Sync error: ${escapeHtml(syncErr)}</div>` : ''}
-      <div class="flex gap-2 flex-wrap">${authButton}</div>
+      <div class="flex gap-2 flex-wrap items-center">
+        ${authButton}
+        <button class="text-[11px] text-amber-300/80 hover:text-amber-200 underline ml-auto" onclick="openPrivacyDetail()">How encryption works →</button>
+      </div>
     </div>
   `;
   return `

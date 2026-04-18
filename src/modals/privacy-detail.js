@@ -26,6 +26,10 @@ function renderPrivacyDetailModal(m) {
 
           <p class="mb-3">${t('privacy_detail.para_sync_optional')}</p>
 
+          <p class="mb-3">${t('privacy_detail.para_sync_technical')}</p>
+
+          <p class="mb-3">${t('privacy_detail.para_sync_references')}</p>
+
           <p class="mb-3">${t('privacy_detail.para_outbound')}</p>
 
           <p class="mb-3">${t('privacy_detail.para_tailwind')}</p>
