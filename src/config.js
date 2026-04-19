@@ -178,14 +178,14 @@ const BELL_VARIANTS = {
     label: 'Warm bell',
     description: 'Real Tibetan bowl strike, low and round. Default.',
     sample: 'content/sounds/bells/tibetan-bowl-struck-1.mp3',
-    play(ctx) {
+    play(ctx, dest = ctx.destination) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration) => {
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.frequency.value = freq;
         o.type = 'sine';
-        o.connect(g); g.connect(ctx.destination);
+        o.connect(g); g.connect(dest);
         g.gain.setValueAtTime(0.001, now);
         g.gain.exponentialRampToValueAtTime(gain, now + 0.05);
         g.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -200,14 +200,14 @@ const BELL_VARIANTS = {
     label: 'Long-decay bowl',
     description: 'Real Tibetan bowl strike with extended sustain. Closest match to the rising-falling feel of a Burmese practice bell while remaining CC0.',
     sample: 'content/sounds/bells/tibetan-bowl-struck-4.mp3',
-    play(ctx) {
+    play(ctx, dest = ctx.destination) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration, attack) => {
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.frequency.value = freq;
         o.type = 'sine';
-        o.connect(g); g.connect(ctx.destination);
+        o.connect(g); g.connect(dest);
         g.gain.setValueAtTime(0.001, now);
         g.gain.exponentialRampToValueAtTime(gain, now + attack);
         g.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -222,7 +222,7 @@ const BELL_VARIANTS = {
     label: 'Tibetan singing bowl',
     description: 'Real friction-rung Tibetan singing bowl. Long sustained tone.',
     sample: 'content/sounds/bells/tibetan-bowl-singing.mp3',
-    play(ctx) {
+    play(ctx, dest = ctx.destination) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration, detune) => {
         const o = ctx.createOscillator();
@@ -230,7 +230,7 @@ const BELL_VARIANTS = {
         o.frequency.value = freq;
         if (detune) o.detune.value = detune;
         o.type = 'sine';
-        o.connect(g); g.connect(ctx.destination);
+        o.connect(g); g.connect(dest);
         g.gain.setValueAtTime(0.001, now);
         g.gain.exponentialRampToValueAtTime(gain, now + 0.15);
         g.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -246,13 +246,13 @@ const BELL_VARIANTS = {
   wood: {
     label: 'Wood block',
     description: 'Short, dry, percussive. Zen-style kotsu. (Synthesized — replace with a real recording when one is sourced.)',
-    play(ctx) {
+    play(ctx, dest = ctx.destination) {
       const now = ctx.currentTime;
       const o = ctx.createOscillator();
       const g = ctx.createGain();
       o.frequency.value = 520;
       o.type = 'triangle';
-      o.connect(g); g.connect(ctx.destination);
+      o.connect(g); g.connect(dest);
       g.gain.setValueAtTime(0.001, now);
       g.gain.exponentialRampToValueAtTime(0.5, now + 0.005);
       g.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
@@ -261,7 +261,7 @@ const BELL_VARIANTS = {
       const g2 = ctx.createGain();
       o2.frequency.value = 1040;
       o2.type = 'sine';
-      o2.connect(g2); g2.connect(ctx.destination);
+      o2.connect(g2); g2.connect(dest);
       g2.gain.setValueAtTime(0.001, now);
       g2.gain.exponentialRampToValueAtTime(0.2, now + 0.005);
       g2.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
@@ -272,14 +272,14 @@ const BELL_VARIANTS = {
     label: 'Bright bowl strike',
     description: 'Real Tibetan bowl strike, smaller bowl, brighter tone — closest match for a Thai forest bell while CC0.',
     sample: 'content/sounds/bells/tibetan-bowl-struck-3.mp3',
-    play(ctx) {
+    play(ctx, dest = ctx.destination) {
       const now = ctx.currentTime;
       const tone = (freq, gain, duration) => {
         const o = ctx.createOscillator();
         const g = ctx.createGain();
         o.frequency.value = freq;
         o.type = 'sine';
-        o.connect(g); g.connect(ctx.destination);
+        o.connect(g); g.connect(dest);
         g.gain.setValueAtTime(0.001, now);
         g.gain.exponentialRampToValueAtTime(gain, now + 0.03);
         g.gain.exponentialRampToValueAtTime(0.001, now + duration);

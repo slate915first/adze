@@ -4,6 +4,21 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.13.3] — 2026-04-19 · HOTFIX — bell-sound previews no longer overlap
+
+### Fixed
+- **Settings → Bell sound:** tapping a new sound while the previous one was still ringing caused them to overlap. Two underlying causes, both addressed:
+  1. **Sample bells (HTMLAudioElement)** — `_playSampleBell` cached one `Audio` element per file path, so each new variant created/used a different cached element with no link to the previously-playing one. Now tracks `_currentBellAudio` module-side and pauses + rewinds it before starting any new bell.
+  2. **Synth-fallback bells (Web Audio oscillators)** — each `BELL_VARIANTS[*].play(ctx)` connected oscillators directly to `ctx.destination`, so there was no way to silence an in-flight decay. Synth play signature extended to `play(ctx, dest = ctx.destination)`; `_playVariant` creates a master `GainNode` per call, passes it as `dest`, and ramps the previous one to silence over 50ms (avoids click) before disconnecting.
+- All five BELL_VARIANTS in `config.js` (warm, goenka, singing, wood, thai) updated to use `dest` instead of `ctx.destination` in their oscillator connects. Default arg keeps any future variant that ignores the parameter functional — it just won't be silenceable mid-decay.
+
+### Why
+- Tester report: "in Settings → Bell sound, each sound won't stop if I press a new one, so the bell sounds overlap each other." Reproducible by tapping multiple Preview buttons quickly.
+
+### Notes
+- The fix also applies to `playBell()` (the in-app sit-bell), so back-to-back sit transitions will likewise no longer overlap.
+- `_currentBellAudio` and `_currentBellGain` are module-private state; they reset per page load. No persistence needed.
+
 ## [15.13.2] — 2026-04-19 · OTP length — copy + invite-flow validation now match the live 8-digit setting
 
 ### Fixed

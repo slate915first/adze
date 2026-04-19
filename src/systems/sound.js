@@ -22,8 +22,42 @@ function ensureAudioCtx() {
 // recorded MP3. _playSampleBell uses an HTMLAudioElement so we don't
 // have to decode through Web Audio (faster start, simpler error path).
 // Cached per-variant so previewing isn't a fresh fetch each time.
+//
+// v15.13.3 — track the currently-playing bell so a new preview tap stops
+// the previous one cleanly. Two state slots because the two playback
+// paths use different APIs:
+//   * _currentBellAudio: HTMLAudioElement reference (sample bells)
+//   * _currentBellGain:  Web Audio GainNode (synth bells route through
+//                        a master gain we can ramp down to silence)
 const _bellAudioCache = {};
+let _currentBellAudio = null;
+let _currentBellGain  = null;
+
+function _stopCurrentBell() {
+  if (_currentBellAudio) {
+    try {
+      _currentBellAudio.pause();
+      _currentBellAudio.currentTime = 0;
+    } catch (e) { /* fail silently */ }
+    _currentBellAudio = null;
+  }
+  if (_currentBellGain) {
+    try {
+      const ctx = _currentBellGain.context;
+      const now = ctx.currentTime;
+      // Ramp to silence in 50ms to avoid a click, then disconnect.
+      _currentBellGain.gain.cancelScheduledValues(now);
+      _currentBellGain.gain.setValueAtTime(_currentBellGain.gain.value, now);
+      _currentBellGain.gain.linearRampToValueAtTime(0.0001, now + 0.05);
+      const oldGain = _currentBellGain;
+      setTimeout(() => { try { oldGain.disconnect(); } catch (e) {} }, 80);
+    } catch (e) { /* fail silently */ }
+    _currentBellGain = null;
+  }
+}
+
 function _playSampleBell(samplePath) {
+  _stopCurrentBell();
   let audio = _bellAudioCache[samplePath];
   if (!audio) {
     audio = new Audio(samplePath);
@@ -32,6 +66,7 @@ function _playSampleBell(samplePath) {
   }
   try {
     audio.currentTime = 0;
+    _currentBellAudio = audio;
     const playPromise = audio.play();
     if (playPromise && typeof playPromise.catch === 'function') playPromise.catch(() => {});
   } catch (e) { /* fail silently */ }
@@ -55,7 +90,16 @@ function _playVariant(variant, fallback) {
     const ctx = ensureAudioCtx();
     if (!ctx) return;
     if (ctx.state === 'suspended') { try { ctx.resume(); } catch(e) {} }
-    try { v.play(ctx); } catch (e) { /* fail silently */ }
+    _stopCurrentBell();
+    // Route the synth's output through a master GainNode we can silence
+    // later. v15.13.3 — synth play(ctx, dest) signature; dest defaults to
+    // ctx.destination so any future variant that ignores the second arg
+    // still works (it just won't be silenceable mid-decay).
+    const master = ctx.createGain();
+    master.gain.value = 1;
+    master.connect(ctx.destination);
+    _currentBellGain = master;
+    try { v.play(ctx, master); } catch (e) { /* fail silently */ }
   }
 }
 
