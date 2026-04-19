@@ -31,6 +31,18 @@
 let _passKey = null;
 let _passSalt = null;
 
+// Stable per-tab id so sibling tabs can tell each other's BroadcastChannel
+// messages from their own echo. See state.js cross-tab guard.
+const _tabId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+  ? crypto.randomUUID()
+  : String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+let _bc = null;
+if (typeof BroadcastChannel !== 'undefined') {
+  try { _bc = new BroadcastChannel('adze'); } catch (e) { _bc = null; }
+}
+
+function syncGetTabId() { return _tabId; }
+
 function passphraseIsUnlocked() { return !!_passKey; }
 
 function syncIsActive() {
@@ -124,13 +136,20 @@ async function passphrasePushState(st) {
   const userId = authGetUserId();
   if (!client || !userId) throw new Error('Not signed in.');
   const ciphertext = await cryptoEncrypt(JSON.stringify(st), _passKey);
+  const pushedAt = new Date().toISOString();
   const { error } = await client
     .from('user_state')
     .upsert({
       user_id: userId,
       ciphertext,
       salt: bytesToBase64(_passSalt),
-      updated_at: new Date().toISOString()
+      updated_at: pushedAt
     });
   if (error) throw error;
+  // Tell sibling tabs this device's in-memory state just advanced. They'll
+  // refuse their own further pushes until reload. Best-effort — channel may
+  // be unavailable in some embedded contexts; silent no-op then.
+  if (_bc) {
+    try { _bc.postMessage({ type: 'pushed', tabId: _tabId, at: pushedAt }); } catch (e) {}
+  }
 }

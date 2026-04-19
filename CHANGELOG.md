@@ -4,6 +4,23 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.9] — 2026-04-19 · HOTFIX — authed-but-locked guard + cross-tab concurrency warning
+
+### Fixed
+Closes Fleet Review Blocker #3 (sync-lifecycle trio, items 2 and 3 of 3). Item 1 landed in v15.15.7.
+
+**Authed-but-locked guard** (`src/systems/state.js`, `saveState()`). When the user is signed in but hasn't entered the passphrase yet, `syncIsActive()` is already false so the remote push path is skipped — but the `localStorage.setItem` line above it still ran. Then `authDoPassphraseUnlock` pulled the (authoritative) remote row and overwrote `state`, silently losing any mutation made during the locked window. New behaviour: `saveState()` returns early when `authGetMode() === 'authed' && !passphraseIsUnlocked()`. The unlock modal already gates the UI in the normal flow; the guard makes the "state is not ours to mutate while locked" invariant explicit for race/crash windows.
+
+**Cross-tab concurrency warning** (`src/systems/passphrase.js` + `src/systems/state.js`). Two tabs both authed + unlocked on the same browser would race on the debounced push: each has its own in-memory `state`, each pushes, the later upsert blindly overwrites the earlier. Minimum viable per review: `BroadcastChannel('adze')`. Each successful `passphrasePushState` broadcasts `{type:'pushed', tabId, at}`. Sibling tabs flip `_crossTabStaleWarning` on receipt; their own subsequent `saveState()` calls refuse to write (neither localStorage nor push) until the user reloads. A stale-warning banner renders next to the existing sync-error banner in Settings → Account & sync.
+
+### Added
+- **`getCrossTabStaleWarning()`** (global, mirrors `getLastSyncError()`).
+- **`syncGetTabId()`** (passphrase.js) — stable per-tab UUID so BroadcastChannel listeners can filter their own echo.
+
+### Scope
+- Sibling-tab detector only. Cross-device races (two phones) are not covered; those need the server-side `updated_at` guard + reconcile-on-conflict, which remains on the ADR-7 Important-list but is no longer Blocker-gated.
+- Tests: 40/40 vitest, Playwright unchanged (no new behaviour surface that the existing specs exercise).
+
 ## [15.15.8] — 2026-04-19 · Cleanup — drop `habit_quest_*` LEGACY_KEYS (test-data era)
 
 ### Changed

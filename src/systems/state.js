@@ -148,9 +148,34 @@ function migrateState(s) {
 
 let _pushStateTimer = null;
 let _lastSyncError = null;
+let _crossTabStaleWarning = null;
 
 function saveState() {
   if (!state) return;
+  // Authed-but-locked guard. Fleet Review Blocker #3 (sync-lifecycle trio,
+  // item 2 of 3). When the user is signed in but hasn't entered the
+  // passphrase yet, syncIsActive() is false — the push path below is already
+  // skipped. But without this guard, localStorage would still accept the
+  // mutation. Then authDoPassphraseUnlock pulls the (authoritative) remote
+  // row, overwrites state, and the local-only edits vanish silently. The
+  // invariant is: while locked, state is not ours to mutate.
+  if (typeof authGetMode === 'function'
+      && authGetMode() === 'authed'
+      && typeof passphraseIsUnlocked === 'function'
+      && !passphraseIsUnlocked()) {
+    console.warn('[adze] saveState blocked: authed but locked');
+    return;
+  }
+  // Another tab in this browser pushed to Supabase while we were running.
+  // Our in-memory state is stale; pushing now would last-writer-wins over
+  // the other tab's edit. Refuse further pushes until the user reloads.
+  // (We still return early — no localStorage write either — because the
+  // stale in-memory state would overwrite the other tab's localStorage copy
+  // just as badly.)
+  if (_crossTabStaleWarning) {
+    console.warn('[adze] saveState blocked: another tab has newer data — reload');
+    return;
+  }
   // localStorage is written in both modes so fast-reload always has something
   // to read synchronously. In synced mode it's a cache of the last plaintext
   // the user saw on this device; the authoritative copy is the ciphertext row.
@@ -187,6 +212,11 @@ function saveStateFlush() {
   }
   if (!state) return Promise.resolve();
   if (typeof syncIsActive !== 'function' || !syncIsActive()) return Promise.resolve();
+  // Refuse the flush if a sibling tab has already pushed newer data — our
+  // state is stale, and flushing would last-writer-wins over their edit.
+  // Matches the saveState guard above; same reasoning on sign-out and
+  // pagehide paths.
+  if (_crossTabStaleWarning) return Promise.resolve();
   return passphrasePushState(state)
     .then(() => { _lastSyncError = null; })
     .catch(e => {
@@ -210,6 +240,32 @@ if (typeof window !== 'undefined') {
 }
 
 function getLastSyncError() { return _lastSyncError; }
+
+function getCrossTabStaleWarning() { return _crossTabStaleWarning; }
+
+// Cross-tab concurrency guard. Fleet Review Blocker #3 (sync-lifecycle
+// trio, item 3 of 3). Two tabs both authed + unlocked can race:
+// each has its own in-memory state, each pushes on saveState debounce,
+// the later push silently overwrites the earlier. Minimum viable fix
+// per review: BroadcastChannel('adze'). Each successful push broadcasts
+// {type:'pushed', tabId, at}. Other tabs flip _crossTabStaleWarning so
+// their own further pushes refuse until reload. This is a sibling-tab
+// detector only; cross-device races need the server-side updated_at
+// guard that's still on the list.
+if (typeof BroadcastChannel !== 'undefined') {
+  try {
+    const _bc = new BroadcastChannel('adze');
+    _bc.addEventListener('message', (ev) => {
+      const msg = ev && ev.data;
+      if (!msg || msg.type !== 'pushed') return;
+      if (typeof syncGetTabId === 'function' && msg.tabId === syncGetTabId()) return;
+      _crossTabStaleWarning = 'Another tab updated your synced data. Reload to continue editing.';
+    });
+  } catch (e) {
+    // BroadcastChannel unsupported / blocked — fall through silently;
+    // the cross-tab warning is best-effort anyway.
+  }
+}
 
 function newState() {
   return {
