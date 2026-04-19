@@ -38,6 +38,7 @@ Decomposed single-file `app.html` into `engine/` · `systems/` · `render/` · `
 - OAuth providers (Apple, Google) — requires Apple Developer account + Google Cloud OAuth client + Supabase provider config.
 - Optional LLM interpretation for free text (opt-in, explicit "this leaves your device" disclosure). Deferred — may never ship.
 - Obsidian vault integration for sutta tracking + project journal.
+- **Cross-user Sangha** — bond with other practitioners, visible profile cards with per-field opt-in sharing, metta/quote/nudge actions, champion-ability effects across bonds. Full design in `docs/SANGHA-DESIGN.md`. Implementation in 4 stages.
 
 ## Current Focus (what's next)
 1. **Fix feedback FAB regression** (blocks beta testing).

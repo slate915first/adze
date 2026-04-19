@@ -51,6 +51,7 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 - **Quote save / collection** — "A word from the Buddha" card has no way to save a quote that resonates. Users want a bookmark action + a "saved quotes" screen to revisit or print. See 2026-04-19 entry.
 - **Annotate setup-flow elements with `data-component`** — curated paths for element-feedback reports beat derived DOM paths. One pass through render/setup.js + render/diagnostic.js.
 - **Audit Phase B / Phase C selects for more missing-re-render bugs** (same class as `currentEdge`).
+- **Cross-user Sangha feature** — bond with other practitioners, profile cards with per-field opt-in sharing, metta/quote/nudge actions, champion abilities across bonds. Full design written in [`docs/SANGHA-DESIGN.md`](SANGHA-DESIGN.md). Stage-4 work; 4 implementation stages so we can ship in pieces.
 
 ---
 

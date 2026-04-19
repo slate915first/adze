@@ -45,6 +45,7 @@ Open [http://localhost:8000](http://localhost:8000). No build, no install, no de
 - [`docs/BETA-GUIDE.md`](docs/BETA-GUIDE.md) — for beta testers.
 - [`docs/REVIEW.md`](docs/REVIEW.md) — production-readiness audit.
 - [`docs/POSTMORTEMS.md`](docs/POSTMORTEMS.md) — honest record of bugs that reached users and the practices we adopted to stop them recurring.
+- [`docs/SANGHA-DESIGN.md`](docs/SANGHA-DESIGN.md) — design brief for the cross-user Sangha feature (privacy constraints, social actions, champion-abilities integration, rollout stages).
 - [`CHANGELOG.md`](CHANGELOG.md) — what shipped in each release.
 
 ## Contributing
