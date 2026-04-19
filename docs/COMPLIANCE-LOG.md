@@ -36,9 +36,9 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
   - German translation of `datenschutz.*` keys (file the translation under a future `de.json` or as inline `datenschutz.de.*` keys; tracked under "Translationen der Rechtsdokumente" in DSGVO audit C21).
   - Implement the 24-month-inactivity auto-delete cron mentioned in `datenschutz.para_retention` (currently honest-but-unimplemented; folds with A10 retention work).
 
-- [ ] **A4 · Link Terms from app + age/Datenschutz checkbox**
-  New `src/modals/terms.js` (loads `docs/TERMS.md` content). Add un-pre-checked "I am at least 16 years old and have read the Datenschutzerklärung and Terms" checkbox to magic-request flow in `src/render/welcome.js` / `src/modals/auth.js`.
-  *Why:* Art. 8 DSGVO (Mindestalter 16 in DE), § 312i BGB.
+- [x] **A4 · Age + Datenschutz checkbox in magic-request flow** · v15.12.4
+  Un-pre-checked checkbox added to `renderMagicRequest` in `src/modals/auth.js`. Send-code button starts disabled and toggles on `#magic-consent` change; defense-in-depth check also in `authDoRequestMagicCode` rejects with a visible error if the box was bypassed via DOM tampering. Inline buttons under the checkbox open the Datenschutzerklärung and Impressum modals (cross-modal navigation acceptable for a deliberate due-diligence action; user returns to the welcome screen and can re-open auth). New e2e test `consent checkbox gates the Send-code button (Track A4)` verifies the gate works (button disabled → check → enabled → uncheck → disabled).
+  *Note:* Terms-as-separate-document was deferred — the existing `docs/TERMS.md` is fine as project doc but isn't loaded into the app yet. The magic-request consent text references **Datenschutzerklärung + Impressum only** (the two legal must-haves); Terms can be folded in later if/when the app moves to commercial offerings.
 
 - [ ] **A5 · DPA evidence archive**
   Create `docs/COMPLIANCE/DPA/` (gitignored). Activate / download DPAs for Supabase, Cloudflare, Resend. Add 1-page TIA (Transfer Impact Assessment) for the three US processors — short, since payload is E2E for Supabase, IPs only for Cloudflare/Resend.

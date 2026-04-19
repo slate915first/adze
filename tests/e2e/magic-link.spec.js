@@ -62,6 +62,7 @@ test.describe('Magic-link sign-in', () => {
     await page.goto('/');
     await page.getByRole('button', { name: /sign in with email/i }).click();
     await page.fill('#magic-email', 'tester@adze.life');
+    await page.check('#magic-consent');
     await page.getByRole('button', { name: /send code/i }).click();
     await expect(page.locator('#magic-code')).toBeVisible({ timeout: 5000 });
     await page.fill('#magic-code', '482931');
@@ -78,6 +79,7 @@ test.describe('Magic-link sign-in', () => {
     await page.goto('/');
     await page.getByRole('button', { name: /sign in with email/i }).click();
     await page.fill('#magic-email', 'blocked@example.com');
+    await page.check('#magic-consent');
     await page.getByRole('button', { name: /send code/i }).click();
     await expect(page.getByText(/closed beta/i).first()).toBeVisible({ timeout: 5000 });
     // User stays on the request form, not advanced to code entry.
@@ -89,6 +91,7 @@ test.describe('Magic-link sign-in', () => {
     await page.goto('/');
     await page.getByRole('button', { name: /sign in with email/i }).click();
     await page.fill('#magic-email', 'tester@adze.life');
+    await page.check('#magic-consent');
     await page.getByRole('button', { name: /send code/i }).click();
     await page.fill('#magic-code', '000000');
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
@@ -97,11 +100,28 @@ test.describe('Magic-link sign-in', () => {
     await expect(page.locator('#magic-code')).toBeVisible();
   });
 
+  test('consent checkbox gates the Send-code button (Track A4)', async ({ page }) => {
+    await stubSupabase(page);
+    await page.goto('/');
+    await page.getByRole('button', { name: /sign in with email/i }).click();
+    await page.fill('#magic-email', 'tester@adze.life');
+    // Consent NOT checked: Send-code button must be disabled.
+    const sendBtn = page.getByRole('button', { name: /send code/i });
+    await expect(sendBtn).toBeDisabled();
+    // Checking the box enables the button.
+    await page.check('#magic-consent');
+    await expect(sendBtn).toBeEnabled();
+    // Unchecking disables again.
+    await page.uncheck('#magic-consent');
+    await expect(sendBtn).toBeDisabled();
+  });
+
   test('very short code rejected client-side before network', async ({ page }) => {
     await stubSupabase(page);
     await page.goto('/');
     await page.getByRole('button', { name: /sign in with email/i }).click();
     await page.fill('#magic-email', 'tester@adze.life');
+    await page.check('#magic-consent');
     await page.getByRole('button', { name: /send code/i }).click();
     await page.fill('#magic-code', '12');
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();

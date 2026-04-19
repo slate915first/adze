@@ -70,10 +70,26 @@ function renderMagicRequest(m) {
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Email</label>
           <input id="magic-email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" inputmode="email" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100" ${m.busy ? 'disabled' : ''}/>
         </div>
+        <!-- v15.12.4 — DSGVO Track A4: age (Art. 8) + Datenschutz (Art. 13)
+             confirmation. Un-pre-checked. Send-code button is disabled until
+             this is checked. Defense-in-depth check also in
+             authDoRequestMagicCode in case the disabled-attribute is bypassed. -->
+        <div class="rounded-lg p-2 border border-amber-800/40 bg-amber-950/20">
+          <label class="flex items-start gap-2 text-[11px] text-amber-100/80 leading-relaxed cursor-pointer">
+            <input id="magic-consent" type="checkbox" class="mt-0.5 flex-shrink-0" ${m.busy ? 'disabled' : ''} oninput="(function(cb){var b=document.getElementById('magic-send-btn');if(b){b.disabled=!cb.checked||${m.busy ? 'true' : 'false'};}})(this)"/>
+            <span>I am at least 16 years old and have read the documents below.</span>
+          </label>
+          <div class="mt-1 ml-5 text-[10px] text-amber-100/60">
+            Read:
+            <button type="button" onclick="openDatenschutz()" class="text-amber-300/90 hover:text-amber-200 underline">Datenschutzerklärung</button>
+            ·
+            <button type="button" onclick="openImpressum()" class="text-amber-300/90 hover:text-amber-200 underline">Impressum</button>
+          </div>
+        </div>
       </div>
       <div class="flex justify-between gap-2">
         <button class="btn btn-ghost" onclick="closeModal()" ${m.busy ? 'disabled' : ''}>Cancel</button>
-        <button class="btn btn-gold" onclick="authDoRequestMagicCode()" ${m.busy ? 'disabled' : ''}>${m.busy ? 'Sending…' : 'Send code'}</button>
+        <button id="magic-send-btn" class="btn btn-gold" onclick="authDoRequestMagicCode()" disabled>${m.busy ? 'Sending…' : 'Send code'}</button>
       </div>
       <p class="text-[11px] text-amber-100/55 italic text-center mt-4 leading-relaxed">
         Adze is in closed beta. Only pre-approved emails receive codes. To request access, email <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
@@ -121,6 +137,12 @@ function renderMagicVerify(m) {
 async function authDoRequestMagicCode() {
   const email = document.getElementById('magic-email')?.value;
   if (!email || !email.trim()) return authSetAuthError('Email is required.');
+  // v15.12.4 — defense in depth: the Send-code button starts disabled until
+  // #magic-consent is checked, but if a script bypasses that, refuse here.
+  const consent = document.getElementById('magic-consent');
+  if (!consent || !consent.checked) {
+    return authSetAuthError('Please confirm your age and that you have read the Datenschutzerklärung.');
+  }
   authSetAuthBusy(true);
   try {
     await authRequestMagicCode(email);

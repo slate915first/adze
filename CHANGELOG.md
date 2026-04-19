@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.12.4] — 2026-04-19 · DSGVO Track A4 — Age + Datenschutz consent in magic-request flow
+
+### Added
+- **`renderMagicRequest`** now shows an un-pre-checked consent checkbox: *"I am at least 16 years old and have read the documents below."* with inline links to the Datenschutzerklärung and Impressum. Send-code button is disabled until the box is checked. Defense-in-depth: `authDoRequestMagicCode` also rejects with a visible error if the box was bypassed via DOM tampering.
+- **New e2e test** `consent checkbox gates the Send-code button (Track A4)` — verifies the button is disabled without consent, enabled with consent, disabled again after uncheck. 19/19 Playwright + 39/39 vitest.
+
+### Why
+- **Art. 8 DSGVO** — minimum age 16 in Germany. Without an explicit gate, a 15-year-old could create a synced account through the magic-link flow.
+- **Art. 7 DSGVO** — informed consent must be explicit, unambiguous, freely given, easy to withdraw. Linking the Datenschutzerklärung and Impressum at the point of consent (not just in a footer) makes informed consent demonstrable.
+
+### Notes
+- A separate Terms-of-Service document (`docs/TERMS.md`) is not currently linked from the app; the consent references the two legal must-haves only. Terms can be folded in if/when Adze offers commercial services.
+- Existing magic-link e2e tests updated to check the consent box before clicking Send-code (one regex Edit covered the three `tester@adze.life` call sites + one for the `blocked@example.com` case).
+
 ## [15.12.3] — 2026-04-19 · DSGVO Track A9 — Account deletion now removes email from beta_allowlist
 
 ### Fixed
