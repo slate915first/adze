@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.12.1] — 2026-04-19 · HOTFIX — Setup summary no longer names a worry the user did not pick (Li May)
+
+### Fixed
+- **`src/engine/diagnostic.js:291` and `:315`** — the beginnerCare intro lines were hardcoded with chip-specific content (*"Adjust any posture to keep the **pain** manageable"* in physicalNote, *"**Thoughts do not stop** — they are what the mind does"* in reassurance). Both fired whenever **any** chip in the respective question was selected, regardless of which chip. Effect: a tester (Li May) who picked `time_commit` + `missing_days` saw a paragraph about not stopping thoughts — a worry she had not named. Same shape for someone who picked only `sleep_energy` and was told about pain.
+- Both intros are now chip-agnostic; the bold lines that follow continue to carry chip-specific guidance via `chipInterp.flags`. No flag mapping changed; copy below the intro untouched.
+
+### Added
+- **`tests/unit/engine-diagnostic.test.js`** — six new cases under `beginnerCare intro must not name an unselected chip`. Asserts the intro never contains "thoughts do not stop" / "thoughts" / "pain" when the corresponding chip wasn't picked, and verifies the targeted bold lines still surface for `time_commit`, `missing_days`, `back`. Existing 33 tests still pass; total 39/39.
+
+### Why this matters beyond the bug
+The same `dominant_hindrance` derivation that drives this summary becomes the highest-risk Sangha-share field (Track B5 in `docs/COMPLIANCE-LOG.md`). Wrong derivation now = wrong public face later. Fixing this is also Sangha prep.
+
 ## [15.12.0] — 2026-04-19 · DSGVO Track A1 + A2 — self-host CDNs + Impressum
 
 Three-lens review (game design + senior engineer + Datenschutz lawyer) of the upcoming Sangha feature converged on a sequenced rollout. Tracks documented in `docs/COMPLIANCE-LOG.md`; roadmap in `docs/ROADMAP.md`. This release ships the two highest-priority items in Track A.

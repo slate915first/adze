@@ -287,8 +287,11 @@ function computeRecommendation(diag, chipInterp) {
       return false;
     };
     if (hasChipsOrOther('physicalConcerns', 'physicalConcernsOther')) {
-      // Generic intro — true for any physical concern.
-      const lines = ['The body you mentioned matters. Adjust any posture to keep the pain manageable — if a sit makes pain worse, end the sit. The app is aware of this.'];
+      // Chip-agnostic intro: must be true regardless of WHICH physicalConcerns
+      // chip was picked. The bold lines below carry chip-specific guidance.
+      // Naming "pain" or "back" here would fabricate a worry the user did not
+      // name (e.g. someone who only picked sleep_energy).
+      const lines = ['The body you named matters. Adjust posture freely — if a sit makes anything worse, end the sit. The body is part of the practice, not an obstacle to it.'];
       // v15.2 — chip-flag-driven specifics. Each flag adds one short, targeted
       // line. Mapped from systems/chip-interpretation.js + docs/CHIP-INTERPRETATION.md.
       if (hasFlag('posture.back')) {
@@ -312,7 +315,11 @@ function computeRecommendation(diag, chipInterp) {
       beginnerCare.physicalNote = lines.length === 1 ? lines[0] : lines[0] + '<br><br>' + lines.slice(1).join('<br>');
     }
     if (hasChipsOrOther('concerns', 'concernsOther')) {
-      const lines = ['What you named is common. Thoughts do not stop — they are what the mind does. The practice is not to stop them but to notice when attention has left the breath and return. That return, repeated, is the meditation.'];
+      // Chip-agnostic intro: previously hardcoded "Thoughts do not stop —"
+      // which fabricated that worry for any user who picked any concerns chip
+      // (Li May reported this bug 2026-04-19). The targeted bold lines below
+      // address the actual chips the user picked.
+      const lines = ['What you named is common — many practitioners face it. The path doesn\'t require getting past these things first; it includes them.'];
       if (hasFlag('misconception.thoughts')) {
         lines.push('<b>On thoughts not stopping:</b> the instruction is not "no thoughts" — it is "notice when attention has wandered, return." That return is the meditation.');
       }

@@ -182,6 +182,64 @@ describe('computeRecommendation · chipInterp flags shape beginnerCare copy (v15
   });
 });
 
+describe('computeRecommendation · beginnerCare intro must not name an unselected chip (Li May 2026-04-19)', () => {
+  it('reassurance intro does NOT name "thoughts" when thoughts_stop chip not picked', () => {
+    const r = computeRecommendation(
+      { experience: 'none', concerns: ['time_commit', 'missing_days'] },
+      { factorBumps: {}, flags: ['friction.time', 'friction.perfectionism'], otherTexts: {} }
+    );
+    const intro = r.beginnerCare.reassurance.split('<br>')[0].toLowerCase();
+    expect(intro).not.toContain('thoughts do not stop');
+    expect(intro).not.toContain('thoughts');
+  });
+
+  it('physicalNote intro does NOT name "pain" when only sleep_energy chip is picked', () => {
+    const r = computeRecommendation(
+      { experience: 'none', physicalConcerns: ['sleep_energy'] },
+      { factorBumps: {}, flags: ['bias.morning_sits'], otherTexts: {} }
+    );
+    const intro = r.beginnerCare.physicalNote.split('<br>')[0].toLowerCase();
+    expect(intro).not.toMatch(/\bpain\b/);
+  });
+
+  it('reassurance still surfaces time + missing-days specifics in the bold lines', () => {
+    const r = computeRecommendation(
+      { experience: 'none', concerns: ['time_commit', 'missing_days'] },
+      { factorBumps: {}, flags: ['friction.time', 'friction.perfectionism'], otherTexts: {} }
+    );
+    expect(r.beginnerCare.reassurance.toLowerCase()).toMatch(/time/);
+    expect(r.beginnerCare.reassurance.toLowerCase()).toMatch(/miss/);
+  });
+
+  it('physicalNote still surfaces back-specific guidance when posture.back flag fires', () => {
+    const r = computeRecommendation(
+      { experience: 'none', physicalConcerns: ['back'] },
+      { factorBumps: {}, flags: ['posture.back'], otherTexts: {} }
+    );
+    expect(r.beginnerCare.physicalNote.toLowerCase()).toContain('back');
+  });
+
+  it('Other-only free-text produces a neutral intro (no fabricated specific worry)', () => {
+    const r = computeRecommendation({
+      experience: 'none',
+      concerns: [],
+      concernsOther: 'worried about consistency'
+    });
+    expect(r.beginnerCare.reassurance).toBeTruthy();
+    expect(r.beginnerCare.reassurance.toLowerCase()).not.toContain('thoughts do not stop');
+    expect(r.beginnerCare.reassurance.toLowerCase()).not.toContain('thoughts');
+  });
+
+  it('single religious-framing chip leads with neutral intro, not thoughts content', () => {
+    const r = computeRecommendation(
+      { experience: 'none', concerns: ['religious'] },
+      { factorBumps: {}, flags: ['framing.secular_preferred'], otherTexts: {} }
+    );
+    const intro = r.beginnerCare.reassurance.split('<br>')[0].toLowerCase();
+    expect(intro).not.toContain('thoughts do not stop');
+  });
+});
+
 describe('computeRecommendation · experienced branch', () => {
   it('does not produce beginnerCare for experienced practitioners', () => {
     const r = computeRecommendation({ experience: 'long', currentSitLength: 60 });

@@ -47,7 +47,6 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 
 *(Top 1–3 items you'll tackle in the next working session. Promoted from Open when a pattern emerges or a severity demands it.)*
 
-- **Fix setup-summary "phantom worry" bug** — engine names a concern the user did not select. 3-line diff in `src/engine/diagnostic.js` + 6 new tests. See 2026-04-19 `[bug] Setup summary names a worry…` entry. Doubles as Sangha prep (same field becomes a sharable profile attribute under Track B5).
 - **Tap-to-complete habit confirmation** — today a single click on a habit card (morning sit, evening sit, etc.) marks it done with zero feedback. Replace with either (a) a confirmation popup "Start sit?" / "Mark this sit as done?" or (b) tap-and-hold to toggle. See 2026-04-19 `[ux]` entry below.
 - **Quote save / collection** — "A word from the Buddha" card has no way to save a quote that resonates. Users want a bookmark action + a "saved quotes" screen to revisit or print. See 2026-04-19 entry.
 - **Annotate setup-flow elements with `data-component`** — curated paths for element-feedback reports beat derived DOM paths. One pass through render/setup.js + render/diagnostic.js.
@@ -69,7 +68,7 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 **Reproduction:** Setup → Phase A (energy=5, experience="none", dominantHindrance="restless") → Phase B → tick `concerns: time_commit + missing_days` only → finish Phase C → summary's reassurance block leads with the thoughts-not-stopping paragraph.
 **Fix sketch:** Replace the hardcoded chip-naming intro with a generic chip-agnostic opener; the targeted bold lines that follow already carry the specific content driven by `chipInterp.flags`. ~3-line diff. Add 6 tests asserting the intro NEVER references a keyword absent from selections. Blast radius: zero (existing tests use `.toBeTruthy()`, none assert intro text).
 **Adjacent risks found:** (a) Phase C sliders missing `sloth` even though Phase A allows it as `dominantHindrance`; (b) `hopes: ['hindrance']` is collected but unused; (c) `dominant_hindrance` snake_case vs camelCase fragility between `setup-flow.js:706` write and `hindrances.js:53` read.
-**Status:** OPEN. Promoted to Next up. Same field is the highest-risk Sangha-share field (Track B5) — fixing the derivation now is also Sangha prep.
+**Status:** FIXED in v15.12.1. Three-line copy change in `src/engine/diagnostic.js:291` and `:315` (intros now chip-agnostic; bold lines below unchanged). Added 6 vitest cases under `beginnerCare intro must not name an unselected chip` — guards against regression. The 3 adjacent risks remain logged here for later attention (not blockers).
 
 ### 2026-04-19 · [bug] Add-custom-habit placeholder shows `t('add_habit.name_placeholder')` literally
 
