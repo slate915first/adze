@@ -48,7 +48,8 @@ function renderPrivacyDetailModal(m) {
 
           <p class="text-xs text-amber-100/65 italic mt-4">${t('privacy_detail.footer')}</p>
         </div>
-        <div class="flex justify-end">
+        <div class="flex justify-between items-center gap-2 flex-wrap">
+          <button class="btn btn-ghost text-xs" onclick="openDatenschutz()">${t('privacy_detail.detailed_notice_button')}</button>
           <button class="btn btn-gold" onclick="closeModal()">${t('privacy_detail.understood_button')}</button>
         </div>
       </div>

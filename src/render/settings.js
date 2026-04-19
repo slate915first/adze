@@ -266,6 +266,7 @@ function renderSettings() {
       <p class="text-xs text-amber-100/70 mb-3 leading-relaxed">${t('settings.privacy.body')}</p>
       <div class="flex gap-2 flex-wrap">
         <button onclick="openPrivacyDetail()" class="btn btn-ghost text-xs">${t('settings.privacy.read_more')}</button>
+        <button onclick="openDatenschutz()" class="btn btn-ghost text-xs">${t('welcome.privacy_policy_link')}</button>
         <button onclick="openImpressum()" class="btn btn-ghost text-xs">${t('welcome.imprint_link')}</button>
       </div>
     </div>

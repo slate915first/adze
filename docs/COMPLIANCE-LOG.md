@@ -30,9 +30,11 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
   *Decision needed:* address strategy (home / c/o coworking / virtual office).
   *Why:* § 5 DDG, BGH Zwei-Klick-Regel.
 
-- [ ] **A3 · Expand Datenschutzerklärung to Art. 13 completeness**
-  Edit `src/modals/privacy-detail.js` + matching strings in `src/content/strings/en.json`. Add: recipients table (Supabase, Cloudflare, Resend, jsDelivr, Tailwind CDN), retention windows, Beschwerderecht (Sächsischer Datenschutzbeauftragter, Dresden), lawful-basis table, "no automated decision-making" clause, cookie/TTDSG paragraph.
-  *Why:* Art. 13 DSGVO Pflichtangaben.
+- [x] **A3 · Expand Datenschutzerklärung to Art. 13 completeness** · v15.12.2
+  Built as a separate `datenschutz` modal (companion to the friendly `privacy_detail`), reachable from welcome footer + Settings + a "Detailed legal notice" button at the bottom of the friendly modal. 12 numbered sections covering all of Art. 13 (1) + (2): controller, purposes + lawful bases, recipients (Supabase + Cloudflare + Resend), Art. 46 SCCs, retention windows, rights, complaint to Sächsischer Datenschutzbeauftragter, required-data clause, no-Art-22-automated-decision, TDDDG § 25 (2) Nr. 2 cookie position, source of data, effective-date + change procedure. Friendly `privacy_detail.para_tailwind` + `para_gdpr` updated to reflect self-hosting (A1) and link to the detailed notice. Currently English; German translation queued (see follow-ups). Scope: current Adze only — no Sangha-related processing declared (Tracks B/C parked).
+  *Follow-ups not blocking other Track A items:*
+  - German translation of `datenschutz.*` keys (file the translation under a future `de.json` or as inline `datenschutz.de.*` keys; tracked under "Translationen der Rechtsdokumente" in DSGVO audit C21).
+  - Implement the 24-month-inactivity auto-delete cron mentioned in `datenschutz.para_retention` (currently honest-but-unimplemented; folds with A10 retention work).
 
 - [ ] **A4 · Link Terms from app + age/Datenschutz checkbox**
   New `src/modals/terms.js` (loads `docs/TERMS.md` content). Add un-pre-checked "I am at least 16 years old and have read the Datenschutzerklärung and Terms" checkbox to magic-request flow in `src/render/welcome.js` / `src/modals/auth.js`.
@@ -64,7 +66,18 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
 
 ---
 
-## Track B — must complete before Sangha implementation begins
+## Track B — must complete before Sangha implementation begins · ⚠ PARKED 2026-04-19
+
+**Status: deferred indefinitely.** The Sangha cross-user feature introduces Art. 9 sensitive-data processing (mental-health-adjacent), social-graph processing of vulnerable users, and likely triggers an Art. 35 DPIA + a § 38 BDSG DSB-pflicht reassessment. That's a substantial legal overhead for a feature with no validated tester demand yet.
+
+**Re-evaluation criteria** — only reopen Track B + C when ALL of:
+1. Track A is complete (EU beta has its full legal floor).
+2. Multiple beta testers (≥3) have explicitly asked for cross-user features.
+3. The product owner (Dirk) has decided that the social layer is worth the compliance overhead.
+
+**The design work is preserved.** `docs/SANGHA-DESIGN.md` and the three-lens reviews (game design + engineering audit + DSGVO audit summarised below) remain valuable intellectual capital. Don't delete; do not implement.
+
+**Implication for current legal work**: the Datenschutzerklärung (A3), VVT (A7), and DPIA decision should describe **only what Adze processes today** (single-practitioner, E2E-encrypted, no cross-user sharing). Do NOT pre-declare Sangha processing — over-disclosure of unimplemented processing is its own risk.
 
 These six items prepare the legal + design + technical ground for Sangha. They depend on Track A finishing; they don't depend on each other.
 
@@ -106,7 +119,9 @@ These six items prepare the legal + design + technical ground for Sangha. They d
 
 ---
 
-## Track C — Sangha implementation (5 stages, gated on Track A + B)
+## Track C — Sangha implementation (5 stages, gated on Track A + B) · ⚠ PARKED 2026-04-19
+
+**Status: deferred indefinitely.** See Track B parking note. Engineering plan preserved below for the day it becomes unparked.
 
 Replaces the original 4-stage plan in `docs/SANGHA-DESIGN.md` §205–217. Adds Stage 0 prep (engineering audit insight). Splits original Stage 1 into separate schema + UI deploys. Each stage = one deploy + green live-RLS suite.
 
@@ -167,3 +182,4 @@ When Sangha ships, the per-field sharing consent dialogs are **Art. 7 DSGVO cons
 | 2026-04-19 | Notifications default silent; no push for metta                                                                | Game-des. + lawyer |
 | 2026-04-19 | No cookie banner; document TDDDG-§25(2)Nr.2 position in Datenschutzerklärung                                   | Lawyer             |
 | 2026-04-19 | Impressum required NOW for closed beta (publicly served URL)                                                   | Lawyer             |
+| 2026-04-19 | **Sangha (Tracks B + C) parked indefinitely.** Re-evaluate when Track A complete + ≥3 testers ask + product owner decides the legal overhead is worth it. Design docs preserved as IC, not implemented. | Product (Dirk)     |

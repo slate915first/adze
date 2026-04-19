@@ -246,6 +246,9 @@ function renderModal() {
   else if (m.type === 'impressum') {
     content = renderImpressumModal(m);
   }
+  else if (m.type === 'datenschutz') {
+    content = renderDatenschutzModal(m);
+  }
   else if (m.type === 'feedback_fab_menu') {
     content = renderFeedbackFabMenuModal(m);
   }

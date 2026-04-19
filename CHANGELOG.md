@@ -4,6 +4,23 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.12.2] — 2026-04-19 · DSGVO Track A3 — Datenschutzerklärung (Art. 13 disclosure) + Sangha parked
+
+### Added
+- **Datenschutzerklärung modal** — new `src/modals/datenschutz.js` companion to the friendly `privacy_detail` modal. 12 numbered sections covering all of Art. 13 (1) + (2): controller, purposes + lawful bases, recipients (Supabase / Cloudflare / Resend), Art. 46 SCCs, retention windows, full rights enumeration, complaint contact (Sächsischer Datenschutz- und Transparenzbeauftragter), required-data clause, Art. 22 negative declaration, TDDDG § 25 (2) Nr. 2 cookie position, source of data, effective-date + change procedure. Reachable via `openDatenschutz()` from welcome footer, Settings → Privacy, and a new "Detailed legal notice" button at the bottom of the friendly modal.
+- **Welcome footer + Settings → Privacy** now show three legal links: friendly privacy note · Datenschutz · Impressum.
+
+### Changed
+- **`privacy_detail.para_tailwind`** — replaced the obsolete "Tailwind loads from a CDN" paragraph with the truthful "no third-party scripts at runtime; everything vendored under /vendor/" statement (consistent with A1).
+- **`privacy_detail.para_gdpr`** — shortened to a summary paragraph that points to the new detailed notice for the structured legal text.
+
+### Decided
+- **Sangha (Tracks B + C) parked indefinitely.** Cross-user feature introduces Art. 9 sensitive-data processing, social-graph processing, and a likely Art. 35 DPIA + § 38 BDSG DSB-pflicht reassessment — too much compliance overhead for a feature with no validated tester demand. Design docs in `docs/SANGHA-DESIGN.md` preserved as intellectual capital. Re-evaluation criteria documented in `docs/COMPLIANCE-LOG.md` (need: Track A complete + ≥3 tester requests + product-owner go-ahead). The current legal work covers Adze-as-it-is-today only — no pre-disclosure of unimplemented processing.
+
+### Notes
+- Datenschutzerklärung is currently English. German translation queued as a follow-up. The Impressum stays German (legal text obligation under § 5 DDG); Datenschutzerklärung in the language the app otherwise uses is acceptable, with translation a quality improvement.
+- Two self-honest acknowledgements in the retention paragraph: 24-month-inactivity auto-delete will be implemented before public release (today only the explicit in-app delete-account button is active); folds with Track A10.
+
 ## [15.12.1] — 2026-04-19 · HOTFIX — Setup summary no longer names a worry the user did not pick (Li May)
 
 ### Fixed

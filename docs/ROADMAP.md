@@ -38,7 +38,7 @@ Decomposed single-file `app.html` into `engine/` · `systems/` · `render/` · `
 - OAuth providers (Apple, Google) — requires Apple Developer account + Google Cloud OAuth client + Supabase provider config.
 - Optional LLM interpretation for free text (opt-in, explicit "this leaves your device" disclosure). Deferred — may never ship.
 - Obsidian vault integration for sutta tracking + project journal.
-- **Cross-user Sangha** — bond with other practitioners, visible profile cards with per-field opt-in sharing, metta/quote/nudge actions, champion-ability effects across bonds. Design in `docs/SANGHA-DESIGN.md`; implementation sequencing in `docs/COMPLIANCE-LOG.md` Track C (5 stages, replacing the original 4).
+- **Cross-user Sangha · PARKED 2026-04-19** — design in `docs/SANGHA-DESIGN.md` (preserved); legal/engineering reviews in `docs/COMPLIANCE-LOG.md`. Deferred until EU beta has its legal floor and ≥3 testers ask. Reason: Art. 9 + DPIA + DSB-reassessment overhead not worth it for unvalidated demand.
 
 ## Compliance + Sangha sequencing (added 2026-04-19)
 
@@ -56,16 +56,8 @@ Three independent reviews (game design, senior-engineer audit, DSGVO/lawyer audi
 9. Extend `delete-account` Edge Function to also clean `beta_allowlist`.
 10. Define + publish retention windows (incl. 24-month-inactivity auto-delete cron).
 
-**Track B — must complete before Sangha implementation begins**
-1. ADR-7 (server data is a projection, never source of truth).
-2. DPIA-sangha.md (Art. 35 — `dominant_hindrance` is Art. 9 sensitive).
-3. Design the missing brahmavihāra verbs (karuṇā, muditā, upekkhā — only metta has one today).
-4. Design dormancy / dissolution / abuse-handling.
-5. Resolve `dominant_hindrance` UX (coarsen-or-precise toggle).
-6. Resolve the 4 open design questions (size cap 7/12, defer teacher role, default-silent notifications, forced-pen-name onboarding).
-
-**Track C — Sangha implementation** (replaces the original 4-stage plan in SANGHA-DESIGN.md)
-- C0 prep (no schema) → C1 profiles + projection sync (no UI) → C2 bonds + peer read → C3 bond UI + card grid → C4 social events → C5 cross-sangha abilities.
+**Track B + Track C — Sangha · ⚠ PARKED 2026-04-19**
+The cross-user Sangha feature is deferred indefinitely. Reason: introduces Art. 9 sensitive-data processing + social-graph + Art. 35 DPIA trigger for a feature with no validated tester demand. Design docs in `docs/SANGHA-DESIGN.md` are preserved as intellectual capital. Re-evaluation criteria documented in `docs/COMPLIANCE-LOG.md` (need Track A complete + ≥3 tester requests + product-owner go-ahead).
 
 **Cookie banner status:** not required (TDDDG § 25 (2) Nr. 2) — document this position in the Datenschutzerklärung.
 
@@ -74,8 +66,8 @@ Three independent reviews (game design, senior-engineer audit, DSGVO/lawyer audi
 2. **Fix `engine/diagnostic.js` reassurance lead sentence** — hardcoded "Thoughts do not stop" fires regardless of selected chips (Li May bug, see FEEDBACK.md 2026-04-19). 3-line fix + 6 new tests; engineering review in COMPLIANCE-LOG.md notes.
 3. **Track A2 + A3 — Impressum + Datenschutzerklärung expansion** (in parallel; A2 is mostly content + address decision).
 4. **Quote save / collection** + **tap-to-complete habit confirmation** (existing FEEDBACK.md "Next up").
-5. **Track B prep** can start in parallel with A4–A10; specifically B3 (brahmavihāra verbs) and B6 (resolve open design questions) are pure design work.
-6. **Encryption transparency copy** — finish the privacy-detail modal update (folds into A3).
+5. **Encryption transparency copy** — finish the privacy-detail modal update (folds into A3).
+6. *(Track B Sangha-prep removed from current focus — feature parked indefinitely; see compliance section above.)*
 
 ## Backlog (not committed)
 - Duplicate file: `src/loaders.js` and `src/data/loaders.js` are both present. One is a leftover — consolidate.

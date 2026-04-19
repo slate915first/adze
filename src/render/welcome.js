@@ -61,7 +61,11 @@ function renderWelcome() {
             ${t('welcome.privacy_link')}
           </button>
         </div>
-        <div class="mt-2">
+        <div class="mt-2 flex justify-center gap-3">
+          <button onclick="openDatenschutz()" class="text-amber-300/80 hover:text-amber-200 underline">
+            ${t('welcome.privacy_policy_link')}
+          </button>
+          <span class="text-amber-100/30">·</span>
           <button onclick="openImpressum()" class="text-amber-300/80 hover:text-amber-200 underline">
             ${t('welcome.imprint_link')}
           </button>

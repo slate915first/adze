@@ -15,6 +15,11 @@ function openImpressum() {
   renderModal();
 }
 
+function openDatenschutz() {
+  view.modal = { type: 'datenschutz' };
+  renderModal();
+}
+
 function openArmyFromToday(armyId) {
   if (view.currentMember) openPathView(view.currentMember);
 }
