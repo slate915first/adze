@@ -200,6 +200,12 @@ async function authVerifyMagicCode(email, code) {
   // invalid" is returned for a VALID token with the wrong type, not just
   // for real expiry — so the only reliable path is to try each type until
   // one works. Failed attempts don't consume the token.
+  //
+  // v15.17.1 — short-circuit on clearly-transient errors so we don't burn
+  // the rate-limit quota (and the user's time) trying four types against
+  // a Supabase 5xx or a network failure. The "token invalid" / "expired"
+  // signal is the ONLY one we should loop on — every other error class is
+  // a real failure we should surface immediately.
   const attempts = ['email', 'magiclink', 'recovery', 'signup'];
   let lastError = null;
   for (const type of attempts) {
@@ -215,6 +221,14 @@ async function authVerifyMagicCode(email, code) {
       return;
     }
     lastError = error;
+    // Short-circuit: only keep looping for token-type-mismatch style errors.
+    // Any other error (network, 5xx, rate limit) won't be fixed by trying a
+    // different `type`, so stop now and surface the real cause.
+    if (error) {
+      const msg = String(error.message || '').toLowerCase();
+      const retryable = msg.includes('token') || msg.includes('expired') || msg.includes('invalid');
+      if (!retryable) break;
+    }
   }
   throw new Error(
     (lastError && lastError.message) ||

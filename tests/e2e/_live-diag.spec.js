@@ -26,12 +26,17 @@ test.describe(`Live smoke (${BASE})`, () => {
     expect(ours, `unexpected errors:\n${ours.join('\n')}`).toEqual([]);
   });
 
-  test('Begin button actually responds (opens setup modal)', async ({ page }) => {
+  test('primary welcome button actually responds (opens modal)', async ({ page }) => {
+    // v15.17.1 — in closed beta the primary button is "✉️ Sign in with
+    // email" (renderWelcome when ADZE_PUBLIC_SIGNUP_ENABLED is false).
+    // Once public signup flips on, the same slot renders "Begin". Accept
+    // either so this smoke test stays green across the pre-public-launch
+    // transition. What we're proving is that inline onclick handlers fire
+    // (the v15.3–v15.10 CSP-broke-every-button class of regression).
     await page.goto('/', { waitUntil: 'networkidle', timeout: 20_000 });
-    await page.getByRole('button', { name: /begin/i }).click();
-    // The setup intro ("v15.x · the app listens first…") is the first
-    // thing rendered inside #modal-root after Begin. Asserting SOMETHING
-    // renders proves inline onclick handlers are executing.
-    await expect(page.locator('#modal-root .modal-bg')).toBeVisible({ timeout: 5_000 });
+    const primary = page.getByRole('button', { name: /begin|sign in with email/i }).first();
+    await expect(primary).toBeVisible({ timeout: 5_000 });
+    await primary.click();
+    await expect(page.locator('#modal-root .modal-bg, #modal-root .fade-in')).toBeVisible({ timeout: 5_000 });
   });
 });

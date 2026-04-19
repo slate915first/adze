@@ -11,8 +11,23 @@ async function loadState() {
   // Synced mode (authed AND passphrase unlocked): pull encrypted ciphertext
   // from Supabase. On failure do NOT silently fall back to localStorage — the
   // E2E promise forbids it. Throw so bootstrap's error UI surfaces the problem.
+  //
+  // v15.17.1 — one retry with 1.5s backoff on transient errors (mobile data
+  // hiccup, Supabase 503, TLS renegotiation). A single retry covers the
+  // dominant failure class without turning a real auth problem into a long
+  // stall. Errors surface to bootstrap only after the retry also fails.
   if (typeof syncIsActive === 'function' && syncIsActive()) {
-    const remote = await passphrasePullState();
+    let remote;
+    try {
+      remote = await passphrasePullState();
+    } catch (firstErr) {
+      const msg = String(firstErr && firstErr.message || firstErr).toLowerCase();
+      const transient = msg.includes('fetch') || msg.includes('network')
+        || msg.includes('503') || msg.includes('502') || msg.includes('timeout');
+      if (!transient) throw firstErr;
+      await new Promise(r => setTimeout(r, 1500));
+      remote = await passphrasePullState();
+    }
     if (remote) return migrateState(remote);
     return null;
   }

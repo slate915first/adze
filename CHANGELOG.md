@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.1] — 2026-04-19 · P1 engineering cluster remainder
+
+### Fixed
+Closes the three P1 engineering items deferred from v15.16.2.
+
+**`authVerifyMagicCode` retry-loop short-circuit** (`src/systems/auth.js`). The four-type fallback (`['email', 'magiclink', 'recovery', 'signup']`) existed because Supabase's "token invalid" error returns for a VALID token with the wrong `type`, not just for real expiry. But on a network error or Supabase 5xx, looping all four types burned the user's time + the Supabase OTP rate-limit quota for no benefit. Now: only keep looping when the error message mentions "token" / "expired" / "invalid" (the only class the type-loop can actually resolve); any other error class short-circuits immediately with the real cause surfaced.
+
+**`loadState` synced-mode retry-with-backoff** (`src/systems/state.js`). A transient Supabase 503, mobile-data hiccup, or TLS renegotiation previously bubbled straight to bootstrap's error UI with no retry affordance — testers on flaky connections hit a hard error screen where a second attempt 1.5s later would have succeeded. Added a single retry with 1.5s backoff, scoped to error classes that are plausibly transient (fetch/network/5xx/timeout); any other error still throws immediately. Worst-case added latency on real failure is 1.5s before the error UI surfaces.
+
+**Live-smoke button matcher** (`tests/e2e/_live-diag.spec.js`). The smoke test asserted on a `/begin/i` button that doesn't render in closed beta (renderWelcome shows "✉️ Sign in with email" when `ADZE_PUBLIC_SIGNUP_ENABLED` is false, "Begin" when it's true). Smoke test was effectively dead on every manual post-deploy run. Matcher is now `/begin|sign in with email/i` and the modal-presence selector accepts `.modal-bg` or `.fade-in` so both paths pass. What the test still proves is what matters — inline `onclick` handlers are firing, i.e., no CSP regression of the v15.3–v15.10 class.
+
+### Scope
+All three are pure follow-ups to v15.16.2; no new schema, no new RLS, no i18n. Tests: 40/40 vitest green.
+
 ## [15.17.0] — 2026-04-19 · Reflection history — in-app readback of past entries
 
 ### Added
