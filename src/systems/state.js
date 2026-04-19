@@ -87,6 +87,32 @@ function migrateState(s) {
   // v9: per-member path tracking
   if (!s.path || typeof s.path !== 'object') s.path = {};
 
+  // v15.14 — savedQuotes default + one-time hydration migration.
+  // Old shape (lazy-init, positional): { [mid]: [{ index, savedAt }, ...] }
+  // New shape (deliberate, stable):    { [mid]: [{ id, text, source, savedAt }, ...] }
+  // Embedding text+source means the saved entry survives if a quote is later
+  // renamed, reordered, or removed from teaching-quotes.json.
+  if (!s.savedQuotes || typeof s.savedQuotes !== 'object') s.savedQuotes = {};
+  if (!s._v15140SavedQuotesHydrated) {
+    if (typeof TEACHING_QUOTES !== 'undefined' && Array.isArray(TEACHING_QUOTES)) {
+      for (const mid of Object.keys(s.savedQuotes)) {
+        const arr = s.savedQuotes[mid];
+        if (!Array.isArray(arr)) { s.savedQuotes[mid] = []; continue; }
+        s.savedQuotes[mid] = arr.map(entry => {
+          if (!entry || typeof entry !== 'object') return null;
+          if (entry.id && entry.text && entry.source) return entry; // already migrated
+          // Legacy entry: { index, savedAt }. Resolve via TEACHING_QUOTES.
+          const q = (typeof entry.index === 'number') ? TEACHING_QUOTES[entry.index] : null;
+          if (!q || !q.id) return null; // legacy entry that no longer resolves; drop
+          return { id: q.id, text: q.text, source: q.source, savedAt: entry.savedAt || todayKey() };
+        }).filter(Boolean);
+      }
+      s._v15140SavedQuotesHydrated = true;
+    }
+    // If TEACHING_QUOTES isn't loaded yet (shouldn't happen — bootstrap awaits
+    // loadAllData first), leave the flag unset so hydration runs next load.
+  }
+
   // v9: per-member reflection log refactor — BREAKING, one-way.
   // Legacy shape:  state.reflectionLog[dateK] = { daily, weekly, monthly }
   // New shape:     state.reflectionLog[dateK][memberId] = { daily, weekly, monthly }

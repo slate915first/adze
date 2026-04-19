@@ -1792,6 +1792,18 @@
   "welcome.privacy_policy_link":                    "Datenschutz",
   "welcome.signin_hint":                            "A fresh sign-in code is emailed each time — no password to remember. Works on any device with the same email.",
 
+  "_section_wisdom_saved_quotes": "wisdom tab — Saved teachings section (v15.14). The personal collection of quotes the practitioner bookmarked from Today's 'Word from the Buddha' card. Slotted between Sutta library and Codex.",
+  "wisdom.saved_quotes.heading":                    "Saved teachings",
+  "wisdom.saved_quotes.collapsed_empty":            "No teachings saved yet — tap the heart on Today's quote to start.",
+  "wisdom.saved_quotes.collapsed_note":             "{n} saved · tap to open the collection",
+  "wisdom.saved_quotes.expanded_note":              "Your collection. Re-read, copy, or print as a small companion.",
+  "wisdom.saved_quotes.empty_body":                 "When a teaching on Today catches you, tap the heart. It will appear here, grouped by source.",
+  "wisdom.saved_quotes.print_button":               "🖨 Print",
+  "wisdom.saved_quotes.copy_all_button":            "⧉ Copy all",
+  "wisdom.saved_quotes.copy_one_title":             "Copy this teaching",
+  "wisdom.saved_quotes.unsave_title":               "Remove from collection",
+  "wisdom.saved_quotes.saved_on":                   "saved {date}",
+
   "_section_confirm_habit_done_modal": "confirm_habit_done modal — small confirmation sheet shown when a non-meditation habit card is tapped on Today. Meditation habits go to the timer prompt instead.",
   "confirm_habit_done.heading":                     "Mark as done?",
   "confirm_habit_done.body":                        "A small pause before recording — let the moment of completion be intentional.",

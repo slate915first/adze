@@ -4,6 +4,26 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.14.0] — 2026-04-19 · Saved teachings — stable-id schema + Wisdom-tab collection (copy + print)
+
+### Added
+- **Stable IDs on all 27 entries in `teaching-quotes.json`** — e.g. `chah-just-let-go`, `buddha-dhp5-hatred-ceases-by-love`, `tnh-peace-every-step`. The old positional `index` is gone from the wire format.
+- **Saved-quote entries now embed `{id, text, source, savedAt}`** — the quote text + attribution travel with each saved entry so a user's personal collection survives any future rename, reorder, or pruning of the canonical quotes JSON. Was a latent data-integrity bug.
+- **One-time migration** in `migrateState` (`_v15140SavedQuotesHydrated`) walks every existing user's `state.savedQuotes` and converts legacy `{index, savedAt}` rows into the new shape using the current `TEACHING_QUOTES` array. Orphan rows (index no longer resolving) are dropped silently rather than carried forward as broken pointers.
+- **Wisdom tab → Saved teachings section** — new collapsible section between Sutta library and Codex. Shows the collection grouped by source (Ajahn Chah, Thich Nhat Hanh, etc. each a pocket-list), with per-quote copy and unsave buttons, section-level "🖨 Print" and "⧉ Copy all" buttons. Default collapsed (honours the v13.6 anti-scroll rule in Wisdom).
+- **Print view** (`printSavedQuotes(memberId)` in `systems/quotes.js`) opens a standalone printable HTML document in a new tab and calls `window.print()` automatically. Clean Georgia-serif typography, grouped by source, page-break-inside avoided per group. Also works as "Save as PDF" via the browser's print dialog.
+- **`copyToClipboard(text)`** — small shared helper in `systems/utils.js` (with hidden-textarea fallback for non-secure-contexts). Used by per-quote copy, copy-all, and will be reusable anywhere else clipboard is needed.
+
+### Changed
+- **Today → "Word from the Buddha" card** still uses the heart toggle (unchanged UX), but now wires `toggleQuoteSaved('<id>')` instead of `toggleQuoteSaved(<index>)`.
+- **`getDailyTeaching()`** returns `id` alongside the existing `text`/`source`/`index`/`matchedTo`. The `index` remains for back-compat with any external caller.
+- **Review tab** saved-quotes section continues to work (this-period summary), just wired through the new id-based unsave action. Kept as a complementary view to the permanent Wisdom collection.
+
+### Notes
+- Per-source filter isn't a separate UI element — grouping is the filter. Deferred unless testers explicitly ask for a "show only Ajahn Chah" toggle.
+- No changes to the heart icon — `🔖`-vs-`♥` can be a separate tiny copy commit if you prefer.
+- Tests: 39/39 vitest, 19/19 Playwright. No behavioural test for the new section (would need full assessment setup in the fixture); welcome + magic-link smoke confirms nothing regressed on the boot path.
+
 ## [15.13.3] — 2026-04-19 · HOTFIX — bell-sound previews no longer overlap
 
 ### Fixed

@@ -261,11 +261,12 @@ function renderToday() {
     : ajahnChah.source === 'Thich Nhat Hanh' ? t('today.teaching.header_nhat_hanh')
     : ajahnChah.source && ajahnChah.source.includes('Dalai Lama') ? t('today.teaching.header_dalai_lama')
     : t('today.teaching.header_generic');
-  // v13.5 — save-quote feature: tap the heart to add this teaching to your
-  // collection. Saved quotes live in state.savedQuotes[memberId] as an array
-  // of { index, savedAt }. They are reviewable in the Review tab and
-  // exportable alongside reflections.
-  const isQuoteSaved = quoteIsSaved(view.currentMember, ajahnChah.index);
+  // v13.5 — save-quote: heart button toggles save/unsave for this teaching.
+  // v15.14 — switched from positional index to stable id; saved entries embed
+  // text+source so they survive any future rename/reorder of teaching-quotes.json.
+  // Collection lives in state.savedQuotes[memberId]; reviewable in Wisdom tab
+  // (full collection with copy/print) and Review tab (this-period summary).
+  const isQuoteSaved = quoteIsSaved(view.currentMember, ajahnChah.id);
   const ajahnCard = `
     <div data-component="today.daily_teaching_card" class="parchment rounded-2xl p-5 mb-5 fade-in border-amber-700/30">
       <div class="flex items-start gap-3">
@@ -273,7 +274,7 @@ function renderToday() {
         <div class="flex-1">
           <div class="flex items-start justify-between gap-2 mb-1">
             <div class="text-[10px] uppercase tracking-wider text-amber-300/70">${teachingHeader}</div>
-            <button data-component="today.daily_teaching_card.save_button" onclick="toggleQuoteSaved(${ajahnChah.index})"
+            <button data-component="today.daily_teaching_card.save_button" onclick="toggleQuoteSaved('${ajahnChah.id}')"
                     class="flex items-center gap-1 text-xs ${isQuoteSaved ? 'text-rose-400 hover:text-rose-300' : 'text-amber-300/70 hover:text-rose-300'} transition shrink-0"
                     title="${isQuoteSaved ? t('today.teaching.saved_tooltip') : t('today.teaching.save_tooltip')}">
               <span class="text-lg">${isQuoteSaved ? '♥' : '♡'}</span>

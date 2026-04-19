@@ -38,8 +38,9 @@ function renderWisdom() {
   // collapse behind tappable headers. State lives on view.wisdomExpand so
   // the user's open/closed choices survive within the session.
   if (!view.wisdomExpand) {
-    view.wisdomExpand = { guidance: true, foundations: false, struggle: false, library: false, codex: false };
+    view.wisdomExpand = { guidance: true, foundations: false, struggle: false, library: false, codex: false, savedQuotes: false };
   }
+  if (typeof view.wisdomExpand.savedQuotes === 'undefined') view.wisdomExpand.savedQuotes = false;
   const we = view.wisdomExpand;
   const chevron = (open) => `<span class="text-amber-300/70 text-lg">${open ? '▾' : '▸'}</span>`;
 
@@ -327,6 +328,63 @@ function renderWisdom() {
           `;
         })()}
         ` : ''}
+      </div>
+
+      <!-- v15.14 — Saved teachings (the personal collection of quotes the
+           practitioner bookmarked from Today's "Word from the Buddha" card).
+           Slotted after the Sutta library + before the Codex: the library is
+           canonical content, this is curated personal content, the codex is
+           narrative-quest rewards. Default collapsed (anti-scroll intent). -->
+      <div class="parchment rounded-xl p-4 mb-4 border border-rose-700/30">
+        ${(() => {
+          const list = savedQuotesForMember(view.currentMember);
+          const n = list.length;
+          return `
+            <button onclick="toggleWisdomExpand('savedQuotes')" class="w-full text-left flex items-baseline justify-between">
+              <div>
+                <h3 class="text-lg font-bold gold-text">${t('wisdom.saved_quotes.heading')}</h3>
+                ${we.savedQuotes
+                  ? `<p class="text-[11px] text-amber-100/70 italic mt-1">${t('wisdom.saved_quotes.expanded_note', {n})}</p>`
+                  : `<p class="text-[11px] text-amber-100/55 italic mt-1">${n === 0 ? t('wisdom.saved_quotes.collapsed_empty') : t('wisdom.saved_quotes.collapsed_note', {n})}</p>`}
+              </div>
+              ${chevron(we.savedQuotes)}
+            </button>
+            ${we.savedQuotes ? (n === 0 ? `
+              <p class="text-[11px] text-amber-100/55 italic mt-3">${t('wisdom.saved_quotes.empty_body')}</p>
+            ` : `
+              <div class="mt-3 mb-3 flex gap-2 flex-wrap">
+                <button onclick="printSavedQuotes('${view.currentMember}')" class="btn btn-ghost text-xs">${t('wisdom.saved_quotes.print_button')}</button>
+                <button onclick="copySavedQuotesToClipboard('${view.currentMember}')" class="btn btn-ghost text-xs">${t('wisdom.saved_quotes.copy_all_button')}</button>
+              </div>
+              ${(() => {
+                const bySource = {};
+                for (const q of list) {
+                  if (!bySource[q.source]) bySource[q.source] = [];
+                  bySource[q.source].push(q);
+                }
+                return Object.entries(bySource).map(([src, qs]) => `
+                  <div class="mb-3">
+                    <div class="text-[10px] uppercase tracking-wider text-amber-300/60 mb-1.5">${src}</div>
+                    <div class="space-y-1.5">
+                      ${qs.map(q => `
+                        <div class="parchment rounded-lg p-2.5 border border-amber-700/20 flex items-start gap-2">
+                          <div class="flex-1 min-w-0">
+                            <p class="serif text-[12px] text-amber-100/90 italic leading-relaxed">"${q.text}"</p>
+                            <div class="text-[9px] text-amber-100/40 mt-1">${t('wisdom.saved_quotes.saved_on', {date: q.savedAt || ''})}</div>
+                          </div>
+                          <div class="flex flex-col gap-1 shrink-0">
+                            <button onclick="copyQuoteToClipboard('${q.id}')" class="text-amber-300/70 hover:text-amber-200 text-xs" title="${t('wisdom.saved_quotes.copy_one_title')}">⧉</button>
+                            <button onclick="toggleQuoteSaved('${q.id}')" class="text-rose-400/80 hover:text-rose-300 text-lg" title="${t('wisdom.saved_quotes.unsave_title')}">♥</button>
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                `).join('');
+              })()}
+            `) : ''}
+          `;
+        })()}
       </div>
 
       <!-- Collected wisdom scrolls -->

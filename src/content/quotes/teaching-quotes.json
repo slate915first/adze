@@ -1,220 +1,164 @@
 [
   {
+    "id": "chah-just-let-go",
     "text": "Just let go.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "restless",
-      "doubt",
-      "general"
-    ]
+    "relatesTo": ["restless", "doubt", "general"]
   },
   {
+    "id": "chah-little-peace",
     "text": "If you let go a little, you have a little peace.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "sensual",
-      "restless",
-      "general"
-    ]
+    "relatesTo": ["sensual", "restless", "general"]
   },
   {
+    "id": "chah-mind-that-lets-go",
     "text": "Do everything with a mind that lets go.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "general",
-      "view"
-    ]
+    "relatesTo": ["general", "view"]
   },
   {
+    "id": "chah-mind-is-mind",
     "text": "The mind is just the mind. Thoughts are just thoughts.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "illwill",
-      "view",
-      "restless"
-    ]
+    "relatesTo": ["illwill", "view", "restless"]
   },
   {
+    "id": "chah-problems-belong-world",
     "text": "Problems belong to the world. Suffering is in you.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "illwill",
-      "view"
-    ]
+    "relatesTo": ["illwill", "view"]
   },
   {
+    "id": "chah-doubt-is-natural",
     "text": "Doubt is natural. Everyone starts with doubts.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "doubt"
-    ]
+    "relatesTo": ["doubt"]
   },
   {
+    "id": "chah-sit-sit-again",
     "text": "Sit. Sit again. That is all.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "effort",
-      "sloth"
-    ]
+    "relatesTo": ["effort", "sloth"]
   },
   {
+    "id": "chah-own-teacher",
     "text": "You are your own teacher. Looking outside is wrong.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "doubt",
-      "view"
-    ]
+    "relatesTo": ["doubt", "view"]
   },
   {
+    "id": "chah-still-flowing-water",
     "text": "Still, flowing water.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "restless",
-      "general"
-    ]
+    "relatesTo": ["restless", "general"]
   },
   {
+    "id": "chah-dhamma-in-your-mind",
     "text": "The Dhamma has to be found by looking into your own mind.",
     "source": "Ajahn Chah",
-    "relatesTo": [
-      "doubt",
-      "view"
-    ]
+    "relatesTo": ["doubt", "view"]
   },
   {
+    "id": "buddha-dhp5-hatred-ceases-by-love",
     "text": "Hatred does not cease by hatred. Only by love is it ended.",
     "source": "The Buddha (Dhp 5)",
-    "relatesTo": [
-      "illwill"
-    ]
+    "relatesTo": ["illwill"]
   },
   {
+    "id": "buddha-dhp276-must-strive",
     "text": "You yourself must strive. The Buddhas only point the way.",
     "source": "The Buddha (Dhp 276)",
-    "relatesTo": [
-      "effort",
-      "doubt",
-      "sloth"
-    ]
+    "relatesTo": ["effort", "doubt", "sloth"]
   },
   {
+    "id": "buddha-dhp277-impermanence",
     "text": "All conditioned things are impermanent.",
     "source": "The Buddha (Dhp 277)",
-    "relatesTo": [
-      "general",
-      "view",
-      "sensual"
-    ]
+    "relatesTo": ["general", "view", "sensual"]
   },
   {
+    "id": "buddha-dhp1-mind-precedes",
     "text": "Mind precedes all things. Mind is their chief.",
     "source": "The Buddha (Dhp 1)",
-    "relatesTo": [
-      "view",
-      "general"
-    ]
+    "relatesTo": ["view", "general"]
   },
   {
+    "id": "buddha-dhp204-health-greatest",
     "text": "Health is the greatest gift, contentment the greatest wealth.",
     "source": "The Buddha (Dhp 204)",
-    "relatesTo": [
-      "sensual"
-    ]
+    "relatesTo": ["sensual"]
   },
   {
+    "id": "buddha-ehipassiko-come-and-see",
     "text": "Come and see.",
     "source": "The Buddha (Ehipassiko formula)",
-    "relatesTo": [
-      "doubt",
-      "general"
-    ]
+    "relatesTo": ["doubt", "general"]
   },
   {
+    "id": "buddha-mn22-suffering-and-end",
     "text": "One thing I teach: suffering, and the end of suffering.",
     "source": "The Buddha (MN 22)",
-    "relatesTo": [
-      "general",
-      "view"
-    ]
+    "relatesTo": ["general", "view"]
   },
   {
+    "id": "buddha-dn16-islands-unto-yourselves",
     "text": "Be islands unto yourselves. Take refuge in no other.",
     "source": "The Buddha (DN 16)",
-    "relatesTo": [
-      "doubt",
-      "general"
-    ]
+    "relatesTo": ["doubt", "general"]
   },
   {
+    "id": "buddha-ud55-one-taste-liberation",
     "text": "As the ocean has one taste — salt — the dhamma has one taste: liberation.",
     "source": "The Buddha (Ud 5.5)",
-    "relatesTo": [
-      "view",
-      "general"
-    ]
+    "relatesTo": ["view", "general"]
   },
   {
+    "id": "buddha-dhp100-one-word-of-peace",
     "text": "Better than a thousand useless words is one word that brings peace.",
     "source": "The Buddha (Dhp 100)",
-    "relatesTo": [
-      "restless",
-      "general"
-    ]
+    "relatesTo": ["restless", "general"]
   },
   {
+    "id": "tnh-peace-every-step",
     "text": "Peace is every step.",
     "source": "Thich Nhat Hanh",
-    "relatesTo": [
-      "restless",
-      "general"
-    ]
+    "relatesTo": ["restless", "general"]
   },
   {
+    "id": "tnh-smile-breathe-slowly",
     "text": "Smile, breathe, and go slowly.",
     "source": "Thich Nhat Hanh",
-    "relatesTo": [
-      "restless",
-      "illwill"
-    ]
+    "relatesTo": ["restless", "illwill"]
   },
   {
+    "id": "tnh-feelings-clouds",
     "text": "Feelings come and go like clouds in a windy sky.",
     "source": "Thich Nhat Hanh",
-    "relatesTo": [
-      "illwill",
-      "general"
-    ]
+    "relatesTo": ["illwill", "general"]
   },
   {
+    "id": "tnh-drink-tea-reverently",
     "text": "Drink your tea slowly and reverently.",
     "source": "Thich Nhat Hanh",
-    "relatesTo": [
-      "sensual",
-      "restless"
-    ]
+    "relatesTo": ["sensual", "restless"]
   },
   {
+    "id": "dl-religion-is-kindness",
     "text": "My religion is kindness.",
     "source": "HH the Dalai Lama",
-    "relatesTo": [
-      "illwill",
-      "general"
-    ]
+    "relatesTo": ["illwill", "general"]
   },
   {
+    "id": "dl-happiness-from-actions",
     "text": "Happiness is not ready-made. It comes from your own actions.",
     "source": "HH the Dalai Lama",
-    "relatesTo": [
-      "effort",
-      "sloth",
-      "general"
-    ]
+    "relatesTo": ["effort", "sloth", "general"]
   },
   {
+    "id": "dl-be-kind-always-possible",
     "text": "Be kind whenever possible. It is always possible.",
     "source": "HH the Dalai Lama",
-    "relatesTo": [
-      "illwill"
-    ]
+    "relatesTo": ["illwill"]
   }
 ]

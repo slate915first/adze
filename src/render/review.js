@@ -401,7 +401,7 @@ function renderReview() {
                         <p class="serif text-[12px] text-amber-100/90 italic leading-relaxed">"${q.text}"</p>
                         <div class="text-[9px] text-amber-100/40 mt-1">${t('review.quotes.saved_on', {date: q.savedAt})}</div>
                       </div>
-                      <button onclick="toggleQuoteSaved(${q.index})" class="text-rose-400/80 hover:text-rose-300 text-lg shrink-0" title="${t('review.quotes.unsave_title')}">♥</button>
+                      <button onclick="toggleQuoteSaved('${q.id}')" class="text-rose-400/80 hover:text-rose-300 text-lg shrink-0" title="${t('review.quotes.unsave_title')}">♥</button>
                     </div>
                   `).join('')}
                 </div>
