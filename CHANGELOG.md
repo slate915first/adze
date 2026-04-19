@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.3] — 2026-04-19 · P1 game cluster — Mahāpajāpatī inversion + evening double-surface
+
+### Fixed
+Two P1 findings from the post-v15.15.9 game-designer lens.
+
+**Mahāpajāpatī `teamScoreMultiplier` removed.** The passive at `src/config.js:130` previously computed `(ctx) => ctx.teamShadow > 60 ? 1.2 : 1.0` — a 1.2× score boost applied when the household's Shadow was high. Game-designer flagged this as a design inversion: the more the household was suffering, the more today's practice earned, which turns struggle into a resource to farm. It also contradicted Mahāpajāpatī's character — she is the bhikkhunī who held the sangha *through* hardship, not one who profits from it. Removed the passive entirely. The `src/systems/sangha.js` narration line ("is lifting the team — every score ×1.2 while the Shadow is high.") also removed to match. A `shadowDecayRateBonus` replacement — which would slow Shadow accumulation when team-Shadow is high, i.e. mitigate hardship rather than reward it — fits the character better and may land in a future commit.
+
+**Evening-sit primary-alert threshold raised 17:00 → 20:00.** `src/systems/path.js:126` produced the `evening_sit` Next-Step hero when `hour >= 17`. `src/render/today.js:134` independently fires the same evening-reflection prompt in the primary-alert band when `!dailyDone && nowHour >= 17`. After 17:00, with morning-sit done and reflection undone, the practitioner saw the evening-close surface in two slots simultaneously — mild notification-pressure doubling. Raised the Next-Step hero threshold to 20:00 so during the 17:00–20:00 window the today.js tile handles the prompt alone; the hero only takes over late in the evening when the window is closing. Complementary Priority 4 branch ("quiet inactive state") updated to `hour < 20` to match.
+
+### Scope
+No migration. No new i18n. No new user-facing surfaces. Pure mechanic tuning.
+
+Tests: 40/40 vitest green.
+
 ## [15.17.2] — 2026-04-19 · P1 teaching cluster — citation fidelity
 
 ### Fixed

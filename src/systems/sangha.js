@@ -11,18 +11,10 @@ function getSanghaActivityToday(memberId) {
   const lines = [];
   if (!state.members) return lines;
 
-  // Mahāpajāpatī — actively boosting today
-  if (state.shadow > 60) {
-    const mp = state.members.find(m => m.character === 'mahapajapati');
-    if (mp) {
-      const c = CHARACTERS.mahapajapati;
-      lines.push({
-        icon: c.icon,
-        char: c.name,
-        text: `is lifting the team — every score ×1.2 while the Shadow is high.`
-      });
-    }
-  }
+  // v15.17.3 — Mahāpajāpatī's "×1.2 score while Shadow is high" passive
+  // was removed (see config.js mahapajapati). The sangha activity line
+  // that narrated it is therefore removed too. When a shadowDecayRateBonus
+  // replacement lands, add a corresponding line here.
 
   // Upāli — a forgiven miss is currently keeping a streak alive
   const upali = state.members.find(m => m.character === 'upali');

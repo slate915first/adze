@@ -126,9 +126,18 @@ const ABILITY_HOOKS = {
   },
 
   mahapajapati: {
-    passive: {
-      teamScoreMultiplier: (ctx) => ctx.teamShadow > 60 ? 1.2 : 1.0
-    },
+    // v15.17.3 — teamScoreMultiplier passive REMOVED. The prior behavior
+    // (1.2× score when state.shadow > 60) rewarded struggle: the more the
+    // household was suffering, the more score points today's practice
+    // earned. That inverts the intended character of Mahāpajāpatī (the
+    // bhikkhunī who holds the sangha through hardship, not a boost the
+    // sangha earns FROM hardship) and it's a game-designer anti-pattern
+    // (struggle-as-resource-to-farm). A shadowDecayRateBonus passive —
+    // which would slow shadow accumulation when team-shadow is high,
+    // i.e. mitigate hardship rather than reward it — is a better fit
+    // and may land in a future commit. Left empty for now; character's
+    // lore + identity remain unchanged.
+    passive: {},
     triggered: {}
   },
 

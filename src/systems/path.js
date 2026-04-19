@@ -122,8 +122,14 @@ function pickNextStep(memberId) {
     };
   }
 
-  // Priority 3: Evening sit, but only after 17:00 — don't push it earlier
-  if (eveningSit && !log[eveningSit.id] && hour >= 17) {
+  // Priority 3: Evening sit, but only after 20:00 — don't push it earlier.
+  // v15.17.3 — raised from 17:00 to 20:00 so the Next-Step hero doesn't
+  // double up with today.js:134's primary-alert band (which also fires
+  // at nowHour >= 17). The 17:00 passive tile remains sufficient during
+  // the 17:00–20:00 window; the hero takes over only late in the evening
+  // when the window is closing. Closes game-designer's duplicate-surface
+  // flag.
+  if (eveningSit && !log[eveningSit.id] && hour >= 20) {
     const tone = sitTone('evening');
     return {
       type: 'evening_sit',
@@ -136,8 +142,9 @@ function pickNextStep(memberId) {
     };
   }
 
-  // Priority 4: Evening sit not yet — quiet inactive state if before 17:00
-  if (eveningSit && !log[eveningSit.id] && hour < 17 && morningSit && log[morningSit.id]) {
+  // Priority 4: Evening sit not yet — quiet inactive state if before 20:00
+  // (v15.17.3 — complement of the raised Priority 3 threshold above).
+  if (eveningSit && !log[eveningSit.id] && hour < 20 && morningSit && log[morningSit.id]) {
     return {
       type: 'evening_sit_waits',
       title: eveningSit.name,
