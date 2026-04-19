@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.8] — 2026-04-19 · Cleanup — drop `habit_quest_*` LEGACY_KEYS (test-data era)
+
+### Changed
+- **`src/data/loaders.js`** — `LEGACY_KEYS = ['habit_quest_v4', 'habit_quest_v3_5', 'habit_quest_v3_3']` → `[]`. Comment updated to explain the infrastructure is preserved for future renames.
+- **Why safe**: Dirk confirmed 2026-04-19 that no live user data ever existed under `habit_quest_*` keys. Pre-rename era was solo-tester (Dirk on his own browser) working with throwaway data while building Adze. The public URL + closed-beta allowlist + first real testers all arrived *after* the v15.15.1 storage-key rename.
+
+### Not removed
+- The `for (const legacy of LEGACY_KEYS)` loop in `src/systems/state.js` stays — it's a no-op with `LEGACY_KEYS = []` and the infrastructure is cheap to keep for the next rename.
+- The back-compat comment in `src/systems/export-import.js` (about accepting legacy "Habit Quest" JSON imports) stays — it's about file imports from disk, not localStorage, and the structural check makes it forward-compatible regardless.
+
+No behaviour change for any user; purely a cleanup of dead legacy bridges.
+
 ## [15.15.7] — 2026-04-19 · HOTFIX — flush pending sync push on tab close / sign-out
 
 ### Fixed
