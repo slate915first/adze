@@ -42,12 +42,19 @@
 function renderEveningCloseModal(m) {
   let content = '';
 
-  // v15.15 — merged flow entry phase. One-line capture with two exits:
+  // v15.15 — merged flow entry phase. One-line capture + optional daily
+  // diagnostic sliders, with two exits:
   //   * "Save and rest" (ghost) — stops here; still counts as full daily.
   //   * "Save and go deeper →" (gold) — proceeds to the gauge phase.
-  // Replaces the standalone oneline_journal modal; openOnelineJournal now
-  // redirects here for back-compat.
+  // Replaces the standalone oneline_journal modal AND the separate
+  // evening_reflection modal (the diagnostic sliders + rotating daily
+  // question that used to live there now render inline here, preserving
+  // the data-collection path without a second auto-fire surface).
   if (m.phase === 'oneline') {
+    const memberId = view.currentMember;
+    const alreadyDiag = memberId ? (typeof hasDailyDiagnosticToday === 'function' && hasDailyDiagnosticToday(memberId)) : true;
+    const diagQs = (!alreadyDiag && typeof getDailyDiagnosticQuestions === 'function') ? getDailyDiagnosticQuestions() : [];
+    const dailyQuestion = (typeof getCurrentDailyQuestion === 'function') ? getCurrentDailyQuestion() : null;
     content = `
       <div class="fade-in">
         <div class="text-center mb-3">
@@ -55,6 +62,18 @@ function renderEveningCloseModal(m) {
           <h2 class="text-xl font-bold gold-text">${t('evening_close.oneline.heading')}</h2>
           <p class="text-[11px] text-amber-200/70 italic mt-1">${t('evening_close.oneline.subtitle')}</p>
         </div>
+        ${diagQs.length > 0 ? `
+          <div class="parchment rounded-xl p-4 mb-3 border-amber-900/40">
+            <p class="text-[10px] text-amber-100/50 italic mb-2">${t('evening_close.oneline.sliders_intro')}</p>
+            ${diagQs.map(q => renderDiagnosticSlider(q, 5, `diag-${q.id}`)).join('')}
+          </div>
+        ` : ''}
+        ${dailyQuestion ? `
+          <div class="parchment rounded-xl p-3 mb-3 border-amber-700/30">
+            <div class="text-[9px] uppercase tracking-wider text-amber-300/60 mb-1">${t('evening_close.oneline.tonight_label')}</div>
+            <p class="serif text-[12px] text-amber-100/85 leading-relaxed italic">${dailyQuestion.q}</p>
+          </div>
+        ` : ''}
         <div class="parchment rounded-xl p-4 mb-3">
           <textarea id="oneline-input"
                     class="w-full bg-amber-950/30 border border-amber-700/40 rounded-lg p-3 text-sm text-amber-100 placeholder-amber-100/40 focus:outline-none focus:border-amber-500"

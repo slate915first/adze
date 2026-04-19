@@ -1361,6 +1361,8 @@
   "evening_close.oneline.continue_button":          "Save and go deeper →",
   "evening_close.oneline.cancel_button":            "Cancel",
   "evening_close.oneline.footer_hint":              "Either choice closes the day. The deeper path is optional, never owed.",
+  "evening_close.oneline.sliders_intro":            "Before you write — a quick read of tonight's hindrance landscape:",
+  "evening_close.oneline.tonight_label":            "Question for tonight",
 
   "evening_close.gauge.heading":                    "Close the day",
   "evening_close.gauge.subtitle":                   "First — what do you have for this?",

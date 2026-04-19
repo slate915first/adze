@@ -258,8 +258,10 @@ function findNextMemberNeedingEvening(excludeMemberId) {
 function switchToNextMemberForEvening(memberId) {
   view.currentMember = memberId;
   saveState();
-  view.modal = { type: 'evening_reflection', expanded: false };
-  renderModal();
+  // v15.15.2 — route to the merged Evening reflection flow. Other member's
+  // evening surfaces now match the primary one (no more split personalities
+  // between Today's tile, the 18:00 auto-fire, and this multi-member switch).
+  openEveningClose();
   render();
 }
 

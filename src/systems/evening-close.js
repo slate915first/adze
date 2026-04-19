@@ -63,7 +63,9 @@ function eveningCloseSetLine(text) {
 
 // Writes both `.oneline` AND a minimal `.daily`, awards tisikkhā, runs the
 // rank-gate evaluator, closes the modal. The "low-energy bail that still
-// counts" path.
+// counts" path. v15.15.2 — also collects any hindrance-slider answers the
+// user filled in on the oneline phase (replaces the old evening_reflection
+// modal's data-collection role).
 function eveningCloseStopHere() {
   if (!view.modal || view.modal.type !== 'evening_close') return;
   const mid = view.currentMember;
@@ -84,6 +86,12 @@ function eveningCloseStopHere() {
     completed
   };
   state.completedDailies = (state.completedDailies || 0) + 1;
+
+  // v15.15.2 — collect diagnostic sliders before saving reflection (so the
+  // gate evaluator sees the fresh hindrance snapshot). saveDailyDiagnostic
+  // runs its own writePathGateEvaluation; the reflection save below runs it
+  // again. Gate eval is idempotent same-day so the double call is safe.
+  _eveningCloseSaveDiagnosticsIfAny(mid);
 
   // Line-level scoring: +1 paññā + up to +2 hindrance_named if the line
   // mentions a hindrance by name. (Matches the pre-merge behavior.)
@@ -214,6 +222,12 @@ function eveningCloseFinish() {
     };
   }
   state.completedDailies = (state.completedDailies || 0) + 1;
+
+  // v15.15.2 — collect diagnostic sliders from the oneline phase if the
+  // user filled them in before going deeper. Must run BEFORE awarding
+  // reflection-tier tisikkhā so the gate eval sees fresh hindrance data.
+  _eveningCloseSaveDiagnosticsIfAny(mid);
+
   // Award tisikkhā by depth tier. The line-level journal_oneline is NOT
   // awarded here even when the line exists — the deeper flow supersedes
   // it by design (no double-count for the same practice beat).
@@ -247,4 +261,24 @@ function _countHindranceMentions(text) {
   return Object.values(HINDRANCE_EVIDENCE_KEYWORDS || {}).flat().reduce((acc, kw) => {
     try { return acc + (new RegExp('\\b' + kw + '\\b', 'i').test(text) ? 1 : 0); } catch (e) { return acc; }
   }, 0);
+}
+
+// v15.15.2 — collects diagnostic-slider values from the DOM and persists
+// them via saveDailyDiagnostic. Called from both merged-flow exit paths
+// (stop-here and finish-deeper). Noop if no sliders are present (e.g. the
+// user already filled the daily diagnostic earlier).
+function _eveningCloseSaveDiagnosticsIfAny(memberId) {
+  if (!memberId || typeof getDailyDiagnosticQuestions !== 'function' || typeof saveDailyDiagnostic !== 'function') return;
+  const diagQs = getDailyDiagnosticQuestions();
+  if (!diagQs || !diagQs.length) return;
+  const answers = {};
+  let anyAnswered = false;
+  diagQs.forEach(q => {
+    const el = document.getElementById(`diag-${q.id}`);
+    if (el) {
+      answers[q.id] = parseInt(el.value, 10);
+      anyAnswered = true;
+    }
+  });
+  if (anyAnswered) saveDailyDiagnostic(memberId, answers);
 }

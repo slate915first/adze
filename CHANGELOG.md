@@ -4,6 +4,27 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.2] — 2026-04-19 · HOUSEKEEPING — auto-fire + sangha trigger now use the merged Evening reflection flow
+
+### Changed
+- **`maybeTriggerEveningReflection`** (`systems/rank-events.js:58-72`) — the 18:00 auto-fire that used to open `view.modal = { type: 'evening_reflection', ... }` now calls `openEveningClose()`, landing the user in the same merged flow as Today's Reflection tile. No more "two different evening modals depending on how you arrived".
+- **`switchToNextMemberForEvening`** (`systems/sangha.js:261`) — the multi-member switch also now routes into the merged flow. Same code path as Today tile and auto-fire.
+- **Diagnostic sliders + rotating daily question** that used to live only in the `evening_reflection` modal now render inline at the top of the merged `oneline` phase. Collected on both exit paths (`eveningCloseStopHere` and `eveningCloseFinish`) via a new private helper `_eveningCloseSaveDiagnosticsIfAny`. No data-collection loss — daily hindrance snapshots still feed the path-gate and trend charts.
+
+### Fixed
+- **`src/modals/evening-reflection.js`** — unquoted `placeholder=t(...)` attribute (same bug class as v15.11.5). Fixed even though this renderer is now unreachable through the two redirected triggers; defense in depth for any serialized `view.modal = { type: 'evening_reflection', ... }` edge case.
+
+### Why
+- Tester observation: the merged Evening reflection tile on Today was clean, but users who let the 18:00 auto-fire catch them saw a different-looking modal with different content — confusing inconsistency. Also: the sangha multi-member switch had its own evening surface. All three now share one surface.
+- Completes the follow-up flagged in the v15.15.0 CHANGELOG.
+
+### Backward compat
+- `evening_reflection` modal type remains a valid render target (for any saved or external `view.modal.type === 'evening_reflection'`), just not auto-routed to anymore.
+- Data shape unchanged — `saveDailyDiagnostic` writes to the same `state.diagnostics.daily[dk][mid]` path. Existing trend charts + gate evaluations work unmodified.
+
+### Tests
+- 39/39 vitest, 19/19 Playwright.
+
 ## [15.15.1] — 2026-04-19 · Renamed `habit_quest` → `adze` everywhere it still lingered
 
 ### Changed

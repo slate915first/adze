@@ -66,8 +66,12 @@ function maybeTriggerEveningReflection() {
     if (view.modal) return;  // still check — might have opened something
     if (isDailyReflectionDoneToday()) return;
     view._eveningReflectionShownThisSession = true;
-    view.modal = { type: 'evening_reflection', expanded: false };
-    renderModal();
+    // v15.15.2 — route to the merged Evening reflection flow (same surface
+    // as Today's single Reflection tile). Previously this opened a separate
+    // `evening_reflection` modal; the diagnostic sliders + rotating daily
+    // question that lived there now render inline in the `oneline` phase,
+    // so no data-collection is lost.
+    openEveningClose();
   }, 1500);
 }
 
