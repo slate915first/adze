@@ -1758,6 +1758,7 @@
   "evening_next_member.switch_button":              "Switch to {name} →",
 
   "timer_prompt.heading":                           "Have you already sat, or are you starting now?",
+  "timer_prompt.flavor_line":                       "Three honest answers: the cushion already held me · the cushion is calling now · not this time.",
   "timer_prompt.already_sat_label":                 "Already sat",
   "timer_prompt.already_sat_button":                "✓ Yes — just mark it done",
   "timer_prompt.already_sat_hint":                  "Use this when you used your own timer or sat without one.",
@@ -1805,8 +1806,8 @@
   "wisdom.saved_quotes.saved_on":                   "saved {date}",
 
   "_section_confirm_habit_done_modal": "confirm_habit_done modal — small confirmation sheet shown when a non-meditation habit card is tapped on Today. Meditation habits go to the timer prompt instead.",
-  "confirm_habit_done.heading":                     "Mark as done?",
-  "confirm_habit_done.body":                        "A small pause before recording — let the moment of completion be intentional.",
+  "confirm_habit_done.heading":                     "Mark this done?",
+  "confirm_habit_done.body":                        "The tap is not the practice. But it is the trace. Only yes if it really happened.",
   "confirm_habit_done.points_hint":                 "+{n} points",
   "confirm_habit_done.confirm_button":              "✓ Yes — mark done",
   "confirm_habit_done.cancel_button":               "Not yet",

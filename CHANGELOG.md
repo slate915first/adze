@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.14.1] — 2026-04-19 · Warmer copy on the two habit-tap modals
+
+### Changed
+- **`timer_prompt`** (the modal that appears when tapping a meditation habit on Today) — added a short italic subtitle under the heading: *"Three honest answers: the cushion already held me · the cushion is calling now · not this time."* Frames the three-option choice as a dhamma-flavored moment instead of a UI decision.
+- **`confirm_habit_done`** (non-meditation habit confirmation sheet) — body rewritten from *"A small pause before recording — let the moment of completion be intentional."* to *"The tap is not the practice. But it is the trace. Only yes if it really happened."* Heading tightened from *"Mark as done?"* to *"Mark this done?"*.
+
+### Why
+- Tester note (Dirk, 2026-04-19): *"can add a funny menu quote… think as a game designer with storytelling ability."* Small copy refinement; kept the tone measured (not cutesy) because this is a meditation app and the prompt needs to hold gravity, but warmer than pure UI language.
+
+### No code change
+- Pure copy. No behaviour change. 39/39 vitest, welcome smoke green.
+
 ## [15.14.0] — 2026-04-19 · Saved teachings — stable-id schema + Wisdom-tab collection (copy + print)
 
 ### Added

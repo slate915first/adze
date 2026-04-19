@@ -521,6 +521,7 @@ function renderModal() {
           <div class="text-5xl mb-2">🧘</div>
           <div class="text-xs uppercase tracking-wider text-amber-300/70">${habitName}</div>
           <h2 class="text-lg font-bold gold-text mt-1">${t('timer_prompt.heading')}</h2>
+          <p class="text-xs text-amber-100/65 italic serif mt-2 max-w-xs mx-auto leading-relaxed">${t('timer_prompt.flavor_line')}</p>
         </div>
 
         <!-- v12.6: clearer two-path split. Already sat → one tap to mark done.
