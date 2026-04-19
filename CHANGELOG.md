@@ -4,6 +4,17 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [Unreleased — server-side, no APP_VERSION bump] — 2026-04-19 · DSGVO Track A10 + repo migration snapshots
+
+### Added
+- **`supabase/migrations/20260419102900_enable_pg_cron_and_inactive_user_cleanup.sql`** (Track A10) — enables `pg_cron` 1.6.4 in Supabase, adds SECURITY DEFINER function `public.cleanup_inactive_users(dry_run boolean default true)`, schedules `adze-cleanup-inactive-users` daily at 03:30 UTC. The function deletes users whose latest activity (max of `last_sign_in_at`, `created_at`, `user_state.updated_at`) is older than 24 months — making the Datenschutzerklärung's 24-month-inactivity promise (A3) enforceable.
+- **Cron starts in DRY-RUN mode** — function defaults to `dry_run := true`. Operator validates the dry-run output for a couple of daily cycles, then flips to live deletion via the one-liner included in the migration file (`unschedule` + `schedule` with `false`).
+- **`supabase/migrations/`** — snapshots of all three live migrations (`create_user_state`, `create_beta_allowlist_with_trigger`, the new A10 migration) committed to the repo for audit trail + disaster recovery. Companion to `supabase/functions/`. README explains the workflow.
+
+### Notes
+- `beta_allowlist` seed inserts in the second migration are intentionally redacted in the repo snapshot — committing real beta-tester e-mail addresses to a public repo would be unlawful processing of their personal data.
+- No client-side code changed; APP_VERSION not bumped.
+
 ## [15.12.4] — 2026-04-19 · DSGVO Track A4 — Age + Datenschutz consent in magic-request flow
 
 ### Added

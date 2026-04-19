@@ -58,10 +58,15 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
   Edge function now deletes the user's email from `public.beta_allowlist` BEFORE the `auth.admin.deleteUser` call. Order matters (read email first, then delete). If the allowlist delete fails, the function aborts BEFORE the auth delete — better visible failure than a half-deleted account that silently leaks the email. Source committed to `supabase/functions/delete-account/index.ts` (so it's not Supabase-only); deployed via MCP as version 2 (sha changed `fd4baeb…` → `79762a6…`).
   *Verification still owed (manual):* sign up a throwaway account, add it to allowlist, sign in, hit Settings → Reset Everything → Delete account, then confirm via SQL that both `auth.users` and `beta_allowlist` no longer have the email. Record the SQL evidence under `docs/COMPLIANCE/` (gitignored) for the audit trail.
 
-- [ ] **A10 · Define + publish retention windows**
-  Decide and document: sessions = until refresh-token expiry; e-mail + ciphertext = until account deletion or **24 months inactivity → auto-delete** (need cron); Cloudflare logs = CF default (30 d); Supabase auth-logs = SB default (90 d); feedback log in Dirk's inbox = 24 months.
-  Publish in Datenschutzerklärung (A3 dependency).
-  *Why:* Art. 5 (1) e (Speicherbegrenzung).
+- [x] **A10 · Retention windows + 24-month-inactivity auto-delete cron** · `supabase/migrations/20260419102900_enable_pg_cron_and_inactive_user_cleanup.sql`
+  Retention windows already published in Datenschutzerklärung (A3). The hard part — the auto-delete that A3 *promised* — is now implemented:
+  - `pg_cron` 1.6.4 enabled in Supabase.
+  - SECURITY DEFINER function `public.cleanup_inactive_users(dry_run boolean default true)` finds users whose latest activity (max of `last_sign_in_at`, `created_at`, `user_state.updated_at`) is older than 24 months. Deletes mirror the Edge Function order: `beta_allowlist` first, `auth.users` second (cascades to `user_state` via FK).
+  - Scheduled daily at 03:30 UTC as `adze-cleanup-inactive-users`. **Currently runs in DRY-RUN mode** — operator validates the dry-run output for a couple of cycles, then unschedules + reschedules with `dry_run := false` (one-liner SQL provided in the migration file).
+  *Now also done as part of A10:*
+  - All three Supabase migrations snapshotted to `supabase/migrations/` (was Edge-Function-only). README explains the workflow + the redaction of personal data in the allowlist seed insert.
+  *Note:* a 23-month "we'll delete in 30 days" warning e-mail is a nice-to-have but not implemented yet — would need either pg_net + Resend HTTP call from inside the cron, or an Edge Function called by the cron. Logged below as a follow-up.
+  *Follow-up (small):* implement the warning-email at 23-month threshold; only matters once Adze has users approaching that horizon (~23 months from now in the worst case).
 
 ---
 
