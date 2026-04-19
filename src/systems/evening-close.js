@@ -93,11 +93,13 @@ function eveningCloseStopHere() {
   // again. Gate eval is idempotent same-day so the double call is safe.
   _eveningCloseSaveDiagnosticsIfAny(mid);
 
-  // Line-level scoring: +1 paññā + up to +2 hindrance_named if the line
-  // mentions a hindrance by name. (Matches the pre-merge behavior.)
+  // v15.16.1 — award base paññā for the line-level journal only. The
+  // free-text hindrance-keyword bonus that used to fire here was removed
+  // (game-designer flagged it as metric-creep: once a tester learns that
+  // typing "kamacchanda" earns more than "I was restless", the reflection
+  // field becomes a keyword-stuffing box). TISIKKHA_EARN.hindrance_named
+  // stays defined in config.js for a future structured-chip flow.
   earnTisikkha(mid, 'journal_oneline');
-  const evidenceCount = _countHindranceMentions(text);
-  for (let i = 0; i < Math.min(evidenceCount, 2); i++) earnTisikkha(mid, 'hindrance_named');
 
   saveState();
   writePathGateEvaluation(mid);
@@ -236,10 +238,11 @@ function eveningCloseFinish() {
     : depth === 'standard' ? 'reflection_standard'
     : 'reflection_minimal';
   if (mid) earnTisikkha(mid, earnKey);
-  // Bonus paññā for naming hindrances in any free-text answer (line + deeper).
+  // v15.16.1 — regex-scan hindrance-keyword bonus removed from scoring; see
+  // the matching comment in eveningCloseStopHere above. Struggle detection
+  // below still uses text pattern-matching for suggestion routing, which is
+  // a suggestion-signal, not a reward-signal (no paññā leaks into it).
   const allText = lineText + ' ' + (answers.deeper || '') + ' ' + (answers.contemplation || '') + ' ' + (answers.one_word || '');
-  const evidenceCount = _countHindranceMentions(allText);
-  for (let i = 0; i < Math.min(evidenceCount, 3); i++) earnTisikkha(mid, 'hindrance_named');
   saveState();
   if (mid) writePathGateEvaluation(mid);
 
@@ -253,14 +256,6 @@ function eveningCloseFinish() {
   view.modal = { type: 'evening_close', phase: 'done', depth, energy: view.modal.energy, minutes: view.modal.minutes, suttaSuggestion: suggestion };
   renderModal();
   render();
-}
-
-// v15.15 — shared helper for both the line-only and deeper finish paths.
-function _countHindranceMentions(text) {
-  if (!text) return 0;
-  return Object.values(HINDRANCE_EVIDENCE_KEYWORDS || {}).flat().reduce((acc, kw) => {
-    try { return acc + (new RegExp('\\b' + kw + '\\b', 'i').test(text) ? 1 : 0); } catch (e) { return acc; }
-  }, 0);
 }
 
 // v15.15.2 — collects diagnostic-slider values from the DOM and persists

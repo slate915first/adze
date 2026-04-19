@@ -112,11 +112,10 @@ function saveDailyReflection(answer) {
       : len < 600 ? 'reflection_deep'
       : 'reflection_open';
     earnTisikkha(mid, tier);
-    // Also: if the answer mentions a hindrance by name, award an extra paññā
-    const evidenceCount = Object.values(HINDRANCE_EVIDENCE_KEYWORDS || {}).flat().reduce((acc, kw) => {
-      try { return acc + (new RegExp('\\b' + kw + '\\b', 'i').test(answer) ? 1 : 0); } catch(e) { return acc; }
-    }, 0);
-    for (let i = 0; i < Math.min(evidenceCount, 3); i++) earnTisikkha(mid, 'hindrance_named');
+    // v15.16.1 — regex-scan hindrance-keyword bonus removed. Same reasoning
+    // as evening-close.js: rewarding keyword presence in free text converts
+    // reflection into keyword-stuffing. TISIKKHA_EARN.hindrance_named stays
+    // defined for a future structured-chip flow.
   }
   saveState();
   // v9: reflection is one of the three gate legs; re-evaluate now.

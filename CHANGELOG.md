@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.16.1] — 2026-04-19 · P0 cluster — metta citation + hindrance-regex removal + evening-reflection i18n
+
+### Fixed
+Three P0 findings from the post-v15.15.9 fleet re-triage.
+
+**Metta tutorial citation (dhamma-reviewer).** `src/content/tutorials/metta.json:35` said "The Buddha said in AN 8.1 that mettā has eleven benefits…" AN 8.1 is the Mettā Sutta in Aṅguttara 8s but it covers the eight grounds for giving, not the eleven benefits. Line 10 of the same file already correctly cites AN 11.16 (Mettānisaṃsa Sutta). The two lines contradicted; a tester looking up the citation would find an empty reference. Fixed line 35 to match line 10's attribution.
+
+**Hindrance-keyword regex bonus removed (game-designer).** The scoring paths in `src/systems/evening-close.js` (two sites) and `src/systems/reflection.js` regex-scanned free-text reflections for Pāli hindrance keywords and awarded extra paññā for each match. Anti-pattern: once a tester guesses that typing "kamacchanda" earns more than "I was restless", the reflection field stops being a reflection and becomes a keyword-stuffing box. Metric-creep replacing intrinsic insight. Removed the three regex call sites + the now-unused `_countHindranceMentions` helper. `TISIKKHA_EARN.hindrance_named` stays defined in `config.js:319` for a future structured-chip flow where the user explicitly names a hindrance via UI rather than by incidental text. The parallel use in `src/systems/hindrances.js:journalEvidenceCount` is retained: that path feeds multi-factor gate evaluation, not a direct reward, so it's not gameable the same way.
+
+**Evening-reflection legacy modal i18n (copy-storyteller).** `src/modals/evening-reflection.js:46` had the one remaining inline-English string — `"Want to write a response? →"` — despite `evening_reflection.want_response` already existing in `en.json:785`. Routed through `t()`. The active 18:00 auto-fire flow (merged into evening-close since v15.15.2) was already `t()`-routed throughout.
+
+### Not in this commit
+The larger copy-storyteller list (i18n leaks on teaching-detail, rules-card, rank-intro, setback-recovery, liberation-offer, defeat, struggle-suggestion) lands in the P1 copy cluster.
+
 ## [15.16.0] — 2026-04-19 · Security twins — pin CSP connect-src + close allowlist enumeration oracle
 
 ### Fixed

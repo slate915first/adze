@@ -43,7 +43,7 @@ function renderEveningReflectionModal(m) {
           </div>
         ` : `
           <button class="text-xs text-amber-300/80 hover:text-amber-200 mt-2" onclick="toggleReflectionExpand()">
-            Want to write a response? →
+            ${t('evening_reflection.want_response')}
           </button>
         `}
       </div>
