@@ -23,8 +23,11 @@ playwright-report/
 !.claude/commands/**
 .mcp.json
 
-# Compliance materials with sensitive content (DPA PDFs, signed agreements,
-# incident files containing user data). The runbooks themselves —
-# VVT.md, INCIDENT-RESPONSE.md, DATA-SUBJECT-REQUESTS.md — live in docs/
-# and ARE committed; only docs/COMPLIANCE/ is excluded.
-docs/COMPLIANCE/
+# Compliance subfolders with sensitive content only. docs/COMPLIANCE/DPA/
+# holds the signed processor-contract PDFs (business-contract scans);
+# docs/COMPLIANCE/incidents/ holds future breach-investigation files that
+# may contain affected user data. Everything else in docs/COMPLIANCE/
+# (README.md, TIA.md, the runbooks referenced from COMPLIANCE-LOG.md) is
+# safe to commit and benefits from version control + disaster recovery.
+docs/COMPLIANCE/DPA/
+docs/COMPLIANCE/incidents/
