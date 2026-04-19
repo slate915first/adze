@@ -4,6 +4,20 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.5] — 2026-04-19 · HOTFIX — `authSignOut()` now clears plaintext residue
+
+### Fixed
+- **`src/systems/auth.js` `authSignOut()`** previously locked the passphrase key + nulled the auth handles but did not wipe `localStorage[STORAGE_KEY]` or reset the in-memory `state`. On a shared browser, the next person who opened Adze would load the just-departed user's decrypted practice data via `loadState()`'s localStorage fallback (authed-but-locked path). Now mirrors the `authDeleteAccount` cleanup pattern already established — removes the localStorage entry, resets `state = newState()`, clears `view.modal` + `view.currentMember`.
+- Data safety: authed-user data is safe in the Supabase ciphertext; sign-in + passphrase-unlock restores the full state on next session. Sign-out now genuinely means sign-out on-device.
+
+### Why
+- Flagged by both `security-reviewer` (Medium — shared-device leak) and `dsgvo-lawyer` (Art. 32 TOM gap) in the 2026-04-19 fleet review. Two lenses independently surfacing the same finding = highest-signal item in the report.
+
+### Scope-note
+- This is a one-way local wipe; no confirmation modal is added in this commit. If a user accidentally taps sign-out, their anonymous-mode-local data is gone (anonymous users don't sign out — this only matters for authed sessions where remote ciphertext is the source of truth anyway). A "Sign out will remove cached data from this device" copy note in the sign-out surface is a separate follow-up.
+
+Closes Fleet Review Blocker #7. Tests: 40/40 vitest.
+
 ## [15.15.4] — 2026-04-19 · HOTFIX — 6 × unquoted `placeholder=t('...')` bugs + permanent CI guard
 
 ### Fixed

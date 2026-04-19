@@ -310,6 +310,17 @@ async function authSignOut() {
   _userId = null;
   _userEmail = null;
   _authMode = 'local';
+  // v15.15.5 — clear plaintext residue. Previously authSignOut only locked
+  // the passphrase key and nulled the auth handles, leaving the most-recent
+  // decrypted state in localStorage. A user on a shared browser who signed
+  // out left their practice data visible to the next person to open Adze in
+  // that browser profile. Mirror the authDeleteAccount cleanup so sign-out
+  // means sign-out everywhere on this device. Data is safe in the Supabase
+  // ciphertext; sign-in + passphrase-unlock restores it.
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  state = (typeof newState === 'function') ? newState() : null;
+  view.modal = null;
+  view.currentMember = null;
 }
 
 async function authResetPassword(email) {
