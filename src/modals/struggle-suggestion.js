@@ -11,9 +11,10 @@ function renderStruggleSuggestionModal(m) {
     const sug = m.suggestion;
     const sutta = sug.sutta;
     const sub = SUTTA_SUBCATEGORIES.find(x => x.id === sug.subId);
+    // Static-key-per-branch routing (lesson #3) — catalog has both forms.
     const framing = sug.alreadyRead
-      ? `In what you wrote, I heard something the Buddha spoke directly to. You have already read this — sometimes a teaching needs to be returned to. The layer beneath the first reading is often where the answer waits.`
-      : `In what you wrote, I heard something the Buddha spoke directly to. If you are ready, here is what he taught.`;
+      ? t('struggle_suggestion.framing_already')
+      : t('struggle_suggestion.framing_new');
     content = `
       <div class="fade-in">
         <div class="text-center mb-3">

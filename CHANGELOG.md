@@ -4,6 +4,26 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.4] — 2026-04-19 · P1 copy cluster — i18n catch-up on four ceremonial + settings surfaces
+
+### Fixed
+Four P1 findings from the post-v15.15.9 copy-storyteller lens. The pattern all four share is inline English bypassing the en.json catalog on surfaces that testers encounter in the first week.
+
+**`struggle_suggestion` framing lines** (`src/modals/struggle-suggestion.js:15-16`). Both branches ("already read" + "first read") were template literals. Routed through the existing `struggle_suggestion.framing_already` and `struggle_suggestion.framing_new` keys (which already lived in en.json:1126-1127, just weren't consumed).
+
+**`rank_announcement` floor branches verified.** Copy-storyteller's carry-over flag asked to verify all 9 floor teachings route through `t()` post v15.15.6. Verified at `src/modals/rank-announcement.js:36-44` — all nine branches read from `rank_announcement.floor_teaching_*` keys. Already clean; no change needed.
+
+**`settings.js` Account & sync card** (`src/render/settings.js:76-106`). Thirteen inline strings (three blurb variants with {email} interpolation, three button labels, heading, sync-error prefix, encryption link, danger-zone label, delete button, delete note). All routed through new `settings.account.*` keys added to `en.json`. The `{email}` binding uses t()'s existing placeholder interpolation — the HTML-formatted email span is passed through the parameter rather than inlined.
+
+**`state.js` cross-tab stale-warning** (`src/systems/state.js:256`). The hardcoded "Another tab updated your synced data. Reload to continue editing." was catalog-bypassed AND used the wrong verb — practitioners *log*, they don't *edit* (copy-storyteller specifically flagged). Moved to new `sync.cross_tab_stale_warning` key with corrected phrasing: "Another tab updated your synced data. Reload this tab to continue." Settings banner picks it up automatically via `getCrossTabStaleWarning()`.
+
+### Not in this commit (remaining copy-storyteller items)
+- Teaching-detail, rules-card, rank-intro, setback-recovery, liberation-offer, defeat, evening-reflection render inlines — P2, encountered only after ≥1 week of practice or only on specific triggers. Separate batch.
+- auth.js 973-line extraction — P2, large refactor deserves its own PR.
+- welcome.js extraction — P2, onboarding-once surface.
+
+Tests: 40/40 vitest green.
+
 ## [15.17.3] — 2026-04-19 · P1 game cluster — Mahāpajāpatī inversion + evening double-surface
 
 ### Fixed

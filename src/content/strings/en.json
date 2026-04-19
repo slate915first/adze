@@ -746,6 +746,21 @@
   "reflection.history.monthly_label":               "Monthly",
   "reflection.history.weeklies_eyebrow":            "Completed weekly contemplations",
 
+  "_section_settings_account": "settings — Account & sync card. The authed / locked / local branches all route through static keys (lesson #3) so verify_strings can pair them with call sites.",
+  "settings.account.heading":                       "Account &amp; sync",
+  "settings.account.blurb_authed_unlocked":         "Signed in as <span class=\"text-amber-100 font-bold\">{email}</span>. Your practice data is encrypted on this device before it's sent to the server.",
+  "settings.account.blurb_authed_locked":           "Signed in as <span class=\"text-amber-100 font-bold\">{email}</span>, but the encryption passphrase isn't loaded — sync is paused until you enter it.",
+  "settings.account.blurb_local":                   "Adze stores everything locally by default. Signing in lets you sync across devices, end-to-end encrypted.",
+  "settings.account.button_manage":                 "Manage",
+  "settings.account.button_enter_passphrase":       "Enter passphrase",
+  "settings.account.button_sign_in":                "Sign in / Sign up",
+  "settings.account.sync_error_prefix":             "Sync error: ",
+  "settings.account.how_encryption_link":           "How encryption works →",
+  "settings.account.danger_zone":                   "Danger zone",
+  "settings.account.delete_button":                 "Delete my account permanently",
+  "settings.account.delete_note":                   "Removes your account, your synced data, and the local copy on this device. Cannot be undone.",
+  "sync.cross_tab_stale_warning":                   "Another tab updated your synced data. Reload this tab to continue.",
+
   "_section_rank_ladder": "rank_ladder modal footer — the tooltip shown inside the rank-ladder view. Must preserve the scaffolding-language pattern (canonical attainment is referenced, never declared).",
   "rank_ladder.tooltip_footer":                     "◆ training ranks · ✦ approaching the path · ◇ ariya (preview only, never certified by the game). The game ladder ends at Rank 9, which the game labels with the canonical term for the fully-liberated mind; whether any practitioner has in fact reached that territory is only ever theirs and their teacher's to verify. Beginners are Rank 0 or 1. No one is expected to start at the top; the path is walked, not awarded.",
 

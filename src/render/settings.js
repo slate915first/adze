@@ -73,32 +73,35 @@ function renderSettings() {
   const authEmail = (typeof authGetEmail === 'function') ? authGetEmail() : '';
   const syncErr   = (typeof getLastSyncError === 'function') ? getLastSyncError() : null;
   const staleWarn = (typeof getCrossTabStaleWarning === 'function') ? getCrossTabStaleWarning() : null;
+  // v15.17.4 — catalog all Account & sync strings. Static-key-per-branch
+  // (lesson #3) so verify_strings + copy-storyteller can pair them.
+  const emailSpan = escapeHtml(authEmail || '');
   let authBlurb, authButton;
   if (authMode === 'authed' && unlocked) {
-    authBlurb  = `Signed in as <span class="text-amber-100 font-bold">${escapeHtml(authEmail || '')}</span>. Your practice data is encrypted on this device before it's sent to the server.`;
-    authButton = `<button class="btn btn-ghost text-sm" onclick="openAuth('menu')">Manage</button>`;
+    authBlurb  = t('settings.account.blurb_authed_unlocked', { email: emailSpan });
+    authButton = `<button class="btn btn-ghost text-sm" onclick="openAuth('menu')">${t('settings.account.button_manage')}</button>`;
   } else if (authMode === 'authed' && !unlocked) {
-    authBlurb  = `Signed in as <span class="text-amber-100 font-bold">${escapeHtml(authEmail || '')}</span>, but the encryption passphrase isn't loaded — sync is paused until you enter it.`;
-    authButton = `<button class="btn btn-gold text-sm" onclick="openAuth('menu')">Enter passphrase</button>`;
+    authBlurb  = t('settings.account.blurb_authed_locked', { email: emailSpan });
+    authButton = `<button class="btn btn-gold text-sm" onclick="openAuth('menu')">${t('settings.account.button_enter_passphrase')}</button>`;
   } else {
-    authBlurb  = 'Adze stores everything locally by default. Signing in lets you sync across devices, end-to-end encrypted.';
-    authButton = `<button class="btn btn-gold text-sm" onclick="openAuth('menu')">Sign in / Sign up</button>`;
+    authBlurb  = t('settings.account.blurb_local');
+    authButton = `<button class="btn btn-gold text-sm" onclick="openAuth('menu')">${t('settings.account.button_sign_in')}</button>`;
   }
   const authCard = `
     <div class="parchment rounded-xl p-5 mb-4">
-      <h3 class="font-bold text-amber-100 mb-1">Account &amp; sync</h3>
+      <h3 class="font-bold text-amber-100 mb-1">${t('settings.account.heading')}</h3>
       <p class="text-xs text-amber-100/65 mb-3 leading-relaxed">${authBlurb}</p>
-      ${syncErr ? `<div class="mb-3 rounded-lg p-2 border border-red-700/50 bg-red-900/20 text-[11px] text-red-200">Sync error: ${escapeHtml(syncErr)}</div>` : ''}
+      ${syncErr ? `<div class="mb-3 rounded-lg p-2 border border-red-700/50 bg-red-900/20 text-[11px] text-red-200">${t('settings.account.sync_error_prefix')}${escapeHtml(syncErr)}</div>` : ''}
       ${staleWarn ? `<div class="mb-3 rounded-lg p-2 border border-amber-700/50 bg-amber-900/20 text-[11px] text-amber-200">${escapeHtml(staleWarn)}</div>` : ''}
       <div class="flex gap-2 flex-wrap items-center">
         ${authButton}
-        <button class="text-[11px] text-amber-300/80 hover:text-amber-200 underline ml-auto" onclick="openPrivacyDetail()">How encryption works →</button>
+        <button class="text-[11px] text-amber-300/80 hover:text-amber-200 underline ml-auto" onclick="openPrivacyDetail()">${t('settings.account.how_encryption_link')}</button>
       </div>
       ${authMode === 'authed' ? `
         <div class="mt-4 pt-3 border-t border-amber-800/30">
-          <div class="text-[10px] uppercase tracking-wider text-red-300/70 mb-1">Danger zone</div>
-          <button class="text-[11px] text-red-300/80 hover:text-red-200 underline" onclick="openAuth('delete-account-confirm')">Delete my account permanently</button>
-          <p class="text-[10px] text-amber-100/50 mt-1 leading-relaxed">Removes your account, your synced data, and the local copy on this device. Cannot be undone.</p>
+          <div class="text-[10px] uppercase tracking-wider text-red-300/70 mb-1">${t('settings.account.danger_zone')}</div>
+          <button class="text-[11px] text-red-300/80 hover:text-red-200 underline" onclick="openAuth('delete-account-confirm')">${t('settings.account.delete_button')}</button>
+          <p class="text-[10px] text-amber-100/50 mt-1 leading-relaxed">${t('settings.account.delete_note')}</p>
         </div>
       ` : ''}
     </div>

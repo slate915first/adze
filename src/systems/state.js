@@ -274,7 +274,11 @@ if (typeof BroadcastChannel !== 'undefined') {
       const msg = ev && ev.data;
       if (!msg || msg.type !== 'pushed') return;
       if (typeof syncGetTabId === 'function' && msg.tabId === syncGetTabId()) return;
-      _crossTabStaleWarning = 'Another tab updated your synced data. Reload to continue editing.';
+      // v15.17.4 — catalog-routed. Also dropped the wrong verb "editing"
+      // (practitioners log, not edit) per copy-storyteller.
+      _crossTabStaleWarning = (typeof t === 'function')
+        ? t('sync.cross_tab_stale_warning')
+        : 'Another tab updated your synced data. Reload this tab to continue.';
     });
   } catch (e) {
     // BroadcastChannel unsupported / blocked — fall through silently;
