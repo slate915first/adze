@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11.5] — 2026-04-19 · HOTFIX — Add-habit placeholder literal `t(...)` bug
+
+### Fixed
+- Add Custom Habit modal showed the literal string `t('add_habit.name_placeholder')` in the Name input's placeholder instead of the intended "e.g. Read 20 minutes". Root cause: `src/modals/add-habit.js:14` had `placeholder=t(...)` — missing the `${}` template-literal interpolation AND missing quotes around the value. Browser read the whole expression as an unquoted HTML attribute value. Fixed to `placeholder="${t(...)}"`.
+
+### Logged (not yet fixed — in `docs/FEEDBACK.md` Open + Next up)
+Six tester observations from the live-game test on 2026-04-19 were added to `docs/FEEDBACK.md`:
+- Add-custom-habit modal needs sutta-based habit catalog (remove blank-slate UX).
+- "Add as a habit in settings" links on Today jump without context; should stay in Today or pre-fill.
+- One-click habit completion with no confirmation — meditation habits should open the timer, non-meditation should ask "mark as done?".
+- One-line journal + Evening close — likely merge into a single Evening ritual with the one-liner as the first prompt.
+- Quote save / collection — add 🔖 to the "Word from the Buddha" card, collect in a new view.
+- "The Codex" heading is opaque — rename or subsume the quote collection.
+
+None of these are code changes tonight — they're design decisions. Promoted the top two (tap-to-complete confirmation + quote save) to the Next up section for the next working session.
+
 ## [15.11.4] — 2026-04-19 · Setup Phase B selects now give visual feedback
 
 ### Fixed

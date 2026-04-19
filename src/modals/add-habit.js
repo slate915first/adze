@@ -11,7 +11,7 @@ function renderAddHabitModal(m) {
     content = `
       <h2 class="text-2xl font-bold gold-text mb-4">${t('add_habit.heading')}</h2>
       <div class="space-y-3">
-        <div><label class="text-xs text-amber-300/70">${t('add_habit.name_label')}</label><input id="h-name" placeholder=t('add_habit.name_placeholder')></div>
+        <div><label class="text-xs text-amber-300/70">${t('add_habit.name_label')}</label><input id="h-name" placeholder="${t('add_habit.name_placeholder')}"></div>
         <div class="grid grid-cols-2 gap-3">
           <div><label class="text-xs text-amber-300/70">${t('add_habit.icon_label')}</label><input id="h-icon" placeholder="📖" maxlength="2"></div>
           <div><label class="text-xs text-amber-300/70">${t('add_habit.points_label')}</label><input id="h-points" type="number" min="1" max="25" value="8"></div>

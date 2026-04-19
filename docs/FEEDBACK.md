@@ -47,14 +47,82 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 
 *(Top 1–3 items you'll tackle in the next working session. Promoted from Open when a pattern emerges or a severity demands it.)*
 
-- **Annotate setup-flow elements with `data-component`** — the generic feedback-click handler now works on any element, but curated paths (e.g. `setup.assessment.phase_a`) are more useful than derived DOM paths. One-pass pass through render/setup.js + render/diagnostic.js to add attributes.
-- **Audit the rest of Phase B / Phase C setup steps for other re-render-missing bugs** (same class as the `currentEdge` one below).
+- **Tap-to-complete habit confirmation** — today a single click on a habit card (morning sit, evening sit, etc.) marks it done with zero feedback. Replace with either (a) a confirmation popup "Start sit?" / "Mark this sit as done?" or (b) tap-and-hold to toggle. See 2026-04-19 `[ux]` entry below.
+- **Quote save / collection** — "A word from the Buddha" card has no way to save a quote that resonates. Users want a bookmark action + a "saved quotes" screen to revisit or print. See 2026-04-19 entry.
+- **Annotate setup-flow elements with `data-component`** — curated paths for element-feedback reports beat derived DOM paths. One pass through render/setup.js + render/diagnostic.js.
+- **Audit Phase B / Phase C selects for more missing-re-render bugs** (same class as `currentEdge`).
 
 ---
 
 ## Open
 
 *(Chronological, newest at top.)*
+
+### 2026-04-19 · [bug] Add-custom-habit placeholder shows `t('add_habit.name_placeholder')` literally
+
+**Reporter:** Dirk
+**Screen / path:** Settings → Habit config → Add Custom Habit modal.
+**What they said:** Screenshot shows the Name input placeholder rendered as the literal string `t('add_habit.name_placeholder')` rather than "e.g. Read 20 minutes".
+**Your interpretation:** `src/modals/add-habit.js:14` had `placeholder=t('add_habit.name_placeholder')` (no `${}` wrap, no quotes). Template literal never interpolated; browser read the literal text as an unquoted HTML attribute value. Fixed.
+**Status:** FIXED in v15.11.5.
+
+### 2026-04-19 · [ux] Add-custom-habit modal is generic — no sutta-based habit suggestions
+
+**Reporter:** Dirk
+**Screen / path:** Habit Manager → Add Custom Habit.
+**What they said:** "it needs a total makeover, just give some clickable meaningful based on suttas habits, either key stone as recommendation or supportive, but this interface is not great."
+**Your interpretation:** The modal asks the user to compose a habit from scratch (name + emoji + points + who + keystone flag). For practitioners who don't know what habits to track, this is a blank slate. The modal should lead with a curated set of sutta-backed habits (daily metta, five-precept review, walking meditation, journaling for X minutes, etc.) — one-tap add, with a "Custom" option kept at the bottom for power users.
+**Status:** OPEN. Scope: bigger — design + content work. Needs a short habit catalog (~12–18 items, tagged keystone vs. supportive, each with a sutta reference). Then UI becomes a scrollable list of pre-made habits with quick-add buttons.
+
+### 2026-04-19 · [ux] Tap on "add as a habit in settings" link jumps to Habit Manager but context is lost
+
+**Reporter:** Dirk
+**Screen / path:** Today tab → Meditation column → "Metta (loving-kindness)" or "Walking meditation" → "add as a habit in settings" link.
+**What they said:** "if I press on for example metta to add as a habit, I jump into habit manager, but there is no metta anymore to just add it, and why do I jump there anyway?"
+**Your interpretation:** The link is a navigation-without-payload — it changes tab but doesn't carry the specific habit the user wanted. Should either (a) add the habit inline with a confirm toast and stay on Today, or (b) jump to Habit Manager with the Add-Habit modal pre-filled for that specific habit.
+**Status:** OPEN. Depends on the habit-catalog work above (so the jump lands on a specific item, not a blank form).
+
+### 2026-04-19 · [ux] One-click habit completion with no confirmation
+
+**Reporter:** Dirk
+**Screen / path:** Today → Meditation / Reading / Reflection cards — tap a habit (e.g. Morning sit).
+**What they said:** "I can still click with one mouse click on e.g. morning sit or evening sit and the task is just done. I wanted either a popup with the question, if I like to start the task, or if I like to confirm that I sat?"
+**Your interpretation:** The tap goes straight to done-state with no intermediate step. For a meditation app specifically, this breaks the mindful moment — the user should confirm they're starting or that they've sat, not fire-and-forget. Options:
+  - (a) Tap a meditation habit → opens the sit-timer modal (ritual: commit to the duration, press Start). Completion via timer end (not tap).
+  - (b) Tap any habit → small confirmation sheet slides up: "Mark [habit] as done?" with Yes / Cancel.
+  - (c) Long-press / swipe to complete.
+**Your preference:** (a) for meditation habits (makes the timer the primary affordance); (b) for non-meditation habits (journaling, reading, etc.). This matches the spirit of Adze better than streak-app one-tap-done.
+**Status:** OPEN. Promoted to Next up.
+
+### 2026-04-19 · [ux] "One-line journal" vs "Evening close" — are they redundant?
+
+**Reporter:** Dirk
+**Screen / path:** Today → Reflection column — two items: "One-line journal · a single sentence about today" and "Evening close · two questions, then go as deep as you have energy for".
+**What they said:** "Two things one-line journal and evening close, what the real difference, is this not too much? can this be together as one?"
+**Your interpretation:** They ARE different in intent — one-liner = 30-second capture any time of day; evening close = structured end-of-day ritual. But to a new user staring at the Today screen, "two things to write" reads as redundant overhead. Design options:
+  - Keep both but visually subordinate one-liner under Evening close (progressive disclosure).
+  - Merge: Evening close includes a "what would you keep as one line?" field at the end.
+  - Remove one-liner entirely; make Evening close the only daily reflection.
+**Status:** OPEN. Game-design decision — worth discussing with you (Dirk) before code change. My instinct: merge, with the one-liner being the *first* prompt inside Evening close, so casual users do just that line and bail; invested users go deeper with the additional questions.
+
+### 2026-04-19 · [ux] [feature] Quote save / collection — let players keep quotes that resonate
+
+**Reporter:** Dirk
+**Screen / path:** Today → "A word from the Buddha" card (top right).
+**What they said:** "the quotes have no option of saving the quotes as I wanted long ago. I should have the option as a player to save the one who really caught me, and later to collect them and print them out, or re-read them in the game."
+**Your interpretation:** Add a 🔖 / ⭐ save button on the quote card. Saved quotes live in `state.savedQuotes = [{ id, text, source, savedAt }]`. New screen (Wisdom tab or under Codex) shows the collection with actions: re-read, copy, print/export (e.g. nicely-formatted HTML or plain text).
+**Status:** OPEN. Promoted to Next up. S-effort — small feature, high emotional value for the practitioner journey.
+
+### 2026-04-19 · [ux] "The Codex" — users don't know what it is
+
+**Reporter:** Dirk
+**Screen / path:** Wisdom tab — "📜 The Codex — collected teachings" heading.
+**What they said:** "What is actually the function now of the codex? As a user I would not understand what it is. Even I don't know… double check the meaning."
+**Your interpretation:** The codex heading is jargon for the app (a game-y word for an internal concept). For practitioners not already fluent in the game's vocabulary, "Codex" is opaque. Options:
+  - Rename to "Collected teachings" (drop the codex word entirely).
+  - Keep the codex framing but add a one-line explanation: "📜 Your Codex — teachings you've encountered this quest".
+  - Merge with the quote-collection feature above — Codex = everything the practitioner has touched + bookmarked.
+**Status:** OPEN. Needs one-line clarity pass. Could also subsume the quote-save feature (Codex becomes the repository).
 
 ### 2026-04-19 · [ux] [bug] Setup Phase B select options give no visual feedback on tap
 
