@@ -4,6 +4,35 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.0] — 2026-04-19 · Reflection-merge — one progressive flow, no longer two tiles
+
+### Changed
+- **Today → Reflection column** now shows a single "Evening reflection" tile instead of the two ("One-line journal" + "Evening close") that felt redundant. Tapping it opens the merged flow.
+- **`openEveningClose()`** now starts at a new phase `oneline` (one-line capture) with two buttons:
+  - **"Save and rest"** (ghost) — honest low-energy bail. Writes both `.oneline` AND a minimal `.daily = { theme: 'oneline_only', answer: <line>, completed }`. Counts as a full daily reflection in every downstream system (rank-gate journal leg, `completedDailies` counter, `pickNextStep`, 18:00 auto-fire).
+  - **"Save and go deeper →"** (gold) — proceeds to the existing 6-phase gauge/minimal/standard/deep/open flow. `eveningCloseFinish` overwrites `.daily` with the richer version; rank-gate is idempotent same-day so no double counting.
+- **`openOnelineJournal()`** redirects to the merged flow for back-compat. `path.js` (next-step prescription) and any other caller of the legacy name still work and land in the new flow.
+- **`isDailyReflectionDoneToday`** now returns true for either a `.daily` OR `.oneline` entry. Callers (`path.js`, `rank-events.js`, Today primary-alert) all see a consistent "reflection done today" signal regardless of which branch the user took.
+
+### Added
+- **`evening_close.oneline.*`** strings — heading, subtitle, placeholder, hindrance hint, the two action buttons, footer hint reinforcing that the deeper path is optional, never owed.
+- **`today.refl.reflection_*`** strings for the new merged tile label + subs. Legacy `today.refl.journal_*` and `today.refl.evening_*` strings kept in place in case we need to roll back.
+
+### Fixed
+- **`src/modals/oneline-journal.js`** — placeholder attribute was unquoted (`placeholder=t(...)`), same bug class as v15.11.5 (literal `t('…')` text would render). Fixed even though this renderer is effectively unreachable after the merge — defense in depth for any serialized `view.modal = { type: 'oneline_journal' }` that might still come in.
+- **`today.js`** — removed stale dead-key checks for `.daily.eveningClose`, `.deeper`, `.evening` (none were ever written by current code). Cleaned during the reflection-merge rewrite.
+
+### Why
+- Tester note (Dirk, 2026-04-19): *"two things one-line journal and evening close, what the real difference, is this not too much? can this be together as one? …they could skip always the more intensive reflection and journaling, but if they like and feel good, they should go on."*
+- Design decisions flagged in the commit: (a) stop-at-line writes both `.oneline` AND minimal `.daily` to keep four downstream systems consistent (gate, counter, next-step, auto-fire); (b) single helper for "reflection done today"; (c) line text is folded into the final `.daily.answer` when the user continues deeper, so hindrance-keyword scans see it.
+
+### Tests
+- 39/39 vitest, 19/19 Playwright. No new behavioral test for the merged flow (fixture cost too high for one UI surface); welcome + magic-link smoke confirms nothing regressed on the boot path.
+
+### Not yet touched (tracked for follow-up)
+- `systems/rank-events.js:58–72` 18:00 auto-fire still opens the separate `evening_reflection` modal (different codepath from `evening_close`). With the new `isDailyReflectionDoneToday` gate including `.oneline`, the auto-fire will correctly suppress when the user has already written a line — but for users who haven't yet, the auto-fire opens a separate modal that doesn't share this merged flow. Harmonizing those two is a future commit.
+- `systems/sangha.js:261` sangha-trigger also opens the separate `evening_reflection` modal. Same follow-up.
+
 ## [15.14.1] — 2026-04-19 · Warmer copy on the two habit-tap modals
 
 ### Changed

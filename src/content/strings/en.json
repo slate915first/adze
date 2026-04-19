@@ -1324,6 +1324,9 @@
   "today.reading.sotd_sub_matched":                 "{ref} · {name} · on {pali}",
 
   "_section_today_reflection_items": "Reflection column items.",
+  "today.refl.reflection_label":                    "Evening reflection",
+  "today.refl.reflection_sub_default":              "a line tonight — deeper if you have the energy",
+  "today.refl.reflection_sub_done":                 "closed for today",
   "today.refl.journal_label":                       "One-line journal",
   "today.refl.journal_sub_default":                 "a single sentence about today",
   "today.refl.journal_sub_written":                 "written",
@@ -1348,6 +1351,16 @@
   "evening_close.intent_readback.eyebrow":          "Today's intention",
   "evening_close.intent_readback.with_observe":     "You set out to <b class=\"text-emerald-200\">cultivate {cultivate}</b> and <b class=\"text-amber-200\">observe {pali}</b>. As you close the day — did either arise clearly? Hold this lightly through the reflection.",
   "evening_close.intent_readback.no_observe":       "You set out to <b class=\"text-emerald-200\">cultivate {cultivate}</b>. As you close the day — did this arise clearly? Hold this lightly through the reflection.",
+
+  "_section_evening_close_oneline": "evening_close.oneline — v15.15 merged entry phase. A one-line capture with two exits: save+rest (counts as full daily) or save+go-deeper (continues into the existing 6-phase flow).",
+  "evening_close.oneline.heading":                  "Today in one line.",
+  "evening_close.oneline.subtitle":                 "A single sentence is enough. Keep what matters.",
+  "evening_close.oneline.placeholder":              "What stayed with you?",
+  "evening_close.oneline.hindrance_hint":           "If a hindrance named itself, you can name it here — it counts toward the path either way.",
+  "evening_close.oneline.stop_button":              "Save and rest",
+  "evening_close.oneline.continue_button":          "Save and go deeper →",
+  "evening_close.oneline.cancel_button":            "Cancel",
+  "evening_close.oneline.footer_hint":              "Either choice closes the day. The deeper path is optional, never owed.",
 
   "evening_close.gauge.heading":                    "Close the day",
   "evening_close.gauge.subtitle":                   "First — what do you have for this?",

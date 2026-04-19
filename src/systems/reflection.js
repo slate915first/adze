@@ -26,10 +26,16 @@ function currentMonthNumber() {
 }
 
 function isDailyReflectionDoneToday(memberId) {
+  // v15.15 — merged reflection flow: either a full .daily entry OR a
+  // stop-at-line .oneline counts as today's reflection. The merged flow
+  // writes both when the user continues deeper; just .oneline when they
+  // stop at the line (plus a minimal .daily so this stays truthy either
+  // way). The OR is belt-and-suspenders against legacy saves.
   const dk = todayKey();
   const mid = memberId || view.currentMember;
   if (!mid) return false;
-  return !!(state.reflectionLog[dk] && state.reflectionLog[dk][mid] && state.reflectionLog[dk][mid].daily);
+  const e = state.reflectionLog[dk] && state.reflectionLog[dk][mid];
+  return !!(e && (e.daily || e.oneline));
 }
 
 function isWeeklyReflectionDue() {

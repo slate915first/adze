@@ -42,7 +42,40 @@
 function renderEveningCloseModal(m) {
   let content = '';
 
-  if (m.phase === 'gauge') {
+  // v15.15 — merged flow entry phase. One-line capture with two exits:
+  //   * "Save and rest" (ghost) — stops here; still counts as full daily.
+  //   * "Save and go deeper →" (gold) — proceeds to the gauge phase.
+  // Replaces the standalone oneline_journal modal; openOnelineJournal now
+  // redirects here for back-compat.
+  if (m.phase === 'oneline') {
+    content = `
+      <div class="fade-in">
+        <div class="text-center mb-3">
+          <div class="text-4xl mb-1">✍️</div>
+          <h2 class="text-xl font-bold gold-text">${t('evening_close.oneline.heading')}</h2>
+          <p class="text-[11px] text-amber-200/70 italic mt-1">${t('evening_close.oneline.subtitle')}</p>
+        </div>
+        <div class="parchment rounded-xl p-4 mb-3">
+          <textarea id="oneline-input"
+                    class="w-full bg-amber-950/30 border border-amber-700/40 rounded-lg p-3 text-sm text-amber-100 placeholder-amber-100/40 focus:outline-none focus:border-amber-500"
+                    rows="3"
+                    placeholder="${t('evening_close.oneline.placeholder')}"
+                    maxlength="500"
+                    oninput="eveningCloseSetLine(this.value)">${escapeHtml(m.line || '')}</textarea>
+          <p class="text-[10px] text-amber-100/55 italic mt-2">${t('evening_close.oneline.hindrance_hint')}</p>
+        </div>
+        <div class="flex flex-col sm:flex-row justify-between gap-2">
+          <button class="btn btn-ghost text-xs" onclick="closeModal()">${t('evening_close.oneline.cancel_button')}</button>
+          <div class="flex gap-2">
+            <button class="btn btn-ghost text-sm" onclick="eveningCloseStopHere()">${t('evening_close.oneline.stop_button')}</button>
+            <button class="btn btn-gold text-sm" onclick="eveningCloseGoDeeper()">${t('evening_close.oneline.continue_button')}</button>
+          </div>
+        </div>
+        <p class="text-[10px] text-amber-100/45 italic text-center mt-3">${t('evening_close.oneline.footer_hint')}</p>
+      </div>
+    `;
+  }
+  else if (m.phase === 'gauge') {
     // v9.11 Turn B: intention readback at top of evening close
     const intent = view.currentMember ? getTodayIntention(view.currentMember) : null;
     const obs = intent && intent.observe ? FIVE_HINDRANCES.find(h => h.id === intent.observe) : null;

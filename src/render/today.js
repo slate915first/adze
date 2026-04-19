@@ -518,35 +518,27 @@ function renderToday() {
       }
     }
 
-    // ---- Reflection column items: journal, evening close, weekly, monthly ----
+    // ---- Reflection column items ----
+    // v15.15 — ONE daily entry: "Evening reflection". The previous pair
+    // ("One-line journal" + "Evening close") is now a single progressive
+    // flow: tap → write a line → "Save and rest" or "Save and go deeper".
+    // See src/systems/evening-close.js for the merged flow + why the
+    // stop-at-line path writes a minimal .daily entry (gate + counter +
+    // auto-fire all read .daily, so keeping them consistent matters).
     const reflItems = [];
     const dailyReflection = state.reflectionLog?.[dk]?.[mid]?.daily;
     const oneliner = state.reflectionLog?.[dk]?.[mid]?.oneline;
-    const journalDone = !!(dailyReflection || oneliner);
-    const journalText = oneliner?.text || dailyReflection?.answer || '';
-    // Journal sub: excerpt (data), fallback to "written" label, or default prompt.
-    const journalSub = journalDone
-      ? ((journalText.length > 50 ? journalText.slice(0, 50) + '…' : journalText) || t('today.refl.journal_sub_written'))
-      : t('today.refl.journal_sub_default');
+    const reflectionDone = !!(dailyReflection || oneliner);
+    const reflectionText = oneliner?.text || dailyReflection?.answer || '';
+    const reflectionSub = reflectionDone
+      ? ((reflectionText.length > 50 ? reflectionText.slice(0, 50) + '…' : reflectionText) || t('today.refl.reflection_sub_done'))
+      : t('today.refl.reflection_sub_default');
     reflItems.push({
-      icon: journalDone ? '✓' : '✍️',
-      label: t('today.refl.journal_label'),
-      sub: journalSub,
-      done: journalDone,
-      action: journalDone ? `showTab('reflection')` : 'openOnelineJournal()'
-    });
-    // v13.4 — evening close "done" state actually reflects whether the
-    // evening reflection was completed today. Without this the item stays
-    // visually undone all day even after a real close.
-    const eveningCloseDone = !!(state.reflectionLog?.[dk]?.[mid]?.daily?.eveningClose
-      || state.reflectionLog?.[dk]?.[mid]?.deeper
-      || state.reflectionLog?.[dk]?.[mid]?.evening);
-    reflItems.push({
-      icon: eveningCloseDone ? '✓' : '🪞',
-      label: t('today.refl.evening_label'),
-      sub: eveningCloseDone ? t('today.refl.evening_sub_done') : t('today.refl.evening_sub_undone'),
-      done: eveningCloseDone,
-      action: eveningCloseDone ? `showTab('reflection')` : 'openEveningClose()'
+      icon: reflectionDone ? '✓' : '🪞',
+      label: t('today.refl.reflection_label'),
+      sub: reflectionSub,
+      done: reflectionDone,
+      action: reflectionDone ? `showTab('reflection')` : 'openEveningClose()'
     });
     const weeklyAvail = !!(typeof isWeeklyReflectionAvailable === 'function' && isWeeklyReflectionAvailable());
     const monthlyAvail = !!(typeof isMonthlyReflectionAvailable === 'function' && isMonthlyReflectionAvailable());
