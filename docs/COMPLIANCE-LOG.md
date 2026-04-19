@@ -55,9 +55,9 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
 - [ ] **A8 · DATA-SUBJECT-REQUESTS process**
   New `docs/DATA-SUBJECT-REQUESTS.md` (intern). Template responses for Auskunft/Berichtigung/Löschung/Übertragbarkeit. 30-day Frist (Art. 12 (3)) tracker.
 
-- [ ] **A9 · Extend `delete-account` Edge Function**
-  Currently deletes `auth.users` (cascades to `user_state`). Add: `DELETE FROM public.beta_allowlist WHERE email = ...`. Verify cascade actually fires on a test account; record evidence in compliance folder.
-  *Why:* Art. 17 DSGVO Vollständigkeit.
+- [x] **A9 · Extend `delete-account` Edge Function** · v15.12.3
+  Edge function now deletes the user's email from `public.beta_allowlist` BEFORE the `auth.admin.deleteUser` call. Order matters (read email first, then delete). If the allowlist delete fails, the function aborts BEFORE the auth delete — better visible failure than a half-deleted account that silently leaks the email. Source committed to `supabase/functions/delete-account/index.ts` (so it's not Supabase-only); deployed via MCP as version 2 (sha changed `fd4baeb…` → `79762a6…`).
+  *Verification still owed (manual):* sign up a throwaway account, add it to allowlist, sign in, hit Settings → Reset Everything → Delete account, then confirm via SQL that both `auth.users` and `beta_allowlist` no longer have the email. Record the SQL evidence under `docs/COMPLIANCE/` (gitignored) for the audit trail.
 
 - [ ] **A10 · Define + publish retention windows**
   Decide and document: sessions = until refresh-token expiry; e-mail + ciphertext = until account deletion or **24 months inactivity → auto-delete** (need cron); Cloudflare logs = CF default (30 d); Supabase auth-logs = SB default (90 d); feedback log in Dirk's inbox = 24 months.

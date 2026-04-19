@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.12.3] — 2026-04-19 · DSGVO Track A9 — Account deletion now removes email from beta_allowlist
+
+### Fixed
+- **Edge Function `delete-account`** previously deleted the `auth.users` row (cascading to `user_state`) but left the user's email in `public.beta_allowlist`. Effect: a "deleted" user remained on the closed-beta invite list — partial fulfillment of Art. 17 (right to erasure). The function now deletes the allowlist entry FIRST (read user.email from JWT, lowercase + trim, DELETE), then deletes the auth row. If the allowlist delete fails, the function aborts BEFORE the auth delete to avoid a half-deleted account that silently leaks the email.
+- Source committed to `supabase/functions/delete-account/index.ts` (audit trail + disaster recovery — was previously Supabase-only).
+
+### Verification needed (manual, gated on Dirk)
+Sign up a throwaway account, add to allowlist, sign in, hit Settings → Reset Everything → Delete account, then SQL-verify both tables are clean. Record under `docs/COMPLIANCE/` (gitignored).
+
+### Notes
+- Deployed via Supabase MCP as version 2 of the function (ezbr_sha256 changed). No client-side code changed; the version bump is for changelog continuity.
+
 ## [15.12.2] — 2026-04-19 · DSGVO Track A3 — Datenschutzerklärung (Art. 13 disclosure) + Sangha parked
 
 ### Added
