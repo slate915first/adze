@@ -4,6 +4,18 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.13.1] — 2026-04-19 · Copy clarification — magic-link is passwordless sign-in, not a one-time invite
+
+### Changed
+- **Welcome screen** — added a small italic line under the "Sign in with email" CTA: *"A fresh sign-in code is emailed each time — no password to remember. Works on any device with the same email."* Pre-empts the common misreading that magic-link is a one-time invite link.
+- **Magic-request modal subhead** — was *"We'll send a code to your inbox."*; now *"We'll email a 6-digit code — a fresh one every time you sign in. No password to remember."* Same intent, more explicit.
+
+### Why
+- Tester / co-founder thinking: people unfamiliar with passwordless auth (Slack / Notion / Substack pattern) often parse "magic link" as a single-use invite. The model is actually two layers — magic-link = identity (re-issuable as needed), passphrase = encryption key (only on your device). Making the re-issuance explicit in onboarding copy avoids "wait, how do I sign in on my phone?" support questions.
+
+### No code or behavior change
+- Pure copy. Same auth flow, same passphrase flow. 39/39 vitest, 9/9 (welcome + magic-link) Playwright.
+
 ## [15.13.0] — 2026-04-19 · Habit-tap confirmation (Li May feedback)
 
 ### Changed

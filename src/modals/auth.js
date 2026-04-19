@@ -62,7 +62,7 @@ function renderMagicRequest(m) {
       <div class="text-center mb-3">
         <div class="text-4xl mb-1">✉️</div>
         <h2 class="text-xl font-bold gold-text">Sign in with email</h2>
-        <p class="text-xs text-amber-100/70 mt-1 serif">We'll send a code to your inbox.</p>
+        <p class="text-xs text-amber-100/70 mt-1 serif">We'll email a 6-digit code — a fresh one every time you sign in. No password to remember.</p>
       </div>
       ${err}
       <div class="space-y-3 mb-4">

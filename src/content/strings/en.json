@@ -1790,6 +1790,7 @@
   "datenschutz.footer":                             "If you notice the app processing data in a way that contradicts this notice, that is a bug — please report it via the in-app feedback button or to hello@adze.life.",
 
   "welcome.privacy_policy_link":                    "Datenschutz",
+  "welcome.signin_hint":                            "A fresh sign-in code is emailed each time — no password to remember. Works on any device with the same email.",
 
   "_section_confirm_habit_done_modal": "confirm_habit_done modal — small confirmation sheet shown when a non-meditation habit card is tapped on Today. Meditation habits go to the timer prompt instead.",
   "confirm_habit_done.heading":                     "Mark as done?",

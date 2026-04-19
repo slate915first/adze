@@ -43,6 +43,9 @@ function renderWelcome() {
             <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="openAuth('magic-request')">
               ✉️  Sign in with email
             </button>
+            <p class="mt-3 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
+              ${t('welcome.signin_hint')}
+            </p>
           `
         }
 
