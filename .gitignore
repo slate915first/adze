@@ -12,8 +12,15 @@ playwright-report/
 .env
 .env.local
 
-# Claude Code workspace metadata (per-developer, not project config)
-.claude/
+# Claude Code workspace metadata (per-developer session state).
+# EXCEPT .claude/agents/ and .claude/commands/ which are project-shared
+# review-lens definitions + slash-command scripts — those travel with the
+# repo so any collaborator gets the same agent fleet for free.
+.claude/*
+!.claude/agents/
+!.claude/agents/**
+!.claude/commands/
+!.claude/commands/**
 .mcp.json
 
 # Compliance materials with sensitive content (DPA PDFs, signed agreements,
