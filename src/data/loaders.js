@@ -37,7 +37,7 @@
 // loss; existing authenticated users are unaffected (their ciphertext lives
 // in Supabase, not keyed by this name).
 const STORAGE_KEY = 'adze_v1';
-const APP_VERSION = '15.15.5';
+const APP_VERSION = '15.15.6';
 const LEGACY_KEYS = ['habit_quest_v4', 'habit_quest_v3_5', 'habit_quest_v3_3'];
 const APP_NAME = 'Adze';
 const APP_TAGLINE = 'The Path of Awakening';

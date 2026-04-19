@@ -4,6 +4,29 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.6] — 2026-04-19 · HOTFIX — rank-announcement strings no longer conflate scaffolding with canonical attainment
+
+### Fixed
+The four `rank_announcement.floor_teaching_5_6` through `_8_9` strings in `src/content/strings/en.json` were rewritten. Previously they declared canonical attainment outright ("Stream-entry. The first three fetters — self-identity view, doubt, clinging to rituals — have weakened so much..."; "The arahant has destroyed the cause of his power...") — the exact failure mode the rank architecture was engineered to prevent. `path-ranks.json` `note` fields and `rank_intro.body_3` have always handled this correctly; these four strings were the one surface that broke the pattern.
+
+New pattern, for all four:
+1. **Game-rank-first framing**: "Rank 6 reached in the game..."
+2. **Canonical parallel as reference, not claim**: "The canonical teaching near this territory is sotāpatti-phala..."
+3. **Explicit disclaimer clause**: "...is yours and your teacher's to verify."
+
+Mechanic explanation (floor drops from X to Y) preserved. Narrative momentum preserved. Attainment-claim removed.
+
+Also in the same commit:
+- **`src/modals/rank-announcement.js`**: 2 of 9 floor-teaching branches were inline English (`1_2` and `8_9`) despite their `en.json` keys existing. Routed through `t()` uniformly across all 9 branches. The `8_9` inline string was the single worst attainment-conflation surface in the app.
+- **Labels** (`Shadow floor rises / at peak / falls`) were inline string construction in `rank-announcement.js:47-49` despite `rank_announcement.floor_rises_label` / `_peak_label` / `_falls_label` keys existing with `{before}` + `{after}` placeholders. Routed through `t()`.
+
+### Why
+- Flagged by `dhamma-reviewer` (2026-04-19 fleet review) as the single Blocker in its lens — *"the exact failure mode the app's entire rank architecture was designed to prevent"*.
+- Flagged by `copy-storyteller` as three of the inline-English-bypassing-i18n leaks on the most ceremonially weighty screens.
+- The fix pattern comes from `path-ranks.json` rank-6-through-9 `note` fields: *"This is a game rank describing the work being done, not a claim about attainment... Game rank. The canonical territory the tradition describes here involves specific fetters weakening — something only the practitioner's own lived experience, confirmed by a qualified teacher, can know."*
+
+Closes Fleet Review Blocker #4. 40/40 vitest.
+
 ## [15.15.5] — 2026-04-19 · HOTFIX — `authSignOut()` now clears plaintext residue
 
 ### Fixed

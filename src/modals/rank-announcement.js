@@ -26,16 +26,22 @@ function renderRankAnnouncementModal(m) {
     const floorFell = floorAfter < floorBefore;
     let floorNote = '';
     if (floorChanged) {
+      // v15.15.6 — all teachings now route through t() uniformly. Previously
+      // 1_2 and 8_9 were inline-English overrides despite the en.json keys
+      // existing. The 8_9 string was also the single worst attainment-
+      // conflation surface in the app (declared "arahant has destroyed the
+      // cause of his power" as a flat fact); rewritten with scaffolding-
+      // language per ADR-7-adjacent path-ranks.json discipline.
       const teachings = {
         '0_1':  { tone: 'rising',  text: t('rank_announcement.floor_teaching_0_1') },
-        '1_2':  { tone: 'rising',  text: 'Sīla is establishing. The floor rises to 40. The first real friction with Māra\'s pull begins now.' },
+        '1_2':  { tone: 'rising',  text: t('rank_announcement.floor_teaching_1_2') },
         '2_3':  { tone: 'rising',  text: t('rank_announcement.floor_teaching_2_3') },
         '3_4':  { tone: 'rising',  text: t('rank_announcement.floor_teaching_3_4') },
         '4_5':  { tone: 'peak',    text: t('rank_announcement.floor_teaching_4_5') },
         '5_6':  { tone: 'falling', text: t('rank_announcement.floor_teaching_5_6') },
         '6_7':  { tone: 'falling', text: t('rank_announcement.floor_teaching_6_7') },
         '7_8':  { tone: 'falling', text: t('rank_announcement.floor_teaching_7_8') },
-        '8_9':  { tone: 'falling', text: 'The game\'s endpoint. The floor falls to 5. Māra still visits but cannot find purchase. The arahant has destroyed the cause of his power. The remaining 5 is not your defilement; it is Māra\'s continued attention, futile but persistent.' }
+        '8_9':  { tone: 'falling', text: t('rank_announcement.floor_teaching_8_9') }
       };
       const key = `${fromRank}_${toRank}`;
       const teaching = teachings[key];
@@ -44,9 +50,11 @@ function renderRankAnnouncementModal(m) {
           : teaching.tone === 'peak' ? 'border-red-700/50 bg-red-950/20'
           : 'border-emerald-700/50 bg-emerald-950/20';
         const iconChar = teaching.tone === 'rising' ? '⬆️' : teaching.tone === 'peak' ? '⛰️' : '⬇️';
-        const labelText = teaching.tone === 'rising' ? `Shadow floor rises: ${floorBefore} → ${floorAfter}`
-          : teaching.tone === 'peak' ? `Shadow floor at peak: ${floorAfter}`
-          : `Shadow floor falls: ${floorBefore} → ${floorAfter}`;
+        const labelText = teaching.tone === 'rising'
+          ? t('rank_announcement.floor_rises_label', { before: floorBefore, after: floorAfter })
+          : teaching.tone === 'peak'
+            ? t('rank_announcement.floor_peak_label', { after: floorAfter })
+            : t('rank_announcement.floor_falls_label', { before: floorBefore, after: floorAfter });
         floorNote = `
           <div class="parchment rounded-xl p-3 mb-3 text-left border-2 ${bgClass}">
             <div class="flex items-baseline gap-2 mb-2">
