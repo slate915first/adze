@@ -4,6 +4,25 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.4] — 2026-04-19 · HOTFIX — 6 × unquoted `placeholder=t('...')` bugs + permanent CI guard
+
+### Fixed
+All six remaining instances of the template-literal HTML attribute parse bug (where `placeholder=t('key')` renders the literal string `t('key')` instead of the translation — same class as v15.11.5, v15.15.0, v15.15.2):
+- `src/modals/element-feedback.js:48` (`element_feedback.report_placeholder`) + `:53` (`element_feedback.suggestion_placeholder`)
+- `src/modals/feedback.js:118` (`feedback.summary_placeholder`) — this is the feedback form itself; literal `t('...')` was rendering where the tester types a report summary
+- `src/modals/monthly-reflection.js:69` (`weekly_reflection.writing_placeholder`)
+- `src/main.js:284` (`daily_reflection.textarea_placeholder`) + `:346` (`weekly_reflection.writing_placeholder`)
+
+Fix pattern: `placeholder=t('key')` → `placeholder="${t('key')}"`. Template interpolation now runs before HTML attribute parsing.
+
+### Added
+- **`tests/unit/placeholder-bug-guard.test.js`** — permanent CI test that walks `src/` for `.js` files (excluding `src/vendor/`), strips comment lines, and fails if any line contains the pattern `placeholder=t(`. This bug class has shipped seven times total; the guard ends the cycle.
+
+### Why this bug kept shipping
+The pattern looks correct at a glance — `placeholder=t('key')` scans as "placeholder from translator". The browser's HTML-attribute parser reads it as a literal unquoted value ending at the first whitespace, so the rendered element carries `placeholder="t('key')"`. There's no JS error; the string renders silently as the placeholder text. Without a dedicated test, only a tester screenshot catches it.
+
+Closes Fleet Review Blocker #2. Tests: 40/40 vitest (39 pre-existing + 1 new guard), welcome smoke green.
+
 ## [15.15.3] — 2026-04-19 · HOTFIX — tisikkhā explainer modal was silently broken
 
 ### Fixed

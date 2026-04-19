@@ -115,7 +115,7 @@ function renderFeedbackModal(m) {
             <div class="mb-4">
               <div class="text-[11px] uppercase tracking-wider text-amber-300/80 mb-2">${t('feedback.summary_label')} <span class="text-red-400">*</span></div>
               <input type="text"
-                     placeholder=t('feedback.summary_placeholder')
+                     placeholder="${t('feedback.summary_placeholder')}"
                      value="${(m.summary || '').replace(/"/g, '&quot;')}"
                      maxlength="80"
                      oninput="feedbackUpdateInput('summary', this.value)"

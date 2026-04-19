@@ -281,7 +281,7 @@ function renderModal() {
           <p class="serif text-sm text-amber-100/90 leading-relaxed">${daily.q}</p>
           ${expanded ? `
             <div class="mt-3 pt-3 border-t border-amber-900/30">
-              <textarea id="daily-answer" rows="4" placeholder=t('daily_reflection.textarea_placeholder')></textarea>
+              <textarea id="daily-answer" rows="4" placeholder="${t('daily_reflection.textarea_placeholder')}"></textarea>
               <p class="text-[10px] text-amber-100/40 italic mt-1">${t('daily_reflection.privacy_note')}</p>
             </div>
           ` : `
@@ -343,7 +343,7 @@ function renderModal() {
           <div class="mt-3">
             <label class="text-xs text-amber-300/80 block mb-1">${WEEKLY_DIAGNOSTIC.writing.question}</label>
             <p class="text-[11px] text-amber-100/50 italic mb-1">${WEEKLY_DIAGNOSTIC.writing.hint}</p>
-            <textarea id="weekly-diag-writing" rows="4" placeholder=t('weekly_reflection.writing_placeholder')></textarea>
+            <textarea id="weekly-diag-writing" rows="4" placeholder="${t('weekly_reflection.writing_placeholder')}"></textarea>
           </div>
         </div>
         ` : ''}

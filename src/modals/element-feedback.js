@@ -45,12 +45,12 @@ function renderElementFeedbackModal(m) {
 
         <div class="parchment rounded-xl p-3 mb-3 border border-amber-700/30">
           <label class="text-[10px] uppercase tracking-wider text-amber-300/80">${t('element_feedback.report_label')}</label>
-          <textarea id="element-report-input" rows="3" placeholder=t('element_feedback.report_placeholder') class="w-full bg-amber-950/30 border border-amber-900/40 rounded p-2 text-sm text-amber-100 mt-1" oninput="elementFeedbackSet('report', this.value)">${m.report || ''}</textarea>
+          <textarea id="element-report-input" rows="3" placeholder="${t('element_feedback.report_placeholder')}" class="w-full bg-amber-950/30 border border-amber-900/40 rounded p-2 text-sm text-amber-100 mt-1" oninput="elementFeedbackSet('report', this.value)">${m.report || ''}</textarea>
         </div>
 
         <div class="parchment rounded-xl p-3 mb-3 border border-amber-700/30">
           <label class="text-[10px] uppercase tracking-wider text-amber-300/80">${t('element_feedback.suggestion_label')} <span class="normal-case opacity-70">${t('element_feedback.suggestion_optional')}</span></label>
-          <textarea rows="2" placeholder=t('element_feedback.suggestion_placeholder') class="w-full bg-amber-950/30 border border-amber-900/40 rounded p-2 text-sm text-amber-100 mt-1" oninput="elementFeedbackSet('suggestion', this.value)">${m.suggestion || ''}</textarea>
+          <textarea rows="2" placeholder="${t('element_feedback.suggestion_placeholder')}" class="w-full bg-amber-950/30 border border-amber-900/40 rounded p-2 text-sm text-amber-100 mt-1" oninput="elementFeedbackSet('suggestion', this.value)">${m.suggestion || ''}</textarea>
         </div>
 
         <div class="parchment rounded-xl p-3 mb-3 border border-amber-700/30 bg-amber-950/20">

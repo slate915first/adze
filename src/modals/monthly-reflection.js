@@ -66,7 +66,7 @@ function renderMonthlyReflectionModal(m) {
             <div class="mt-3">
               <label class="text-xs text-amber-300/80 block mb-1">${w.question}</label>
               <p class="text-[11px] text-amber-100/50 italic mb-1">${w.hint}</p>
-              <textarea id="mdiag-writing-${w.id}" rows="4" placeholder=t('weekly_reflection.writing_placeholder')></textarea>
+              <textarea id="mdiag-writing-${w.id}" rows="4" placeholder="${t('weekly_reflection.writing_placeholder')}"></textarea>
             </div>
           `).join('')}
         </div>
