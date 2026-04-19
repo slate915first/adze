@@ -44,16 +44,15 @@ These ten items unblock public-facing-EU operation. They do not touch Sangha. Es
   Create `docs/COMPLIANCE/DPA/` (gitignored). Activate / download DPAs for Supabase, Cloudflare, Resend. Add 1-page TIA (Transfer Impact Assessment) for the three US processors — short, since payload is E2E for Supabase, IPs only for Cloudflare/Resend.
   *Why:* Art. 28 (3) DSGVO; without DPA every transfer is rechtswidrig.
 
-- [ ] **A6 · Incident-response procedure**
-  New `docs/INCIDENT-RESPONSE.md` (intern). Cover: detection paths (Supabase/Cloudflare alerts, security@ inbox), 24h triage trigger, 72h supervisory-authority report timer, Sächsischer LfDI online form, betroffene-user notification template, Estate-Plan / Notfall-Zugang for Single-Maintainer-Risiko.
-  *Why:* Art. 33–34 DSGVO.
+- [x] **A6 · Incident-response procedure** · `docs/INCIDENT-RESPONSE.md`
+  Detection paths, breach-classification by type (confidentiality / integrity / availability / account compromise / provider), 24h triage trigger, 72h Aufsichtsbehörden-Meldung timeline, containment playbook, type-specific containment recipes (RLS regression, allowlist breach, CSP / XSS, service-worker stuck, account compromise), notification templates (DE for authority, EN for users), single-maintainer continuity section.
+  *Two open follow-ups in the doc itself:* (a) automated alerts at Supabase + Cloudflare not yet configured — action item in next compliance pass; (b) continuity contact (estate plan) not yet designated.
 
-- [ ] **A7 · VVT (Verzeichnis von Verarbeitungstätigkeiten)**
-  New `docs/VVT.md` (intern). Use the table from the DSGVO audit §1 as starting point.
-  *Why:* Art. 30 DSGVO. Freistellung greift nicht, sobald Art.-9-Verarbeitung (Sangha) regelmäßig wird.
+- [x] **A7 · VVT (Verzeichnis von Verarbeitungstätigkeiten)** · `docs/VVT.md`
+  Five processing activities documented per Art. 30 (1) requirements: (1) magic-link auth; (2) cross-device sync; (3) beta access control; (4) service security logs; (5) bug-report e-mails. Each row covers purpose, data subjects, data categories, recipients, lawful basis, third-country transfer mechanism, retention, technical measures. Cross-cutting Art. 32 measures listed separately. Committed to repo intentionally — contains no user data, only the controller's own published address + system description.
 
-- [ ] **A8 · DATA-SUBJECT-REQUESTS process**
-  New `docs/DATA-SUBJECT-REQUESTS.md` (intern). Template responses for Auskunft/Berichtigung/Löschung/Übertragbarkeit. 30-day Frist (Art. 12 (3)) tracker.
+- [x] **A8 · DATA-SUBJECT-REQUESTS process** · `docs/DATA-SUBJECT-REQUESTS.md`
+  Per-right runbook for Art. 15–22: identity verification (e-mail-on-file standard, light second-factor question for verification), explicit fulfillment recipes with SQL excerpts where manual extraction is needed, response templates (acknowledgement + identity verification + Auskunft fulfillment), 30-day-Frist procedure, abbreviated request-log table. Note: detailed correspondence stays in operator's e-mail; only abbreviated outcomes go into the committed log.
 
 - [x] **A9 · Extend `delete-account` Edge Function** · v15.12.3
   Edge function now deletes the user's email from `public.beta_allowlist` BEFORE the `auth.admin.deleteUser` call. Order matters (read email first, then delete). If the allowlist delete fails, the function aborts BEFORE the auth delete — better visible failure than a half-deleted account that silently leaks the email. Source committed to `supabase/functions/delete-account/index.ts` (so it's not Supabase-only); deployed via MCP as version 2 (sha changed `fd4baeb…` → `79762a6…`).
