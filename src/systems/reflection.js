@@ -265,3 +265,150 @@ function submitMonthlyReflection() {
   renderModal();
   render();
 }
+
+// ============================================================================
+// v15.17 — Reflection history readback (Li May & operator's wife feedback).
+// In-app browsing of past daily, one-line, weekly, and monthly reflections.
+// Teaching-framed per dhamma-reviewer: this is vicāra (investigation), not
+// progress-audit. The render code deliberately omits counts, streaks, and
+// per-hindrance aggregates (game-designer anti-pattern vetoes).
+// ============================================================================
+
+// Walk state.reflectionLog into a flat, reverse-chronological list of entries.
+// Each entry: { id, kind, date, title, preview, body, meta }.
+//   id      — stable string (`${dateKey}:${kind}`) used for detail-phase routing
+//   kind    — 'daily' | 'oneline' | 'weekly' | 'monthly'
+//   date    — YYYY-MM-DD (the practitioner's local date key)
+//   title   — one-line type label, already translated
+//   preview — ~80 chars of the entry text for list display
+//   body    — full text for the detail phase (may be multi-paragraph)
+//   meta    — the original entry object, passed through for future renderers
+//
+// Returns an empty array if no entries exist or the member has no log yet.
+function getAllPastReflections(memberId) {
+  if (!memberId || !state || !state.reflectionLog) return [];
+  const out = [];
+  const dateKeys = Object.keys(state.reflectionLog);
+  for (const dk of dateKeys) {
+    const byMember = state.reflectionLog[dk];
+    if (!byMember || typeof byMember !== 'object') continue;
+    const entry = byMember[memberId];
+    if (!entry || typeof entry !== 'object') continue;
+
+    // Daily reflection — a rotating question + free-text answer.
+    if (entry.daily && entry.daily.answer && String(entry.daily.answer).trim()) {
+      const ans = String(entry.daily.answer);
+      out.push({
+        id: `${dk}:daily`,
+        kind: 'daily',
+        date: dk,
+        title: t('reflection_history.kind.daily'),
+        preview: _reflectionPreview(ans),
+        body: ans,
+        meta: entry.daily
+      });
+    }
+
+    // One-line journal — shorter, captured via the evening-close oneline phase.
+    // Skip if the daily above already captured the same text (the merged flow
+    // writes both .daily and .oneline with the same answer).
+    if (entry.oneline && entry.oneline.text && String(entry.oneline.text).trim()) {
+      const txt = String(entry.oneline.text).trim();
+      const dailyAns = entry.daily && entry.daily.answer ? String(entry.daily.answer).trim() : '';
+      if (txt !== dailyAns) {
+        out.push({
+          id: `${dk}:oneline`,
+          kind: 'oneline',
+          date: dk,
+          title: t('reflection_history.kind.oneline'),
+          preview: _reflectionPreview(txt),
+          body: txt,
+          meta: entry.oneline
+        });
+      }
+    }
+
+    // Weekly reflection — multi-question answers array.
+    if (entry.weekly && entry.weekly.answers) {
+      const body = _reflectionJoinAnswers(entry.weekly.answers);
+      if (body) {
+        out.push({
+          id: `${dk}:weekly`,
+          kind: 'weekly',
+          date: dk,
+          title: t('reflection_history.kind.weekly', {n: entry.weekly.week || ''}),
+          preview: _reflectionPreview(body),
+          body,
+          meta: entry.weekly
+        });
+      }
+    }
+
+    // Monthly reflection — multi-question answers + structured writings block.
+    if (entry.monthly && (entry.monthly.answers || entry.monthly.writings)) {
+      const pieces = [];
+      if (entry.monthly.answers) pieces.push(_reflectionJoinAnswers(entry.monthly.answers));
+      if (entry.monthly.writings) pieces.push(_reflectionJoinAnswers(entry.monthly.writings));
+      const body = pieces.filter(Boolean).join('\n\n');
+      if (body) {
+        out.push({
+          id: `${dk}:monthly`,
+          kind: 'monthly',
+          date: dk,
+          title: t('reflection_history.kind.monthly', {n: entry.monthly.month || ''}),
+          preview: _reflectionPreview(body),
+          body,
+          meta: entry.monthly
+        });
+      }
+    }
+  }
+
+  // Reverse chronological: newest first. Secondary sort by kind-weight so the
+  // richer entry wins the eye on multi-entry days (monthly > weekly > daily > oneline).
+  const kindWeight = { monthly: 0, weekly: 1, daily: 2, oneline: 3 };
+  out.sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return (kindWeight[a.kind] || 9) - (kindWeight[b.kind] || 9);
+  });
+  return out;
+}
+
+// Truncate to ~80 chars, collapse whitespace, add ellipsis if truncated.
+function _reflectionPreview(text) {
+  if (!text) return '';
+  const flat = String(text).replace(/\s+/g, ' ').trim();
+  return flat.length > 80 ? flat.slice(0, 77) + '…' : flat;
+}
+
+// Weekly/monthly `.answers` and `.writings` are shaped as either an array of
+// strings, a { key: string } object, or occasionally a nested mix. Flatten
+// defensively so `[object Object]` never leaks into the preview or detail body.
+function _reflectionJoinAnswers(v) {
+  if (!v) return '';
+  if (typeof v === 'string') return v.trim();
+  if (Array.isArray(v)) return v.map(x => _reflectionJoinAnswers(x)).filter(Boolean).join('\n\n');
+  if (typeof v === 'object') {
+    return Object.values(v).map(x => _reflectionJoinAnswers(x)).filter(Boolean).join('\n\n');
+  }
+  return String(v);
+}
+
+function openReflectionHistory() {
+  view.modal = { type: 'reflection_history', phase: 'list' };
+  renderModal();
+}
+
+function openReflectionHistoryDetail(entryId) {
+  if (!view.modal || view.modal.type !== 'reflection_history') return;
+  view.modal.phase = 'detail';
+  view.modal.entryId = entryId;
+  renderModal();
+}
+
+function backToReflectionHistoryList() {
+  if (!view.modal || view.modal.type !== 'reflection_history') return;
+  view.modal.phase = 'list';
+  view.modal.entryId = null;
+  renderModal();
+}

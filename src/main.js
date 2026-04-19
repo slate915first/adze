@@ -138,6 +138,9 @@ function renderModal() {
   else if (m.type === 'evening_reflection') {
     content = renderEveningReflectionModal(m);
   }
+  else if (m.type === 'reflection_history') {
+    content = renderReflectionHistoryModal(m);
+  }
   else if (m.type === 'wisdom') {
     const w = WISDOM_SCROLLS.find(x => x.id === m.wisdomId);
     if (!w) { closeModal(); return; }

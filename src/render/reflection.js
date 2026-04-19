@@ -190,6 +190,32 @@ function renderReflection() {
     </div>
   `;
 
+  // v15.17 — Readback tile. Only surfaces when the practitioner has at least
+  // one past entry to read; otherwise it's noise. Routed through the
+  // reverse-chronological list per ux-reviewer + game-designer + dhamma-
+  // reviewer convergent design (2026-04-19). Text-only, no counts in the
+  // tile itself — the counts tile below still carries that ambient role.
+  const hasAnyPastReflection =
+    (typeof getAllPastReflections === 'function')
+      ? getAllPastReflections(view.currentMember).length > 0
+      : false;
+  if (hasAnyPastReflection) {
+    html += `
+      <div class="mt-6">
+        <button onclick="openReflectionHistory()" class="parchment rounded-xl p-4 w-full text-left hover:parchment-active transition border-amber-700/40">
+          <div class="flex items-center gap-3">
+            <div class="text-3xl">📖</div>
+            <div class="flex-1">
+              <div class="text-xs uppercase tracking-wider text-amber-300">${t('reflection.history_tile.eyebrow')}</div>
+              <div class="font-bold text-amber-100 text-sm mt-0.5">${t('reflection.history_tile.heading')}</div>
+              <div class="text-xs text-amber-100/70 mt-1">${t('reflection.history_tile.body')}</div>
+            </div>
+          </div>
+        </button>
+      </div>
+    `;
+  }
+
   // History
   if (state.completedDailies > 0 || state.completedWeeklies.length > 0 || state.completedMonthlies.length > 0) {
     html += `

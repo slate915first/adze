@@ -4,6 +4,40 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.0] — 2026-04-19 · Reflection history — in-app readback of past entries
+
+### Added
+Requested by a real beta tester: the ability to read back past daily / weekly / monthly / one-line reflections inside the app, instead of having to export the JSON file.
+
+**`src/modals/reflection-history.js` (new)** — a two-phase modal:
+- *list phase:* reverse-chronological list of every reflection the practitioner has written, each row showing the kind (Daily / One line / Weekly · W{n} / Monthly · M{n}), a human-readable date, and an ~80-char preview.
+- *detail phase:* read-only full text of one entry. Back button returns to list without tearing down the modal.
+
+**`src/systems/reflection.js`** — `getAllPastReflections(memberId)` walks `state.reflectionLog`, normalises the four entry shapes (`.daily`, `.oneline`, `.weekly`, `.monthly`), defends against `[object Object]` leakage from the heterogeneous `.answers` / `.writings` shapes, de-duplicates the one-line-vs-daily overlap introduced when the merged evening-close flow writes both fields with the same text, and returns a sorted array. `openReflectionHistory`, `openReflectionHistoryDetail`, `backToReflectionHistoryList` are the phase-routing helpers.
+
+**`src/render/reflection.js`** — a new "Your reflections" tile (📖 · Readback / Your reflections / "Revisit what you noticed on past days — to ask whether it still applies.") surfaces on the Reflection tab above the existing counts tile. Guard: only renders when at least one past entry exists, so new practitioners don't see an empty button.
+
+### Teaching framing (dhamma-reviewer condition)
+Every phase of the modal carries one line of framing at the top: *"Past observations are reminders, not records. What matters is what you notice now."* Echoes the existing liberation-disclaimer register. Pre-frames the act as vicāra (investigation) — Bojjhaṅga #2, Dhammavicaya — rather than as progress-audit. The raft metaphor (MN 22 Alagaddūpama) informs the stance without being quoted at the user.
+
+### Game-designer anti-pattern vetoes honored
+- No completion percentage, streak count, or "X of Y days reflected" indicator.
+- No per-hindrance frequency tally, sortable tags, or trend graph.
+- The word "track" does not appear in any of the readback UI.
+- Access is behind one deliberate tap on a named tile, not a persistent counter anywhere else in the app.
+
+### UX scope (ux-reviewer)
+- Reverse-chronological list, not a calendar grid. A calendar grid would add month-navigation headers, day-cell sizing fights, and type-disambiguation dots before the user reaches the text they want — hostile for a low-energy practice app.
+- Text-only in the first pass. Trend visualisation already lives in `openWeeklySummary` (the 📊 tile); kept separate so this readback stays practice-oriented.
+- iOS Safari: scroll containers use `max-h-[65vh]` / `max-h-[60vh]` with `-webkit-overflow-scrolling: touch` + `overscroll-behavior: contain` to prevent pull-to-refresh on the outer page and to avoid the 100vh-under-address-bar trap.
+- Modal-over-modal risk sidestepped by using two phases of a single modal rather than two stacked modals; the close-button + back-button semantics are independent by design.
+
+### i18n
+All user-facing strings routed through `t()`. New keys under `reflection.history_tile.*` and `reflection_history.*` in `src/content/strings/en.json`.
+
+### Manual verification
+40/40 vitest green. **Browser smoke-test still pending** (this is a static site with no build step; standard workflow is to load `src/index.html` directly or via any static server and exercise the flow). The scroll-container + Intl.DateTimeFormat + heterogeneous-shape normalisation are the three areas most likely to surface an edge case in practice — worth a 2-minute manual pass before broader tester visibility.
+
 ## [15.16.2] — 2026-04-19 · P1 engineering — server-authoritative updated_at + allowlist search_path
 
 ### Fixed
