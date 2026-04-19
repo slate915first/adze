@@ -4,6 +4,23 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.13.0] — 2026-04-19 · Habit-tap confirmation (Li May feedback)
+
+### Changed
+- **Today screen → Meditation column** taps now route through the existing `handleHabitTap` dispatcher instead of bypassing it with a direct `toggleHabit` call. One-line fix in `render/today.js:437`. The dispatcher was already in `systems/habits-ui.js` and already knew how to route sit habits to the timer flow — Today just wasn't using it.
+- **`handleHabitTap` extended**: meditation classification (sit / walking / metta) now triggers the timer flow even for habits without a `slot` (i.e. user-added walking/metta from the small-habits catalog). Previously only `slot`-bearing habits got the timer.
+
+### Added
+- **`confirm_habit_done` modal** — small confirmation sheet shown when a non-meditation habit card is tapped (custom habits, non-meditation small habits like body_scan / mindful_meal / etc., journals if reached this way). "Mark as done?" with a one-line tonal note. Yes / Not yet. Already-done habits still un-mark on tap without confirmation (over-confirmation taxes the user).
+
+### Why
+- **Tester feedback (Li May, 2026-04-19)**: *"I can still click with one mouse click on e.g. morning sit or evening sit and the task is just done. I wanted either a popup with the question, if I like to start the task, or if I like to confirm that I sat?"*
+- **Dirk's preference**: meditation habits = ritual (commit + start the timer; completion happens when the timer ends, not on the tap). Non-meditation habits = a small intentional pause before recording. Both addressed in this change.
+
+### Tests
+- 39/39 vitest, 19/19 Playwright.
+- No new test for the confirmation flow itself — would require a fully-set-up assessment to populate habits in the test fixture; deferred. The welcome smoke test confirms the new modal script loads without JS errors.
+
 ## [Unreleased — server-side, no APP_VERSION bump] — 2026-04-19 · DSGVO Track A10 + repo migration snapshots
 
 ### Added

@@ -104,7 +104,7 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
   - (b) Tap any habit → small confirmation sheet slides up: "Mark [habit] as done?" with Yes / Cancel.
   - (c) Long-press / swipe to complete.
 **Your preference:** (a) for meditation habits (makes the timer the primary affordance); (b) for non-meditation habits (journaling, reading, etc.). This matches the spirit of Adze better than streak-app one-tap-done.
-**Status:** OPEN. Promoted to Next up.
+**Status:** FIXED in v15.13.0. Both (a) and (b) shipped. Today's Meditation column taps now route through `handleHabitTap` (one-line change in `render/today.js`); meditation classification (sit/walking/metta — by slot or by name) triggers the timer flow; everything else opens the new `confirm_habit_done` modal. Already-done taps still un-mark immediately (over-confirmation taxes the user).
 
 ### 2026-04-19 · [ux] "One-line journal" vs "Evening close" — are they redundant?
 

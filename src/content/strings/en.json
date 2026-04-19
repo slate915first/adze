@@ -1791,6 +1791,13 @@
 
   "welcome.privacy_policy_link":                    "Datenschutz",
 
+  "_section_confirm_habit_done_modal": "confirm_habit_done modal — small confirmation sheet shown when a non-meditation habit card is tapped on Today. Meditation habits go to the timer prompt instead.",
+  "confirm_habit_done.heading":                     "Mark as done?",
+  "confirm_habit_done.body":                        "A small pause before recording — let the moment of completion be intentional.",
+  "confirm_habit_done.points_hint":                 "+{n} points",
+  "confirm_habit_done.confirm_button":              "✓ Yes — mark done",
+  "confirm_habit_done.cancel_button":               "Not yet",
+
   "_section_impressum_modal": "impressum modal — § 5 DDG legal notice for Germany. German-only content because this is a German legal-text obligation; the link label 'Impressum' is universally understood across the EU.",
   "impressum.heading":                              "Impressum",
   "impressum.subtitle":                             "Angaben gemäß § 5 DDG",

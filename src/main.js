@@ -249,6 +249,9 @@ function renderModal() {
   else if (m.type === 'datenschutz') {
     content = renderDatenschutzModal(m);
   }
+  else if (m.type === 'confirm_habit_done') {
+    content = renderConfirmHabitDoneModal(m);
+  }
   else if (m.type === 'feedback_fab_menu') {
     content = renderFeedbackFabMenuModal(m);
   }

@@ -9,18 +9,28 @@ function handleHabitTap(habitId) {
   const h = state.habits.find(x => x.id === habitId);
   if (!h) return;
   // Already done? Tapping toggles it off (matches v8 behavior).
+  // Un-marking is intentionally NOT confirmed — over-confirmation taxes the user.
   const dk = todayKey();
   const cur = state.log[dk]?.[view.currentMember]?.[habitId];
   if (cur === true) {
     toggleHabit(habitId, true); // this will delete the entry (v8 toggle behavior)
     return;
   }
-  // Non-sit habits always go straight to toggle.
-  if (!h.slot) {
-    toggleHabit(habitId, true);
+  // Meditation habits (sit / walking / metta) — by slot OR by name classification —
+  // route through the timer flow per state.prefs.timerMode. v15.12.x extension:
+  // walking/metta small habits classify as meditation even without a slot, so
+  // they too get the timer ritual.
+  const isMeditation = !!h.slot || !!classifyMeditationHabit(h);
+  if (!isMeditation) {
+    // Non-meditation habit (journal, custom, mindfulness "small habits" without
+    // a meditation classification) — show a small confirmation sheet so an
+    // accidental tap doesn't silently mark the habit done. v15.13 — addresses
+    // Li May's "I clicked once and the task was just done" feedback.
+    view.modal = { type: 'confirm_habit_done', habitId };
+    renderModal();
     return;
   }
-  // Sit habit — check prefs.
+  // Meditation path — check prefs for whether to ask, always-timer, or never-timer.
   const mode = state.prefs?.timerMode || 'ask';
   if (mode === 'never') {
     toggleHabit(habitId, true);
@@ -32,6 +42,21 @@ function handleHabitTap(habitId) {
   }
   // mode === 'ask' — show the prompt modal.
   view.modal = { type: 'timer_prompt', habitId };
+  renderModal();
+}
+
+// v15.13 — confirm_habit_done modal handlers. Used for non-meditation
+// habits where the timer ritual doesn't apply but a single tap shouldn't
+// silently mark the task done either.
+function confirmHabitDoneYes() {
+  const id = view.modal?.habitId;
+  view.modal = null;
+  renderModal();
+  if (id) toggleHabit(id, true);
+}
+
+function confirmHabitDoneCancel() {
+  view.modal = null;
   renderModal();
 }
 

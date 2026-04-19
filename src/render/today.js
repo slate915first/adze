@@ -434,7 +434,7 @@ function renderToday() {
           label: h.name,
           sub: medCategorySub(cat),
           done: log[h.id] === true,
-          action: `toggleHabit('${h.id}', true)`,
+          action: `handleHabitTap('${h.id}')`,
           category: cat
         });
       }
