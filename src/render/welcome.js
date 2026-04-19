@@ -55,10 +55,17 @@ function renderWelcome() {
       </div>
 
       <div class="w-full pt-6 mt-6 border-t border-amber-800/30 text-[11px] text-amber-100/55 leading-relaxed">
-        <span>🔒 ${t('welcome.footer_privacy')}</span>
-        <button onclick="openPrivacyDetail()" class="text-amber-300/80 hover:text-amber-200 underline ml-1">
-          ${t('welcome.privacy_link')}
-        </button>
+        <div>
+          <span>🔒 ${t('welcome.footer_privacy')}</span>
+          <button onclick="openPrivacyDetail()" class="text-amber-300/80 hover:text-amber-200 underline ml-1">
+            ${t('welcome.privacy_link')}
+          </button>
+        </div>
+        <div class="mt-2">
+          <button onclick="openImpressum()" class="text-amber-300/80 hover:text-amber-200 underline">
+            ${t('welcome.imprint_link')}
+          </button>
+        </div>
       </div>
 
     </div>

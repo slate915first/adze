@@ -51,7 +51,7 @@ const SUPABASE_STUB = `
 `;
 
 async function stubSupabase(page) {
-  await page.route(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js/, (route) =>
+  await page.route(/(?:cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js|vendor\/supabase\.js)/, (route) =>
     route.fulfill({ status: 200, contentType: 'application/javascript', body: SUPABASE_STUB })
   );
 }

@@ -4,6 +4,30 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.12.0] — 2026-04-19 · DSGVO Track A1 + A2 — self-host CDNs + Impressum
+
+Three-lens review (game design + senior engineer + Datenschutz lawyer) of the upcoming Sangha feature converged on a sequenced rollout. Tracks documented in `docs/COMPLIANCE-LOG.md`; roadmap in `docs/ROADMAP.md`. This release ships the two highest-priority items in Track A.
+
+### Added
+- **`src/vendor/`** — vendored Tailwind Play CDN runtime (`tailwind-play-cdn.js`, 397 KB) and Supabase JS SDK (`supabase.js`, pinned `2.103.3`). Visitor IPs no longer leak to `cdn.tailwindcss.com` / `cdn.jsdelivr.net`. Closes the LG München I 3 O 17493/20 (Google-Fonts) class of risk.
+- **Impressum** — new `src/modals/impressum.js` (German legal text per § 5 DDG). Reachable from welcome footer and Settings → Privacy via `openImpressum()`.
+- **`docs/COMPLIANCE-LOG.md`** — full Tracks A/B/C action items with rationale, decision log, and DSGVO article cites for the Sangha rollout.
+- **`docs/SANGHA-DESIGN.md` review** — three reviews summarized; details in COMPLIANCE-LOG.
+
+### Changed
+- **`src/_headers`** — Content-Security-Policy `script-src` and `style-src` dropped both CDN domains (now `'self'` only). `'unsafe-eval'` retained for the self-hosted Tailwind Play runtime; queued follow-up to replace with a real Tailwind build to drop it.
+- **`src/index.html`** — `<script>` tags for Tailwind + Supabase point at the local vendored copies.
+- **`docs/ROADMAP.md`** — added "Compliance + Sangha sequencing" section indexing Tracks A/B/C; rewrote "Current Focus" to lead with Track A and the Li May engine bug.
+- **`docs/FEEDBACK.md`** — Li May's setup-summary bug logged with reproduction, root cause (`src/engine/diagnostic.js:315`), proposed 3-line fix, missing-test list. Promoted to Next up.
+
+### Tests
+- **`tests/e2e/magic-link.spec.js` + `tests/e2e/invite-flow.spec.js`** — `page.route()` regex extended to also intercept the new `/vendor/supabase.js` path, so the Supabase SDK stub still applies after vendoring. Caught by the suite before deploy.
+- 33/33 vitest unit tests pass; 18/18 Playwright e2e pass.
+
+### Logged (not yet fixed)
+- Li May setup-summary bug: hardcoded "Thoughts do not stop" lead sentence in `engine/diagnostic.js:315` fires on any `concerns` chip, not just the `thoughts_stop` chip. Same anti-pattern in physical-concerns block at `:291`. 3-line fix + 6 missing tests queued — same `dominant_hindrance` field is the highest-risk Sangha-share attribute, so fixing now doubles as Sangha prep (Track B5).
+- Track A3–A10 + Track B + Track C → see `docs/COMPLIANCE-LOG.md`.
+
 ## [15.11.5] — 2026-04-19 · HOTFIX — Add-habit placeholder literal `t(...)` bug
 
 ### Fixed

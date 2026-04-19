@@ -14,7 +14,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Adze">
 
-<script src="https://cdn.tailwindcss.com"></script>
+<!-- Self-hosted to keep visitor IPs from leaving Cloudflare (DSGVO Art. 44 +
+     LG München I 3 O 17493/20). Tailwind Play CDN runtime; pinned by file
+     content under src/vendor/. Future work: replace with a real Tailwind
+     build to drop the JIT runtime + 'unsafe-eval'. -->
+<script src="vendor/tailwind-play-cdn.js"></script>
 <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
@@ -132,6 +136,7 @@
 <script src="modals/sutta-view.js"></script>
 <script src="modals/feedback.js"></script>
 <script src="modals/privacy-detail.js"></script>
+<script src="modals/impressum.js"></script>
 <script src="modals/rank-intro.js"></script>
 <script src="modals/liberation-offer.js"></script>
 <script src="modals/shadow-explainer.js"></script>
@@ -156,7 +161,10 @@
 <script src="main.js"></script>
 
 <!-- ─── Stage 2: Supabase auth + client-side E2E encryption ─── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Self-hosted (vendored) to avoid third-country IP transfer to jsDelivr
+     without consent. Pinned to supabase-js@2.103.3 — bump deliberately by
+     re-downloading the UMD bundle into src/vendor/supabase.js. -->
+<script src="vendor/supabase.js"></script>
 <script src="systems/crypto.js"></script>
 <script src="systems/auth.js"></script>
 <script src="systems/passphrase.js"></script>

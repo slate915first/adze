@@ -38,14 +38,44 @@ Decomposed single-file `app.html` into `engine/` · `systems/` · `render/` · `
 - OAuth providers (Apple, Google) — requires Apple Developer account + Google Cloud OAuth client + Supabase provider config.
 - Optional LLM interpretation for free text (opt-in, explicit "this leaves your device" disclosure). Deferred — may never ship.
 - Obsidian vault integration for sutta tracking + project journal.
-- **Cross-user Sangha** — bond with other practitioners, visible profile cards with per-field opt-in sharing, metta/quote/nudge actions, champion-ability effects across bonds. Full design in `docs/SANGHA-DESIGN.md`. Implementation in 4 stages.
+- **Cross-user Sangha** — bond with other practitioners, visible profile cards with per-field opt-in sharing, metta/quote/nudge actions, champion-ability effects across bonds. Design in `docs/SANGHA-DESIGN.md`; implementation sequencing in `docs/COMPLIANCE-LOG.md` Track C (5 stages, replacing the original 4).
+
+## Compliance + Sangha sequencing (added 2026-04-19)
+
+Three independent reviews (game design, senior-engineer audit, DSGVO/lawyer audit) converged on a sequenced rollout. Detailed action items + rationale + decision log in **`docs/COMPLIANCE-LOG.md`** — this is the index.
+
+**Track A — must complete before EU beta opens beyond Dirk's allowlist** (~1 work-week)
+1. Self-host Tailwind + Supabase-JS-SDK (kills CDN IP-leak; tightens CSP). One hour, biggest legal-risk reduction per minute.
+2. Add Impressum (modal + footer link). Needs ladungsfähige Anschrift decision.
+3. Expand Datenschutzerklärung to Art. 13 completeness.
+4. Link Terms + age/Datenschutz checkbox in magic-request flow.
+5. DPA evidence archive (Supabase, Cloudflare, Resend) + 1-page TIA.
+6. Incident-response procedure (`docs/INCIDENT-RESPONSE.md`, intern).
+7. VVT (`docs/VVT.md`, intern).
+8. DATA-SUBJECT-REQUESTS process doc.
+9. Extend `delete-account` Edge Function to also clean `beta_allowlist`.
+10. Define + publish retention windows (incl. 24-month-inactivity auto-delete cron).
+
+**Track B — must complete before Sangha implementation begins**
+1. ADR-7 (server data is a projection, never source of truth).
+2. DPIA-sangha.md (Art. 35 — `dominant_hindrance` is Art. 9 sensitive).
+3. Design the missing brahmavihāra verbs (karuṇā, muditā, upekkhā — only metta has one today).
+4. Design dormancy / dissolution / abuse-handling.
+5. Resolve `dominant_hindrance` UX (coarsen-or-precise toggle).
+6. Resolve the 4 open design questions (size cap 7/12, defer teacher role, default-silent notifications, forced-pen-name onboarding).
+
+**Track C — Sangha implementation** (replaces the original 4-stage plan in SANGHA-DESIGN.md)
+- C0 prep (no schema) → C1 profiles + projection sync (no UI) → C2 bonds + peer read → C3 bond UI + card grid → C4 social events → C5 cross-sangha abilities.
+
+**Cookie banner status:** not required (TDDDG § 25 (2) Nr. 2) — document this position in the Datenschutzerklärung.
 
 ## Current Focus (what's next)
-1. **Fix feedback FAB regression** (blocks beta testing).
-2. **Version constant + `CHANGELOG.md`** — wire `APP_VERSION` through welcome/setup/settings/feedback email subject.
-3. **Encryption transparency copy** — finish the privacy-detail modal update we started.
-4. **Setup diagnostic rework:** chip suggestions + local interpretation for Phase 2 optional questions; one-question-per-step for Phase 3 sliders.
-5. **Assessment-step flicker** — apply in-place DOM patch pattern.
+1. **Track A1 — self-host Tailwind + Supabase-JS-SDK.** Single highest legal-risk reduction; 1 hour.
+2. **Fix `engine/diagnostic.js` reassurance lead sentence** — hardcoded "Thoughts do not stop" fires regardless of selected chips (Li May bug, see FEEDBACK.md 2026-04-19). 3-line fix + 6 new tests; engineering review in COMPLIANCE-LOG.md notes.
+3. **Track A2 + A3 — Impressum + Datenschutzerklärung expansion** (in parallel; A2 is mostly content + address decision).
+4. **Quote save / collection** + **tap-to-complete habit confirmation** (existing FEEDBACK.md "Next up").
+5. **Track B prep** can start in parallel with A4–A10; specifically B3 (brahmavihāra verbs) and B6 (resolve open design questions) are pure design work.
+6. **Encryption transparency copy** — finish the privacy-detail modal update (folds into A3).
 
 ## Backlog (not committed)
 - Duplicate file: `src/loaders.js` and `src/data/loaders.js` are both present. One is a leftover — consolidate.

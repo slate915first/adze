@@ -47,6 +47,7 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 
 *(Top 1–3 items you'll tackle in the next working session. Promoted from Open when a pattern emerges or a severity demands it.)*
 
+- **Fix setup-summary "phantom worry" bug** — engine names a concern the user did not select. 3-line diff in `src/engine/diagnostic.js` + 6 new tests. See 2026-04-19 `[bug] Setup summary names a worry…` entry. Doubles as Sangha prep (same field becomes a sharable profile attribute under Track B5).
 - **Tap-to-complete habit confirmation** — today a single click on a habit card (morning sit, evening sit, etc.) marks it done with zero feedback. Replace with either (a) a confirmation popup "Start sit?" / "Mark this sit as done?" or (b) tap-and-hold to toggle. See 2026-04-19 `[ux]` entry below.
 - **Quote save / collection** — "A word from the Buddha" card has no way to save a quote that resonates. Users want a bookmark action + a "saved quotes" screen to revisit or print. See 2026-04-19 entry.
 - **Annotate setup-flow elements with `data-component`** — curated paths for element-feedback reports beat derived DOM paths. One pass through render/setup.js + render/diagnostic.js.
@@ -58,6 +59,17 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 ## Open
 
 *(Chronological, newest at top.)*
+
+### 2026-04-19 · [bug] Setup summary names a worry the user did not select
+
+**Reporter:** Li May
+**Screen / path:** Setup → first-time assessment → recommendation summary card → green-bordered "beginnerCare" panel.
+**What they said:** After completing the assessment, the summary's reassurance block led with content about *not stopping thoughts* — which she had not selected as a concern. She had picked two other chips (e.g. time-commitment, missing-days) and not the "thoughts won't stop" chip. She tried to flag it via the in-app feedback element-picker but the summary elements weren't pickable (separate `[ux]` issue — Annotate setup-flow elements with `data-component`, see Next up).
+**Your interpretation:** Real engine bug, traced to `src/engine/diagnostic.js:315` (concerns block) and the parallel `:291` (physical block). The intro sentence is hardcoded — *"What you named is common. Thoughts do not stop — they are what the mind does…"* — and fires whenever **any** `concerns` chip is selected, treating every chip selection as if it were the `thoughts_stop` chip. Same anti-pattern in physicalConcerns ("…keep the pain manageable…" appears even if the user only ticked `sleep_energy`). Tests at `tests/unit/engine-diagnostic.test.js:126–182` only assert truthiness, not semantic match — that's the test gap.
+**Reproduction:** Setup → Phase A (energy=5, experience="none", dominantHindrance="restless") → Phase B → tick `concerns: time_commit + missing_days` only → finish Phase C → summary's reassurance block leads with the thoughts-not-stopping paragraph.
+**Fix sketch:** Replace the hardcoded chip-naming intro with a generic chip-agnostic opener; the targeted bold lines that follow already carry the specific content driven by `chipInterp.flags`. ~3-line diff. Add 6 tests asserting the intro NEVER references a keyword absent from selections. Blast radius: zero (existing tests use `.toBeTruthy()`, none assert intro text).
+**Adjacent risks found:** (a) Phase C sliders missing `sloth` even though Phase A allows it as `dominantHindrance`; (b) `hopes: ['hindrance']` is collected but unused; (c) `dominant_hindrance` snake_case vs camelCase fragility between `setup-flow.js:706` write and `hindrances.js:53` read.
+**Status:** OPEN. Promoted to Next up. Same field is the highest-risk Sangha-share field (Track B5) — fixing the derivation now is also Sangha prep.
 
 ### 2026-04-19 · [bug] Add-custom-habit placeholder shows `t('add_habit.name_placeholder')` literally
 

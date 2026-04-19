@@ -1768,5 +1768,13 @@
   "timer_prompt.skip_prompt":                       "Skip this prompt next time?",
   "timer_prompt.always_open_breath":                "Always open the timer (breath)",
   "timer_prompt.always_open_hint":                  "You can change this any time in Settings. The bell, flavor choice, and intention ritual are part of the practice — not an obstacle to it.",
-  "timer_prompt.cancel_button":                     "Cancel"
+  "timer_prompt.cancel_button":                     "Cancel",
+
+  "_section_impressum_modal": "impressum modal — § 5 DDG legal notice for Germany. German-only content because this is a German legal-text obligation; the link label 'Impressum' is universally understood across the EU.",
+  "impressum.heading":                              "Impressum",
+  "impressum.subtitle":                             "Angaben gemäß § 5 DDG",
+  "impressum.body_html":                            "<p class=\"mb-3\"><b class=\"text-amber-200\">Diensteanbieter</b><br>Dirk Sauerstein<br>Bischofstr. 2 A<br>04179 Leipzig<br>Deutschland</p><p class=\"mb-3\"><b class=\"text-amber-200\">Kontakt</b><br>E-Mail: <a href=\"mailto:hello@adze.life\" class=\"text-amber-300 underline\">hello@adze.life</a></p><p class=\"mb-3\"><b class=\"text-amber-200\">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</b><br>Dirk Sauerstein (Anschrift wie oben).</p><p class=\"mb-3\"><b class=\"text-amber-200\">Haftung für Inhalte</b><br>Adze publiziert kuratierte Sutten-Übersetzungen und Praxis-Hinweise. Inhalte werden mit Sorgfalt erstellt, eine Gewähr für Vollständigkeit und Aktualität wird nicht übernommen. Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p><p class=\"mb-3\"><b class=\"text-amber-200\">Haftung für Links</b><br>Adze enthält Links zu externen Webseiten Dritter (z. B. SuttaCentral). Auf deren Inhalte haben wir keinen Einfluss; für diese ist stets der jeweilige Anbieter verantwortlich.</p><p class=\"text-xs text-amber-100/65 italic mt-4\">EU-Streitschlichtung: Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung bereit (<a href=\"https://ec.europa.eu/consumers/odr\" class=\"text-amber-300 underline\" target=\"_blank\" rel=\"noopener\">ec.europa.eu/consumers/odr</a>). Adze nimmt an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle nicht teil und ist hierzu auch nicht verpflichtet.</p>",
+  "impressum.close_button":                         "Schließen",
+
+  "welcome.imprint_link":                           "Impressum"
 }

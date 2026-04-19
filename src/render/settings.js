@@ -264,7 +264,10 @@ function renderSettings() {
     <div class="parchment rounded-xl p-5 mb-4 border border-amber-700/30">
       <h3 class="font-bold text-amber-100 mb-2">${t('settings.privacy.heading')}</h3>
       <p class="text-xs text-amber-100/70 mb-3 leading-relaxed">${t('settings.privacy.body')}</p>
-      <button onclick="openPrivacyDetail()" class="btn btn-ghost text-xs">${t('settings.privacy.read_more')}</button>
+      <div class="flex gap-2 flex-wrap">
+        <button onclick="openPrivacyDetail()" class="btn btn-ghost text-xs">${t('settings.privacy.read_more')}</button>
+        <button onclick="openImpressum()" class="btn btn-ghost text-xs">${t('welcome.imprint_link')}</button>
+      </div>
     </div>
 
     <div class="parchment rounded-xl p-5 mb-4">

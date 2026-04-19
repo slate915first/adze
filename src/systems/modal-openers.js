@@ -10,6 +10,11 @@ function openPrivacyDetail() {
   renderModal();
 }
 
+function openImpressum() {
+  view.modal = { type: 'impressum' };
+  renderModal();
+}
+
 function openArmyFromToday(armyId) {
   if (view.currentMember) openPathView(view.currentMember);
 }

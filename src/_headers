@@ -24,11 +24,15 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=(), magnetometer=()
 
   # Content Security Policy — most restrictive header. Allows:
-  #   - scripts/styles from same origin and the explicit CDNs Adze loads.
-  #     Tailwind CDN ships its own runtime that needs 'unsafe-eval' to do
-  #     just-in-time class generation; we accept that until we self-host.
-  #   - 'unsafe-inline' on styles for Tailwind's injected <style> tag.
+  #   - scripts/styles from same origin only (Tailwind + Supabase SDK are
+  #     vendored under src/vendor/, so no third-party origins are needed).
+  #   - 'unsafe-eval' is still required because the self-hosted Tailwind
+  #     Play CDN runtime does just-in-time class generation. Drops when we
+  #     migrate to a Tailwind build step.
+  #   - 'unsafe-inline' on scripts: legacy inline onclick handlers
+  #     (event-delegation refactor pending).
+  #   - 'unsafe-inline' on styles: Tailwind's injected <style> tag.
   #   - connect-src to Supabase (auth + RLS-scoped data).
   #   - img-src 'self' + data: (for inline base64 emoji fallbacks).
   #   - frame-ancestors 'none' to mirror X-Frame-Options for older browsers.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; img-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'

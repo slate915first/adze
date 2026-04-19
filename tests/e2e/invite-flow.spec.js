@@ -59,7 +59,7 @@ const SUPABASE_STUB_SCRIPT = `
 // CDN script would otherwise load and overwrite any window.supabase we set
 // via addInitScript.
 async function stubSupabaseCdn(page) {
-  await page.route(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js/, (route) => {
+  await page.route(/(?:cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js|vendor\/supabase\.js)/, (route) => {
     route.fulfill({
       status: 200,
       contentType: 'application/javascript',
@@ -77,7 +77,7 @@ const SUPABASE_STUB_SCRIPT_ANON = SUPABASE_STUB_SCRIPT.replace(
   'getSession: function() { return Promise.resolve({ data: { session: null }, error: null }); }'
 );
 async function stubSupabaseCdnAnon(page) {
-  await page.route(/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js/, (route) => {
+  await page.route(/(?:cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js|vendor\/supabase\.js)/, (route) => {
     route.fulfill({
       status: 200,
       contentType: 'application/javascript',
