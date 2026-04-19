@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.16.2] — 2026-04-19 · P1 engineering — server-authoritative updated_at + allowlist search_path
+
+### Fixed
+Two P1 findings from the post-v15.15.9 fleet triage, both landing in migration `20260419220000_harden_updated_at_and_allowlist_search_path`.
+
+**`user_state.updated_at` is now server-authoritative.** The previous upsert carried a client-supplied `new Date().toISOString()`. Mobile clocks can skew tens of seconds to minutes after sleep/wake, and the cross-device optimistic-concurrency guard on the roadmap will rely on `updated_at` being monotonic. Added `set_user_state_updated_at()` as a BEFORE UPDATE trigger that forces `new.updated_at := now()` on every update regardless of what the client sends. Insert-time default (`default now()`) was already in place. Client code (`src/systems/passphrase.js:passphrasePushState`) no longer sends `updated_at` in the upsert payload. The BroadcastChannel message still carries a local ISO timestamp for diagnostic purposes — it's not consulted for ordering.
+
+**`enforce_beta_allowlist` tightened to project convention.** Was `set search_path = public`; now `set search_path = ''` with the fully-qualified `public.beta_allowlist` reference (which was already there in the query body). Removes the theoretical attack where a malicious object injected into `public` could run under the definer's elevated privileges. Low-impact today (no public-schema write access outside the operator), but aligns with the newer `cleanup_inactive_users` pattern and the project security rule.
+
+### Not in this commit (P1 engineering cluster remainder)
+- `authVerifyMagicCode` 4-type retry short-circuit on non-token-type errors.
+- `loadState` retry-with-backoff on transient synced-mode network errors.
+- `_live-diag.spec.js:31` Begin-button assertion in closed beta.
+
+Deferred as a small follow-up to keep this release scoped to the migration-dependent pair.
+
 ## [15.16.1] — 2026-04-19 · P0 cluster — metta citation + hindrance-regex removal + evening-reflection i18n
 
 ### Fixed

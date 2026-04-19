@@ -136,20 +136,23 @@ async function passphrasePushState(st) {
   const userId = authGetUserId();
   if (!client || !userId) throw new Error('Not signed in.');
   const ciphertext = await cryptoEncrypt(JSON.stringify(st), _passKey);
-  const pushedAt = new Date().toISOString();
+  // v15.16.2 — updated_at is set server-side (BEFORE UPDATE trigger +
+  // column default on insert). Client-supplied timestamps are vulnerable
+  // to mobile clock skew, which would break the future cross-device
+  // optimistic-concurrency guard. Let Postgres own the clock.
   const { error } = await client
     .from('user_state')
     .upsert({
       user_id: userId,
       ciphertext,
-      salt: bytesToBase64(_passSalt),
-      updated_at: pushedAt
+      salt: bytesToBase64(_passSalt)
     });
   if (error) throw error;
   // Tell sibling tabs this device's in-memory state just advanced. They'll
-  // refuse their own further pushes until reload. Best-effort — channel may
-  // be unavailable in some embedded contexts; silent no-op then.
+  // refuse their own further pushes until reload. The `at` field is a
+  // local timestamp for diagnostic purposes only; the authoritative
+  // updated_at lives server-side and is pulled alongside the ciphertext.
   if (_bc) {
-    try { _bc.postMessage({ type: 'pushed', tabId: _tabId, at: pushedAt }); } catch (e) {}
+    try { _bc.postMessage({ type: 'pushed', tabId: _tabId, at: new Date().toISOString() }); } catch (e) {}
   }
 }
