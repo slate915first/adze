@@ -4,6 +4,16 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.3] — 2026-04-19 · HOTFIX — tisikkhā explainer modal was silently broken
+
+### Fixed
+- **`src/modals/tisikkha-explainer.js:12`** shadowed the global `t()` i18n function with a local `const t = mid ? getTisikkha(mid) : {...}`. Every subsequent `t('tisikkha.heading')` call in the file then tried to invoke the tisikkha-state object as a function → `t is not a function` → the entire tisikkhā explainer modal rendered an exception in production. Local renamed to `tk`; 8 property accesses (`tk.sila`, `tk.samadhi`, `tk.panna`, `tk.pannaTotal`) updated; 18 i18n calls now resolve to the global function as intended. Flagged by the copy-storyteller fleet-review agent.
+
+### Why this bug lived
+Shadowing is a class of JS bug that doesn't crash at parse time — it only crashes at the first function-call site. With no unit test of this modal and no explicit usage path in the e2e tests, the broken render could persist indefinitely until a tester tried to open it.
+
+Closes Fleet Review Blocker #5.
+
 ## [15.15.2] — 2026-04-19 · HOUSEKEEPING — auto-fire + sangha trigger now use the merged Evening reflection flow
 
 ### Changed

@@ -9,7 +9,12 @@ function renderTisikkhaExplainerModal(m) {
   let content = '';
 
     const mid = view.currentMember;
-    const t = mid ? getTisikkha(mid) : { sila: 0, samadhi: 0, panna: 0, pannaTotal: 0 };
+    // v15.15.3 — was `const t = ...` which shadowed the global t() i18n
+    // function and broke every t('tisikkha.*') lookup in this file. Local
+    // renamed to `tk` so the global t() is reachable; property accesses
+    // (tk.sila, tk.samadhi, tk.panna, tk.pannaTotal) are the only ones
+    // that should go through the local tisikkha object.
+    const tk = mid ? getTisikkha(mid) : { sila: 0, samadhi: 0, panna: 0, pannaTotal: 0 };
     const rk = mid ? computeMemberRank(mid) : 0;
     const nextRank = rk < 9 ? rk + 1 : null;
     const nextRi = nextRank !== null ? getRankInfo(nextRank) : null;
@@ -38,27 +43,27 @@ function renderTisikkhaExplainerModal(m) {
           <div class="parchment rounded-lg p-3 border border-amber-700/40">
             <div class="flex items-baseline justify-between mb-1">
               <div><span class="text-base">⚖️</span> <b class="text-amber-200">${t('tisikkha.sila.name')}</b> <span class="text-amber-100/60 text-[11px]">${t('tisikkha.sila.english')}</span></div>
-              <div class="text-amber-300 text-sm"><b>${t.sila}</b></div>
+              <div class="text-amber-300 text-sm"><b>${tk.sila}</b></div>
             </div>
             <p class="text-[11px] text-amber-100/75">${t('tisikkha.sila.body')}</p>
-            ${thresh ? nextThreshRow(t.sila, thresh.sila, 'amber') : ''}
+            ${thresh ? nextThreshRow(tk.sila, thresh.sila, 'amber') : ''}
           </div>
           <div class="parchment rounded-lg p-3 border border-amber-700/40">
             <div class="flex items-baseline justify-between mb-1">
               <div><span class="text-base">🪷</span> <b class="text-amber-200">${t('tisikkha.samadhi.name')}</b> <span class="text-amber-100/60 text-[11px]">${t('tisikkha.samadhi.english')}</span></div>
-              <div class="text-amber-300 text-sm"><b>${t.samadhi}</b></div>
+              <div class="text-amber-300 text-sm"><b>${tk.samadhi}</b></div>
             </div>
             <p class="text-[11px] text-amber-100/75">${t('tisikkha.samadhi.body')}</p>
-            ${thresh ? nextThreshRow(t.samadhi, thresh.samadhi, 'amber') : ''}
+            ${thresh ? nextThreshRow(tk.samadhi, thresh.samadhi, 'amber') : ''}
           </div>
           <div class="parchment rounded-lg p-3 border border-emerald-700/40 bg-emerald-950/15">
             <div class="flex items-baseline justify-between mb-1">
               <div><span class="text-base">💡</span> <b class="text-emerald-200">${t('tisikkha.panna.name')}</b> <span class="text-amber-100/60 text-[11px]">${t('tisikkha.panna.english')}</span></div>
-              <div class="text-emerald-300 text-sm"><b>${t.panna}</b> <span class="text-[10px] text-emerald-100/55">${t('tisikkha.panna.lifetime_suffix', {total: t.pannaTotal})}</span></div>
+              <div class="text-emerald-300 text-sm"><b>${tk.panna}</b> <span class="text-[10px] text-emerald-100/55">${t('tisikkha.panna.lifetime_suffix', {total: tk.pannaTotal})}</span></div>
             </div>
             <p class="text-[11px] text-amber-100/75 mb-1">${t('tisikkha.panna.body_spendable')}</p>
             <p class="text-[11px] text-emerald-100/85 italic">${t('tisikkha.panna.body_lifetime')}</p>
-            ${thresh ? nextThreshRow(t.panna, thresh.panna, 'emerald') : ''}
+            ${thresh ? nextThreshRow(tk.panna, thresh.panna, 'emerald') : ''}
           </div>
         </div>
 
