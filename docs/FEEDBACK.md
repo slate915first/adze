@@ -47,7 +47,8 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 
 *(Top 1–3 items you'll tackle in the next working session. Promoted from Open when a pattern emerges or a severity demands it.)*
 
-*(empty — no beta reports yet)*
+- **Annotate setup-flow elements with `data-component`** — the generic feedback-click handler now works on any element, but curated paths (e.g. `setup.assessment.phase_a`) are more useful than derived DOM paths. One-pass pass through render/setup.js + render/diagnostic.js to add attributes.
+- **Audit the rest of Phase B / Phase C setup steps for other re-render-missing bugs** (same class as the `currentEdge` one below).
 
 ---
 
@@ -55,7 +56,13 @@ Once the issue is addressed, move the entry to `## Addressed` with a commit refe
 
 *(Chronological, newest at top.)*
 
-*(empty — no beta reports yet)*
+### 2026-04-19 · [ux] [bug] Setup Phase B select options give no visual feedback on tap
+
+**Reporter:** Dirk (maintainer, testing as a beta user)
+**Screen / path:** Setup → Phase B (experienced branch) → "Where is the edge of your practice right now?" (`currentEdge` select).
+**What they said:** "I don't any feedback from the interface, if i selected something. I reported that bug quite a while ago, not sure why it is not fixed."
+**Your interpretation:** v15.11.4 hotfix — `setDiagnosticB` had a hardcoded `selectKeys` list that triggered the re-render; `currentEdge` was missing. State updated in memory but UI never re-painted. Fixed by deriving the list dynamically from `__ASSESSMENT` so new select questions in `assessment.json` don't require a mirrored code change.
+**Status:** FIXED in v15.11.4. Audit other Phase B / Phase C selects for the same pattern (promoted to Next up).
 
 ---
 

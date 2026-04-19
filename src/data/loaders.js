@@ -30,7 +30,7 @@
 // App-wide identifiers (synchronous — no dependency on fetched data)
 // ---------------------------------------------------------------------------
 const STORAGE_KEY = 'habit_quest_v4';
-const APP_VERSION = '15.11.3';
+const APP_VERSION = '15.11.4';
 const LEGACY_KEYS = ['habit_quest_v3_5', 'habit_quest_v3_3'];
 const APP_NAME = 'Adze';
 const APP_TAGLINE = 'The Path of Awakening';

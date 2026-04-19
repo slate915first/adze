@@ -186,20 +186,40 @@ function setDiagnosticB(key, val) {
     if (el) el.textContent = t('common.minutes', {n: val});
     return;
   }
-  // If this is a text field (oninput from textarea/input type=text),
-  // NEVER re-render — would kill focus. The state is already updated above.
-  // Detect: strings that are multi-word, long, or contain spaces are
-  // almost certainly text field content, not a select-key click.
-  // v12.5 stricter rule: ONLY re-render when the caller is a click handler
-  // (determined by the DOM event type not being 'input'). Since we can't
-  // introspect that here, we fall back to: only re-render if the value is
-  // a short token that looks like a select-id (no spaces, < 30 chars, and
-  // key is one of the known multi-choice diagnostic fields).
-  const selectKeys = ['experience', 'posture', 'timeOfDay', 'nervous', 'tradition', 'stuckness'];
+  // v15.11.4 — select-type re-render list was hardcoded and stale.
+  // `currentEdge` was missing; tapping an option produced NO visual
+  // feedback (state updated in memory, UI never refreshed). Now derive
+  // the set of select-type question IDs dynamically from the loaded
+  // assessment data, so adding a new select question in assessment.json
+  // doesn't require a mirrored code change.
+  const selectKeys = getPhaseBSelectKeys();
   if (selectKeys.includes(key)) {
     renderModal();
   }
   // Otherwise (textareas like teacherInfluence, whatUnclear) — no re-render.
+}
+
+// v15.11.4 — Derived once from __ASSESSMENT after boot. Cached so we don't
+// re-walk the JSON on every keystroke. Falls back to the old hardcoded
+// list if __ASSESSMENT hasn't loaded (shouldn't happen post-boot).
+let _phaseBSelectKeysCache = null;
+function getPhaseBSelectKeys() {
+  if (_phaseBSelectKeysCache) return _phaseBSelectKeysCache;
+  try {
+    const data = (typeof __ASSESSMENT !== 'undefined') ? __ASSESSMENT : null;
+    if (data) {
+      const keys = new Set(['experience']);  // Phase A select also routes here
+      for (const branch of ['phaseB_beginner', 'phaseB_experienced']) {
+        for (const q of (data[branch] || [])) {
+          if (q && q.type === 'select' && q.id) keys.add(q.id);
+        }
+      }
+      _phaseBSelectKeysCache = Array.from(keys);
+      return _phaseBSelectKeysCache;
+    }
+  } catch (e) { /* fall through */ }
+  // Defensive fallback.
+  return ['experience', 'posture', 'timeOfDay', 'tradition', 'currentEdge', 'stuckness'];
 }
 
 function setDiagnosticC(key, val) {

@@ -4,6 +4,15 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.11.4] — 2026-04-19 · Setup Phase B selects now give visual feedback
+
+### Fixed
+- **`Where is the edge of your practice right now?` (and other Phase B selects) gave no visual feedback on tap.** Root cause: `setDiagnosticB()` had a hardcoded `selectKeys` list that decided whether to trigger the re-render. `currentEdge` was missing from it (among other potential omissions). State updated silently in memory; UI didn't repaint. Reported by Dirk — "I reported this quite a while ago, not sure why it is not fixed." It had been rolling over from prior sessions without reaching a fix.
+- Replaced the hardcoded list with a dynamic derivation from `__ASSESSMENT` (the loaded `assessment.json`). Any question with `"type": "select"` in any Phase B branch now routes to the re-render path automatically. Adding a new select question in the JSON no longer requires a mirrored code change in setup-flow.js.
+
+### Tracked
+- Logged in `docs/FEEDBACK.md` → Open → now FIXED. Next-up items queued: annotate setup elements with `data-component` for cleaner element-feedback paths; audit remaining Phase B/C flows for similar re-render omissions.
+
 ## [15.11.3] — 2026-04-19 · Feedback mode actually reports clicks now
 
 ### Fixed
