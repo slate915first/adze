@@ -171,6 +171,44 @@ function saveState() {
   }
 }
 
+// v15.15.7 — cancel-and-flush the pending debounced push. Called from:
+//   * pagehide / visibilitychange:hidden (best-effort — browsers give a
+//     few hundred ms after these events; we kick the fetch without
+//     awaiting and let the keepalive-ish machinery do its job).
+//   * authSignOut (awaited — otherwise _supabase.auth.signOut() revokes
+//     the JWT before the push has a chance to flush, silently losing any
+//     edits made within the last 2s of the session).
+// Closes the silent-data-loss vector senior-engineer flagged as Fleet
+// Review Blocker #3 (sync-lifecycle trio, item 1 of 3).
+function saveStateFlush() {
+  if (_pushStateTimer) {
+    clearTimeout(_pushStateTimer);
+    _pushStateTimer = null;
+  }
+  if (!state) return Promise.resolve();
+  if (typeof syncIsActive !== 'function' || !syncIsActive()) return Promise.resolve();
+  return passphrasePushState(state)
+    .then(() => { _lastSyncError = null; })
+    .catch(e => {
+      _lastSyncError = (e && e.message) ? e.message : String(e);
+      console.error('Adze sync flush failed:', e);
+    });
+}
+
+// Best-effort flush on tab close / backgrounding. pagehide is the most
+// reliable unload signal across modern browsers; visibilitychange:hidden
+// is the iOS Safari workaround (pagehide fires less reliably on iOS when
+// the user switches apps rather than closing the tab). We fire without
+// awaiting — the browser will honor the in-flight fetch as a keepalive
+// best-effort; if the tab is killed mid-flight, we accept the ≤2s data
+// loss window that existed before this fix (pre-flush).
+if (typeof window !== 'undefined') {
+  window.addEventListener('pagehide', () => { saveStateFlush(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') saveStateFlush();
+  });
+}
+
 function getLastSyncError() { return _lastSyncError; }
 
 function newState() {

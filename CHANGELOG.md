@@ -4,6 +4,27 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.7] — 2026-04-19 · HOTFIX — flush pending sync push on tab close / sign-out
+
+### Fixed
+Partial close of Fleet Review Blocker #3 (sync-lifecycle trio, item 1 of 3).
+
+**The silent data-loss window**: `saveState()` debounces Supabase pushes by 2 seconds to coalesce taps into a single network call. If the user closed the tab / navigated away / signed out within that 2s window, the last edit was written to `localStorage` but **never** reached Supabase. On next sign-in from another device, that edit was gone. Silent contradiction of the "ciphertext row is authoritative" claim comments made.
+
+Two callers cover the two realistic scenarios:
+
+- **`pagehide` + `visibilitychange:hidden` listeners** (`src/systems/state.js`) fire a best-effort flush on tab close, app backgrounding, or navigation-away. The fetch is kicked without awaiting — modern browsers honor in-flight fetch on unload as a keepalive best-effort. iOS Safari needs both events: `pagehide` is unreliable on app-switch (as opposed to tab-close), so `visibilitychange:hidden` is the iOS workaround.
+- **`authSignOut()`** now `await`s `saveStateFlush()` **before** calling `_supabase.auth.signOut()` and `passphraseLock()`. Without this, the JWT gets revoked + the encryption key gets locked before the push can complete → the push fails RLS and the edit is lost. Flush-first order is correct because both the key and the JWT are still live; the push completes cleanly; THEN we tear down.
+
+### Added
+- **`saveStateFlush()`** exposed as a global (like `saveState`). Cancels the pending `_pushStateTimer`, fires `passphrasePushState(state)` immediately, returns the promise. Callers on clean paths (`authSignOut`) can await; callers on dirty paths (`pagehide`) fire-and-forget.
+
+### Not in this commit (still open from Blocker #3)
+- **Authed-but-locked guard**: `saveState` still mutates localStorage when user is authed but passphrase hasn't been unlocked, and unlock then overwrites with the remote copy. Silent local-only data loss on the authed-but-locked → unlock path. Next commit.
+- **Optimistic concurrency**: `passphrasePushState` is still last-writer-wins between two tabs / devices. Needs `updated_at` guard + `BroadcastChannel('adze')` cross-tab warning. Next commit.
+
+Tests: 40/40 vitest, 19/19 Playwright. Manual verification on iOS Safari recommended — Playwright's browser-event simulation isn't reliable for the `pagehide` path.
+
 ## [15.15.6] — 2026-04-19 · HOTFIX — rank-announcement strings no longer conflate scaffolding with canonical attainment
 
 ### Fixed

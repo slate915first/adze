@@ -303,6 +303,14 @@ async function authSignIn(email, password) {
 }
 
 async function authSignOut() {
+  // v15.15.7 — flush any pending debounced state push BEFORE we revoke
+  // the JWT or lock the passphrase. If we don't, a user who edits state
+  // and immediately signs out loses the last ≤2 seconds of edits (the
+  // JWT is gone → push fails RLS; the key is gone → can't re-encrypt).
+  // Closes Fleet Review Blocker #3 (sync-lifecycle trio, 1 of 3).
+  if (typeof saveStateFlush === 'function') {
+    try { await saveStateFlush(); } catch (e) { /* don't block sign-out on a flush failure */ }
+  }
   if (_supabase) {
     try { await _supabase.auth.signOut(); } catch (e) { /* ignore */ }
   }
