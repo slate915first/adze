@@ -443,7 +443,12 @@
     top: 0; left: 0; right: 0;
     background: linear-gradient(135deg, rgba(220,38,38,0.95), rgba(168,30,30,0.9));
     color: #fff;
-    padding: 8px 12px;
+    /* v15.17.5 — Dynamic-Island / notched-iPhone PWA fix. Previously the
+       banner text sat under the notch when the app ran in standalone
+       mode with viewport-fit=cover. Adding the safe-area inset to the
+       top padding keeps the text visible; the visual-only padding (8px)
+       is preserved as a minimum. */
+    padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px;
     text-align: center;
     font-size: 12px;
     font-family: -apple-system, system-ui, sans-serif;

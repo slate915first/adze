@@ -41,7 +41,7 @@
 // and leave it there for at least a release cycle so existing users
 // migrate cleanly.
 const STORAGE_KEY = 'adze_v1';
-const APP_VERSION = '15.17.4';
+const APP_VERSION = '15.17.5';
 const LEGACY_KEYS = [];
 const APP_NAME = 'Adze';
 const APP_TAGLINE = 'The Path of Awakening';

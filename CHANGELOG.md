@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.5] — 2026-04-19 · P1 UX cluster — evening-close order, unlock beat, notch safe-area, stale-banner note
+
+### Fixed
+Three UX findings from the post-v15.15.9 ux-reviewer lens; one documented as a next-sprint item.
+
+**Evening-close oneline phase — textarea before sliders** (`src/modals/evening-close.js`). Previous render order: sliders (diagnostic) → question → textarea. For testers who hadn't done today's diagnostic yet (the default case), the most cognitively demanding UI was first. Reordered: question → textarea (primary action) → sliders. Minimal-by-default honored.
+
+**Passphrase-unlock confirmation beat** (`src/modals/auth.js`). On slow connections, the combined PBKDF2-600k-iter + remote-pull takes 800–1500ms; previously the unlock modal simply vanished on success, leaving no visual signal of "unlocked vs silently failed." Added a new 400ms `passphrase-unlocked` step: 🔓 + "Unlocked" + "Welcome back." The beat is long enough to register, short enough not to feel like a wait. `authDoPassphraseUnlock` flow now transitions through this step before `closeModal()`.
+
+**Feedback banner notch overlap** (`src/styles/styles.css:441`). On Dynamic-Island / notched iPhones running in PWA standalone mode (`viewport-fit=cover`), the feedback-mode banner sat under the notch because `top: 0` doesn't honor the OS safe-area. Changed `padding` to `calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px` — the visual-only 8px floor is preserved, the OS inset is added on top. Matches how the FAB bottom was fixed in v15.0.
+
+### Not in this commit (documented for next sprint)
+**Stale-data banner visibility** — the v15.15.9 cross-tab warning renders only inside Settings → Account & sync. A practitioner on Today / Wisdom / Reflection when the stale event fires never sees it until they navigate. ux-reviewer called this P1-document, not P0-block, because the warning is a diagnostic aid (save guards already prevent the overwrite itself). Inline comment added at `src/systems/state.js` so the follow-up (lightweight global toast surface) is tracked. No code change in this release.
+
+Tests: 40/40 vitest green.
+
 ## [15.17.4] — 2026-04-19 · P1 copy cluster — i18n catch-up on four ceremonial + settings surfaces
 
 ### Fixed

@@ -267,6 +267,16 @@ function getCrossTabStaleWarning() { return _crossTabStaleWarning; }
 // their own further pushes refuse until reload. This is a sibling-tab
 // detector only; cross-device races need the server-side updated_at
 // guard that's still on the list.
+//
+// VISIBILITY CAVEAT (ux-reviewer 2026-04-19, logged v15.17.5):
+// The stale-warning banner only renders inside Settings → Account &
+// sync. A practitioner who gets the cross-tab event while on Today /
+// Wisdom / Reflection will never see it until they navigate to
+// Settings. Not release-blocking — the warning is a diagnostic aid,
+// not a safety gate (save guards already prevent the overwrite) —
+// but the right follow-up is a lightweight global toast/snackbar
+// surface. Deferred to the next sprint; tracked here so it isn't
+// forgotten.
 if (typeof BroadcastChannel !== 'undefined') {
   try {
     const _bc = new BroadcastChannel('adze');

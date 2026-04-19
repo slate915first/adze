@@ -37,6 +37,7 @@ function renderAuthModal(m) {
   if (m.step === 'passphrase-unlock')       return renderPassphraseUnlock(m);
   if (m.step === 'passphrase-reset-confirm')return renderPassphraseResetConfirm(m);
   if (m.step === 'passphrase-success')      return renderPassphraseSuccess(m);
+  if (m.step === 'passphrase-unlocked')     return renderPassphraseUnlocked(m);
   if (m.step === 'set-initial-password')    return renderSetInitialPassword(m);
   if (m.step === 'forgot-password')         return renderForgotPassword(m);
   if (m.step === 'forgot-password-sent')    return renderForgotPasswordSent(m);
@@ -523,6 +524,20 @@ function renderPassphraseSuccess(m) {
   `;
 }
 
+// v15.17.5 — 400ms confirmation beat shown right after a successful
+// unlock. Deliberately bare — no button, no copy overload. Just ✓ +
+// one line. ux-reviewer asked for 300–500ms; 400ms is long enough to
+// register and short enough not to feel like a wait.
+function renderPassphraseUnlocked(m) {
+  return `
+    <div class="fade-in text-center py-6">
+      <div class="text-6xl mb-3">🔓</div>
+      <h2 class="text-xl font-bold gold-text mb-2">Unlocked</h2>
+      <p class="text-sm text-amber-100/85 serif leading-relaxed">Welcome back.</p>
+    </div>
+  `;
+}
+
 // ---------------------------------------------------------------------------
 // Step renderers
 // ---------------------------------------------------------------------------
@@ -916,6 +931,20 @@ async function authDoPassphraseUnlock() {
     if (remote) {
       state = migrateState(remote);
       if (state && state.setupComplete) view.currentMember = state.members[0]?.id;
+    }
+    // v15.17.5 — 400ms "✓ unlocked" confirmation beat per ux-reviewer.
+    // On slow connections the combined PBKDF2 + remote-pull can take
+    // 800–1500ms; without a confirmation, the modal simply disappears
+    // and the practitioner has no signal that unlock succeeded vs
+    // silently failed. The beat is short enough not to feel like a
+    // wait and long enough to register visually.
+    if (view.modal && view.modal.type === 'auth') {
+      view.modal.step = 'passphrase-unlocked';
+      view.modal.busy = false;
+      view.modal.error = null;
+      renderModal();
+      setTimeout(() => { closeModal(); authAfterAuthSuccess(); }, 400);
+      return;
     }
     closeModal();
     authAfterAuthSuccess();

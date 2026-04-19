@@ -55,6 +55,11 @@ function renderEveningCloseModal(m) {
     const alreadyDiag = memberId ? (typeof hasDailyDiagnosticToday === 'function' && hasDailyDiagnosticToday(memberId)) : true;
     const diagQs = (!alreadyDiag && typeof getDailyDiagnosticQuestions === 'function') ? getDailyDiagnosticQuestions() : [];
     const dailyQuestion = (typeof getCurrentDailyQuestion === 'function') ? getCurrentDailyQuestion() : null;
+    // v15.17.5 — minimal-by-default reorder per ux-reviewer. The previous
+    // order was: sliders → question → textarea. With diagQs.length > 0
+    // (the default for a tester who hasn't done today's diagnostic yet),
+    // the most cognitively demanding UI landed first. New order: prompt
+    // → textarea (primary action) → sliders (optional diagnostic below).
     content = `
       <div class="fade-in">
         <div class="text-center mb-3">
@@ -62,12 +67,6 @@ function renderEveningCloseModal(m) {
           <h2 class="text-xl font-bold gold-text">${t('evening_close.oneline.heading')}</h2>
           <p class="text-[11px] text-amber-200/70 italic mt-1">${t('evening_close.oneline.subtitle')}</p>
         </div>
-        ${diagQs.length > 0 ? `
-          <div class="parchment rounded-xl p-4 mb-3 border-amber-900/40">
-            <p class="text-[10px] text-amber-100/50 italic mb-2">${t('evening_close.oneline.sliders_intro')}</p>
-            ${diagQs.map(q => renderDiagnosticSlider(q, 5, `diag-${q.id}`)).join('')}
-          </div>
-        ` : ''}
         ${dailyQuestion ? `
           <div class="parchment rounded-xl p-3 mb-3 border-amber-700/30">
             <div class="text-[9px] uppercase tracking-wider text-amber-300/60 mb-1">${t('evening_close.oneline.tonight_label')}</div>
@@ -83,6 +82,12 @@ function renderEveningCloseModal(m) {
                     oninput="eveningCloseSetLine(this.value)">${escapeHtml(m.line || '')}</textarea>
           <p class="text-[10px] text-amber-100/55 italic mt-2">${t('evening_close.oneline.hindrance_hint')}</p>
         </div>
+        ${diagQs.length > 0 ? `
+          <div class="parchment rounded-xl p-4 mb-3 border-amber-900/40">
+            <p class="text-[10px] text-amber-100/50 italic mb-2">${t('evening_close.oneline.sliders_intro')}</p>
+            ${diagQs.map(q => renderDiagnosticSlider(q, 5, `diag-${q.id}`)).join('')}
+          </div>
+        ` : ''}
         <div class="flex flex-col sm:flex-row justify-between gap-2">
           <button class="btn btn-ghost text-xs" onclick="closeModal()">${t('evening_close.oneline.cancel_button')}</button>
           <div class="flex gap-2">
