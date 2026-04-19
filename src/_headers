@@ -32,7 +32,10 @@
   #   - 'unsafe-inline' on scripts: legacy inline onclick handlers
   #     (event-delegation refactor pending).
   #   - 'unsafe-inline' on styles: Tailwind's injected <style> tag.
-  #   - connect-src to Supabase (auth + RLS-scoped data).
+  #   - connect-src pinned to THIS specific Supabase project URL (not a
+  #     wildcard on *.supabase.co) so a future XSS can't exfil to an
+  #     attacker-owned Supabase project. Auth, REST, and functions all
+  #     live under this one hostname on modern Supabase.
   #   - img-src 'self' + data: (for inline base64 emoji fallbacks).
   #   - frame-ancestors 'none' to mirror X-Frame-Options for older browsers.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://*.supabase.co; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' data: blob:; connect-src 'self' https://zpawwkvdgocsrwwalhxu.supabase.co wss://zpawwkvdgocsrwwalhxu.supabase.co; font-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'

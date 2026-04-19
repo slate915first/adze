@@ -162,9 +162,22 @@ async function authRequestMagicCode(email) {
     options: { shouldCreateUser: true }
   });
   if (error) {
-    // Surface the allowlist-rejection message directly if it's ours.
-    const m = error.message || 'Could not send the sign-in code.';
-    throw new Error(m);
+    // Enumeration-oracle mitigation. The beta_allowlist trigger (P0001)
+    // raises a distinct "not on the invite list" message for any address
+    // not pre-approved. Surfacing that verbatim lets anyone probe who is
+    // in the closed beta (and by extension, harvest tester emails). Treat
+    // trigger-rejection as silent success — the allowed path and the
+    // rejected path produce the same UX ("code on its way"); non-invited
+    // probers learn nothing. Other errors (real send failures, rate
+    // limits, Supabase 5xx) get a single generic message so neither the
+    // existence of the email nor the nature of the failure leaks.
+    const msg = (error.message || '').toLowerCase();
+    const isAllowlistRejection =
+      msg.includes('invite list') ||
+      msg.includes('closed beta') ||
+      error.code === 'P0001';
+    if (isAllowlistRejection) return;
+    throw new Error('Could not send the sign-in code. Please try again in a moment.');
   }
 }
 

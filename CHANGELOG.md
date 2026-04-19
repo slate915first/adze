@@ -4,6 +4,21 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.16.0] — 2026-04-19 · Security twins — pin CSP connect-src + close allowlist enumeration oracle
+
+### Fixed
+Two P0 findings from the post-v15.15.9 re-review (security-reviewer agent, 2026-04-19).
+
+**CSP `connect-src` pinned.** `src/_headers:38` previously allowed `https://*.supabase.co`. A future XSS could therefore connect to any Supabase project — including an attacker-owned one — and exfiltrate decrypted state. Pinned to the specific project URL (`zpawwkvdgocsrwwalhxu.supabase.co`, both `https://` and `wss://`). Auth, REST, and Edge Functions all live under this one hostname in modern Supabase, so no functional change.
+
+**Allowlist enumeration oracle closed.** `src/systems/auth.js:164-168` previously surfaced the verbatim trigger error message — including the distinct "not on the invite list" rejection (P0001) — to the client. A probing attacker could therefore harvest the beta-tester email list by feeding candidates to the magic-link form and reading the error. `authRequestMagicCode` now treats allowlist rejection as silent success (same UX as the allowed path: modal advances to verify step, code is "on its way") and returns a single generic "try again in a moment" message for every other error class. Both the existence of the email on the allowlist and the nature of any failure are no longer distinguishable from the client.
+
+### Trade-off
+An invited tester who typos their email address now gets no clear rejection — they'll advance to the verify step and just not receive a code. In closed beta with ~6 testers, the support-load cost of this is acceptable compared to the enumeration risk. Post-public-launch the mitigation becomes essential rather than optional.
+
+### Scope
+No changes to encryption, RLS, Edge Function privileges, or data handling. Purely a CSP-wildcard tightening + error-message-generalisation.
+
 ## [15.15.9] — 2026-04-19 · HOTFIX — authed-but-locked guard + cross-tab concurrency warning
 
 ### Fixed
