@@ -64,7 +64,7 @@ function buildFinalTeachingSummary(memberId) {
   md += `---\n\n`;
 
   md += `## Important — what this document is and is not\n\n`;
-  md += `This document marks the end of your journey through Habit Quest. You reached rank 9 in the game — the arahant rank — by doing the full teaching arc the tool can provide. **This is not a certificate of real attainment.** The game's ranks are teaching scaffolding. Real awakening is marked by specific fetters actually falling away, and no self-report tool can verify that. What you have is a complete map of the path, a record of your practice during the game's window, and the instructions to continue without the scaffolding.\n\n`;
+  md += `This document marks the end of your journey through Adze. You reached rank 9 in the game — the arahant rank — by doing the full teaching arc the tool can provide. **This is not a certificate of real attainment.** The game's ranks are teaching scaffolding. Real awakening is marked by specific fetters actually falling away, and no self-report tool can verify that. What you have is a complete map of the path, a record of your practice during the game's window, and the instructions to continue without the scaffolding.\n\n`;
   md += `The canonical tradition is unambiguous: the four noble persons — sotāpanna, sakadāgāmī, anāgāmī, arahant — are recognized only by a qualified teacher in the living tradition, and even then with great care. This document is for you and for that teacher.\n\n`;
   md += `---\n\n`;
 
@@ -125,7 +125,7 @@ function buildFinalTeachingSummary(memberId) {
   md += `The Buddha's last words were *vayadhammā saṅkhārā, appamādena sampādetha* — "conditioned things are of a nature to decay; strive on with diligence." This game is a conditioned thing. It served its purpose. Now it decays, as it should, and you continue with diligence.\n\n`;
   md += `Go sit. There is nothing more the tool has to say.\n\n`;
   md += `---\n\n`;
-  md += `*Final teaching summary generated ${liberationDate} from Habit Quest.*\n`;
+  md += `*Final teaching summary generated ${liberationDate} from Adze.*\n`;
 
   return md;
 }

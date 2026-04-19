@@ -169,7 +169,7 @@ function buildPlayerStandingMarkdown(memberId) {
 
   let md = '';
   md += `# Player Standing — ${member.name}\n\n`;
-  md += `*Generated ${today} from Habit Quest. This is a short reference for sharing with a teacher or trusted friend. It contains no reflection or journal text — only quantitative state.*\n\n`;
+  md += `*Generated ${today} from Adze. This is a short reference for sharing with a teacher or trusted friend. It contains no reflection or journal text — only quantitative state.*\n\n`;
   md += `---\n\n`;
 
   md += `## Current rank\n\n`;

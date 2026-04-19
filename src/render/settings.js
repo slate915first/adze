@@ -32,7 +32,7 @@
 //                      from state (feedbackLog length, etc.).
 //
 //   exportData()       Serialize state to JSON, trigger download with
-//                      filename habit-quest-3-{today}.json.
+//                      filename adze-{today}.json.
 //
 //   importData()       Open a file picker, parse JSON, replace state,
 //                      reload to member[0]. Has no schema validation
@@ -294,7 +294,7 @@ function exportData() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `habit-quest-3-${todayKey()}.json`;
+  a.href = url; a.download = `adze-${todayKey()}.json`;
   a.click();
 }
 

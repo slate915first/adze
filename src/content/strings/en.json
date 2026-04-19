@@ -1584,7 +1584,7 @@
   "alerts.export_failed":                           "Export failed: {error}",
   "alerts.download_failed":                         "Download failed: {error}",
   "alerts.no_data_to_export":                       "No data to export yet.",
-  "alerts.not_a_valid_export":                      "That file doesn't look like a Habit Quest export.",
+  "alerts.not_a_valid_export":                      "That file doesn't look like an Adze export.",
   "alerts.import_complete":                         "Import complete.",
   "alerts.import_read_failed":                      "Could not read that file: {error}",
   "alerts.import_quick":                            "Imported.",

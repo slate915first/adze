@@ -11,7 +11,7 @@ function exportUserData() {
   if (!state) { alert(t('alerts.no_data_to_export')); return; }
   const payload = {
     _meta: {
-      app: 'Habit Quest',
+      app: 'Adze',
       version: APP_VERSION,
       exportedAt: new Date().toISOString(),
       storageKey: STORAGE_KEY
@@ -23,7 +23,7 @@ function exportUserData() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `habit-quest-${todayKey()}.json`;
+  a.download = `adze-${todayKey()}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -43,11 +43,13 @@ function importUserData() {
         const parsed = JSON.parse(ev.target.result);
         const incoming = parsed.state || parsed; // accept either {_meta, state} or raw state
         if (!incoming.members && !incoming.habits) {
-          alert('That file doesn\'t look like a Habit Quest export.');
+          // Accept both new ('Adze') and legacy ('Habit Quest') exports — the
+          // structural check above is what matters for import safety.
+          alert('That file doesn\'t look like an Adze export.');
           return;
         }
         const ok = confirm(
-          'Import this Habit Quest data?\n\n' +
+          'Import this Adze data?\n\n' +
           'This will REPLACE your current data with the contents of the file. ' +
           'Your current quest, members, log, reflections, and diagnostics will be lost.\n\n' +
           'Tip: export your current data first if you want to keep it.'

@@ -31,7 +31,7 @@ function buildPracticeHistoryMarkdown(memberId) {
 
   let md = '';
   md += `# Practice History — ${member.name}\n\n`;
-  md += `*Exported ${new Date().toISOString().slice(0, 10)} from Habit Quest v9.3*\n\n`;
+  md += `*Exported ${new Date().toISOString().slice(0, 10)} from Adze.*\n\n`;
   md += `---\n\n`;
 
   // Identity

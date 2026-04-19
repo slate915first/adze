@@ -29,9 +29,16 @@
 // ---------------------------------------------------------------------------
 // App-wide identifiers (synchronous — no dependency on fetched data)
 // ---------------------------------------------------------------------------
-const STORAGE_KEY = 'habit_quest_v4';
-const APP_VERSION = '15.15.0';
-const LEGACY_KEYS = ['habit_quest_v3_5', 'habit_quest_v3_3'];
+// v15.15.1 — renamed storage key from 'habit_quest_v4' to 'adze_v1'. The old
+// name was a historical artefact from the pre-Adze days of the project. The
+// rename is user-invisible: on next load, loadState() finds the new key
+// missing, falls through to LEGACY_KEYS, picks up 'habit_quest_v4', migrates
+// and saves under the new name. Existing anonymous-mode users see no data
+// loss; existing authenticated users are unaffected (their ciphertext lives
+// in Supabase, not keyed by this name).
+const STORAGE_KEY = 'adze_v1';
+const APP_VERSION = '15.15.1';
+const LEGACY_KEYS = ['habit_quest_v4', 'habit_quest_v3_5', 'habit_quest_v3_3'];
 const APP_NAME = 'Adze';
 const APP_TAGLINE = 'The Path of Awakening';
 

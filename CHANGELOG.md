@@ -4,6 +4,31 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.15.1] — 2026-04-19 · Renamed `habit_quest` → `adze` everywhere it still lingered
+
+### Changed
+- **`STORAGE_KEY`** in `src/data/loaders.js` renamed from `'habit_quest_v4'` → `'adze_v1'`. The old name was a historical artefact from the pre-Adze days. User-invisible migration: existing anonymous-mode users find the new key missing on next load, fall through to `LEGACY_KEYS` (which now lists `'habit_quest_v4'` at the front), their data is migrated and re-saved under `'adze_v1'`. Authenticated users are unaffected — their ciphertext lives in Supabase, not keyed by this name.
+- **Export filename**: `habit-quest-${todayKey()}.json` → `adze-${todayKey()}.json` (both in `systems/export-import.js` and the duplicate path in `render/settings.js` — the latter is being kept for compatibility with any older caller).
+- **Export `_meta.app`** field in the JSON payload: `'Habit Quest'` → `'Adze'`.
+- **Import messaging** ("doesn't look like a Habit Quest export", "Import this Habit Quest data?") → Adze-branded, with a comment noting that legacy exports still import fine (structural check is `members && habits`, not a metadata string check).
+- **Markdown exports** (practice-history / sangha / liberation) no longer say "from Habit Quest" — all say "from Adze" now.
+- **`alerts.not_a_valid_export`** string updated to match.
+
+### Why
+- Tester / maintainer observation: *"I can see in some codes still habit_quest items, why not change everything to adze?"* The app has been called Adze for a long time; leftover `habit_quest` references in filenames, export metadata, and markdown exports were creating a branding-coherence gap. Mostly cosmetic, but the STORAGE_KEY rename is the only one with behavioral impact — and it's transparent to users.
+
+### Backward compat
+- **Legacy localStorage**: `'habit_quest_v4'` (current), `'habit_quest_v3_5'`, `'habit_quest_v3_3'` all still migrate on first load. Only the top-level key name changes.
+- **Legacy JSON exports**: the old format with `_meta.app: 'Habit Quest'` re-imports fine. The import validator checks structural fields (`members`, `habits`), not the name.
+
+### Not touched
+- `docs/CHANGELOG.md` historical entries (history is history).
+- Git commit messages (can't rewrite without force-push).
+- `docs/COMPLIANCE-LOG.md` + other docs that reference `habit_quest_v4` as the current storage key — those are historical at this point; future compliance notes will reference `adze_v1`.
+
+### Tests
+- 39/39 vitest, 19/19 Playwright.
+
 ## [15.15.0] — 2026-04-19 · Reflection-merge — one progressive flow, no longer two tiles
 
 ### Changed
