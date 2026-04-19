@@ -78,7 +78,7 @@ function ensurePathRecord(memberId) {
       // v10.0 canonical correction: only paññā has a lifetime total. Sīla
       // and samādhi are LIVED qualities — virtue not practiced erodes,
       // concentration not maintained dissipates. Only the wisdom underneath
-      // (paññā) is unshakeable per SN 22.45.
+      // (paññā) is unshakeable — the lifetime-total invariant.
       tisikkha: {
         sila: 0, samadhi: 0, panna: 0,
         pannaTotal: 0,

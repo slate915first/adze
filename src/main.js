@@ -665,7 +665,7 @@ function renderModal() {
                 `;
               }).join('')}
             </div>
-            <p class="text-[11px] text-amber-100/65 italic mt-3 leading-relaxed">◆ training ranks · ✦ approaching the path · ◇ ariya (preview only, never certified by the game). The end goal — Arahant — is Rank 9. Beginners are Rank 0 or 1. No one is expected to start at the top; the path is walked, not awarded.</p>
+            <p class="text-[11px] text-amber-100/65 italic mt-3 leading-relaxed">${t('rank_ladder.tooltip_footer')}</p>
           </div>
 
           <div class="flex justify-end">

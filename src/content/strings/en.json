@@ -241,7 +241,7 @@
   "setup.vow.minutes_move_label":                   "How the minutes move",
   "setup.vow.minutes_move_body":                    "The game adapts. If you miss the key habit three times in a seven-day window, you'll be offered a compassionate downgrade — no penalty, no shame. If you hold the practice for a full week, you'll be offered a gentle increase. Your discipline is not predicted; it is listened to.",
   "setup.vow.bodhisatta_quote":                     "\"Let only skin and sinew and bone remain. Let the flesh and blood dry up. I will not rise from this seat until I have attained what is to be attained.\"",
-  "setup.vow.bodhisatta_attribution":               "— The Bodhisatta's vow beneath the Bodhi tree (MN 26)",
+  "setup.vow.bodhisatta_attribution":               "— The Bodhisatta's vow beneath the Bodhi tree (MN 36 — Mahāsaccaka Sutta)",
   "setup.vow.take_vow_button":                      "🪷 Take the Vow",
 
   "_section_setup_custom_finish": "Setup — renderSetupCustomFinish. Free-path closer (shorter flow — no assessment, no recommendation).",
@@ -746,6 +746,9 @@
   "reflection.history.monthly_label":               "Monthly",
   "reflection.history.weeklies_eyebrow":            "Completed weekly contemplations",
 
+  "_section_rank_ladder": "rank_ladder modal footer — the tooltip shown inside the rank-ladder view. Must preserve the scaffolding-language pattern (canonical attainment is referenced, never declared).",
+  "rank_ladder.tooltip_footer":                     "◆ training ranks · ✦ approaching the path · ◇ ariya (preview only, never certified by the game). The game ladder ends at Rank 9, which the game labels with the canonical term for the fully-liberated mind; whether any practitioner has in fact reached that territory is only ever theirs and their teacher's to verify. Beginners are Rank 0 or 1. No one is expected to start at the top; the path is walked, not awarded.",
+
   "_section_reflection_history": "reflection_history modal — in-app readback of past daily/weekly/monthly reflections (v15.17). Teaching-framed as vicāra (investigation), not progress-tracking.",
   "reflection.history_tile.eyebrow":                "Readback",
   "reflection.history_tile.heading":                "Your reflections",
@@ -954,7 +957,7 @@
   "tisikkha.panna.english":                         "— wisdom, discernment",
   "tisikkha.panna.lifetime_suffix":                 "/ {total} lifetime",
   "tisikkha.panna.body_spendable":                  "Earned by sits, journal entries, and especially by naming hindrances precisely as they arise. Paññā is also <em>spendable</em> — it costs paññā to read suttas above your current rank.",
-  "tisikkha.panna.body_lifetime":                   "Paññā alone has a lifetime total that cannot be reduced. SN 22.45: the wisdom faculty is <em>acala</em> — unshakeable. What you have actually understood through real practice is yours, even when sīla lapses or samādhi dissipates. The current balance is what is spendable; the lifetime total is what cannot be taken.",
+  "tisikkha.panna.body_lifetime":                   "Paññā alone has a lifetime total that cannot be reduced. The tradition holds that the wisdom that has seen clearly is <em>acala</em> — unshakeable. What you have actually understood through real practice is yours, even when sīla lapses or samādhi dissipates. The current balance is what is spendable; the lifetime total is what cannot be taken.",
 
   "tisikkha.threshold.endpoint":                    "at the game's endpoint — no further threshold",
   "tisikkha.threshold.not_required":                "no minimum required for {pali}",

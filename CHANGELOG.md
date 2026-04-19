@@ -4,6 +4,26 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.17.2] — 2026-04-19 · P1 teaching cluster — citation fidelity
+
+### Fixed
+Three P1 findings from the post-v15.15.9 dhamma-reviewer lens. Every user-facing surface that cited a canonical source has been re-checked against Bodhi's translations and the commentary tradition.
+
+**Bodhisatta-vow attribution: MN 26 → MN 36.** The "let only skin and sinew and bone remain" vow is traditionally associated with the Bodhi-tree awakening narrative, but the canonical source within the Pāli canon is MN 36 (Mahāsaccaka Sutta), NOT MN 26 (Ariyapariyesana — which is the going-forth + post-awakening sutta). A Theravāda teacher would catch the mis-citation immediately. Changed:
+- `setup.vow.bodhisatta_attribution` in `en.json:244` (setup vow-taking screen)
+- `wisdom-scrolls.json` scroll w9 "The Vow" source
+- `quests/stages.json` stage 4 "Beneath the Bodhi Tree" suttaRef (now "MN 36, Sn 3.2")
+- Note appended to `sutta-questions/mn26.json` q6 clarifying that the app's vow text draws from MN 36, while MN 26 is cited elsewhere for the Buddha's first post-awakening words (still correct at `victory.buddha_attribution` and `wisdom-scrolls.json` scrolls w1, w6).
+
+**SN 22.45 acala claim softened.** The tisikkhā-explainer tagline previously read "SN 22.45: the wisdom faculty is acala — unshakeable." SN 22.45 (Aniccatā Sutta) in Bodhi's SN is about contemplating impermanence in the five aggregates; it does not literally use the word acala applied to the wisdom faculty. The attribution was plausible-sounding but unverified against canonical source. Rephrased to "The tradition holds that the wisdom that has seen clearly is acala — unshakeable." — the claim stands (it IS what the tradition says) without anchoring to a specific sutta that does not in fact support it. Also updated `sn22_45.md` summary to drop the acala line and reframe around impermanence, which is what the sutta actually teaches. Code comment in `rank-gate.js:81` also updated.
+
+**Rank-ladder tooltip scaffolding framing.** `main.js:665` previously stated "The end goal — Arahant — is Rank 9." Post v15.15.6 the ceremonial rank-announcement surfaces use scaffolding language throughout (game rank ≠ canonical attainment), but this tooltip was still declarative in the old register. Routed through a new `rank_ladder.tooltip_footer` i18n key and rewritten: "The game ladder ends at Rank 9, which the game labels with the canonical term for the fully-liberated mind; whether any practitioner has in fact reached that territory is only ever theirs and their teacher's to verify." Matches the path-ranks.json `note` pattern.
+
+### Teacher-review ready
+The three most-cited findings on the dhamma-reviewer's list are closed. A qualified Theravāda teacher can now read the app's user-facing teaching surfaces without catching a misattribution on the Bodhi-tree vow or a spurious canonical anchor on acala. Remaining dhamma-reviewer items (AN 8.1 metta closed in v15.16.1, Dalai Lama / Thich Nhat Hanh cross-tradition quote labels, Pali → Pāli normalization passes) are P2 and not in this release.
+
+Tests: 40/40 vitest green.
+
 ## [15.17.1] — 2026-04-19 · P1 engineering cluster remainder
 
 ### Fixed
