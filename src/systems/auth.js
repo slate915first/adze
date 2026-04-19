@@ -148,7 +148,9 @@ async function authSetInitialPassword(newPassword) {
 }
 
 // v15.11 — Magic-link sign-in (Slack/Notion/Linear pattern).
-// Step 1: request a code. Supabase sends a 6-digit code via email. The
+// Step 1: request a code. Supabase emails an OTP (length set by the project's
+// Auth → Email OTP Length setting; Adze runs at 8). Each request issues a
+// fresh code; the previous code is invalidated. The
 // allowlist trigger on auth.users (public.enforce_beta_allowlist) rejects
 // any email that's not pre-approved, so only invited testers get a code.
 async function authRequestMagicCode(email) {
@@ -207,17 +209,21 @@ async function authVerifyMagicCode(email, code) {
   );
 }
 
-// v15.10 — Verify a 6-digit invite code the user typed in manually.
+// v15.10 — Verify a one-time code the user typed in manually.
 // This is the prefetch-proof flow: nothing happens server-side until the
 // human types the code into the app. Type is 'invite' for new-tester
 // invitations; 'recovery' for password resets; 'email' for magic-link
 // signup if we ever enable that.
+//
+// v15.13.2 — accept 4–10 digit codes (matches authVerifyMagicCode and
+// Supabase's configurable Email-OTP-Length range). Hardcoded 6 was wrong
+// for projects that bumped Supabase's OTP length (Adze runs at 8).
 async function authVerifyEmailOtp(email, token, type) {
   if (!_supabase) throw new Error('Supabase client not initialized');
   if (!email || !token) throw new Error('Email and code are required.');
   const cleanEmail = String(email).trim().toLowerCase();
   const cleanToken = String(token).trim().replace(/\s/g, '');
-  if (!/^\d{6}$/.test(cleanToken)) throw new Error('The code should be 6 digits.');
+  if (!/^\d{4,10}$/.test(cleanToken)) throw new Error('The code should be the digits from your email.');
   const { data, error } = await _supabase.auth.verifyOtp({
     email: cleanEmail,
     token: cleanToken,

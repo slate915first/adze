@@ -51,9 +51,9 @@ function renderAuthModal(m) {
 
 // v15.11 — Magic-link sign-in: two steps.
 // 1) magic-request: enter email, tap "Send code" → Supabase emails a
-//    6-digit code. Allowlist trigger rejects unapproved emails with a
+//    8-digit code. Allowlist trigger rejects unapproved emails with a
 //    clear message surfaced here.
-// 2) magic-verify: enter the 6-digit code → verifyOtp → session →
+// 2) magic-verify: enter the 8-digit code → verifyOtp → session →
 //    chain into existing passphrase-unlock / passphrase-setup flow.
 function renderMagicRequest(m) {
   const err = renderAuthError(m);
@@ -62,7 +62,7 @@ function renderMagicRequest(m) {
       <div class="text-center mb-3">
         <div class="text-4xl mb-1">✉️</div>
         <h2 class="text-xl font-bold gold-text">Sign in with email</h2>
-        <p class="text-xs text-amber-100/70 mt-1 serif">We'll email a 6-digit code — a fresh one every time you sign in. No password to remember.</p>
+        <p class="text-xs text-amber-100/70 mt-1 serif">We'll email an 8-digit code — a fresh one every time you sign in. No password to remember.</p>
       </div>
       ${err}
       <div class="space-y-3 mb-4">
@@ -120,7 +120,7 @@ function renderMagicVerify(m) {
       <div class="space-y-3 mb-4">
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Paste the code here</label>
-          <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
+          <input id="magic-code" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • • • •" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
       <div class="flex justify-between gap-2">
@@ -169,7 +169,7 @@ async function authDoVerifyMagicCode() {
   const code = document.getElementById('magic-code')?.value;
   const email = view.modal?.email;
   if (!email) return authSetAuthError('Session expired. Go back and request a new code.');
-  if (!code) return authSetAuthError('Enter the 6-digit code.');
+  if (!code) return authSetAuthError('Enter the 8-digit code from your email.');
   authSetAuthBusy(true);
   try {
     await authVerifyMagicCode(email, code);
@@ -198,7 +198,7 @@ async function authDoResendMagicCode() {
   }
 }
 
-// v15.10 — 6-digit code entry. The pro pattern: no link to click, no
+// v15.10 — single-use code entry. The pro pattern: no link to click, no
 // prefetch to consume, nothing happens server-side until the human types
 // the code into this form. Slack / Notion / Linear / GitHub all use this.
 function renderInviteCode(m) {
@@ -218,7 +218,7 @@ function renderInviteCode(m) {
         </div>
         <div>
           <label class="text-[11px] uppercase tracking-wider text-amber-300/80 block mb-1">Code</label>
-          <input id="invcode-token" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • •" ${m.busy ? 'disabled' : ''}/>
+          <input id="invcode-token" type="text" inputmode="numeric" pattern="[0-9]{4,10}" maxlength="10" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" class="w-full rounded-lg p-2 bg-amber-950/40 border border-amber-800/50 text-amber-100 text-lg tracking-widest text-center font-mono" placeholder="• • • • • • • •" ${m.busy ? 'disabled' : ''}/>
         </div>
       </div>
       <div class="flex justify-between gap-2">

@@ -4,6 +4,22 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.13.2] — 2026-04-19 · OTP length — copy + invite-flow validation now match the live 8-digit setting
+
+### Fixed
+- **`src/systems/auth.js:220`** (`authVerifyEmailOtp`, the invite-code path) — client validation hardcoded `^\d{6}$` and rejected 8-digit codes before they ever reached Supabase. Bumped to `^\d{4,10}$` to match `authVerifyMagicCode` (already fixed in v15.11.2) and Supabase's documented Email-OTP-Length range. The magic-link flow itself was unaffected; this only blocked the older invite-code surface.
+- **`src/modals/auth.js`**: invite-code input pattern + maxlength were also hardcoded to 6 — now `[0-9]{4,10}` / `maxlength="10"`.
+
+### Changed (copy)
+- Magic-request modal subhead: "6-digit" → "8-digit".
+- magic-verify code input placeholder: 6 dots → 8 dots (in both magic-link AND invite-code surfaces, replace_all).
+- magic-verify error: "Enter the 6-digit code" → "Enter the 8-digit code from your email".
+- v15.13.1 welcome subline (added yesterday) was already digit-agnostic; no change needed there.
+- Comments updated through both files to reference the configurable Supabase OTP length, not a magic constant.
+
+### Why
+- The live Supabase project (`zpawwkvdgocsrwwalhxu`) is configured for 8-digit OTPs (Auth → Email OTP Length). User-facing copy was still saying 6, which would confuse first-time testers, and the invite-code validator was blocking the actual codes.
+
 ## [15.13.1] — 2026-04-19 · Copy clarification — magic-link is passwordless sign-in, not a one-time invite
 
 ### Changed
