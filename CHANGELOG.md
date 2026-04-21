@@ -4,6 +4,14 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.7] — 2026-04-21 · Playwright regression guard for CSS design tokens
+
+Adds `tests/e2e/theme-tokens.spec.js` — a five-test spec that would have caught the v15.19.0 circular-ref bug before it shipped. Enumerates every `:root` token via the browser's parsed CSSOM, asserts each resolves to a non-empty value in both classic and calm themes, explicitly scans for `--foo: var(--foo)` self-references, and sanity-checks the body's computed background and color. No source change to `styles.css`, `theme-calm.css`, or any render file — purely a test addition.
+
+Why this is the right safety net: vitest does not evaluate CSS custom properties because CSS-variable resolution is a browser concern. The spec runs in a real Chromium under `npx playwright test` and catches the guaranteed-invalid-value failure mode directly. A new token automatically gets covered — the spec enumerates via CSSOM rather than a hard-coded list, so the maintenance cost does not scale with the token surface.
+
+Precedes a planned sequence of token-family extractions (duration, radius, typography). Each family ships as its own commit; this spec runs between them.
+
 ## [15.19.6] — 2026-04-21 · HOTFIX — restore readability (circular CSS var references)
 
 Critical fix. v15.19.0 shipped a broken `:root` block in `src/styles/styles.css` where every solid-hex token was declared as `var(--itself)` — circular self-reference. Browsers resolve these as invalid → empty string → rules that consumed those tokens lost their values entirely:
