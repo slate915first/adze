@@ -30,3 +30,22 @@ function closeModal() {
     openNextOnboardingDiagnostic();
   }
 }
+
+// v15.18 — delegated fallback for the three legal-text buttons in Settings.
+// A tester reported that Datenschutz and Impressum were un-tappable from the
+// Settings tab on iOS Safari (the Privacy-Detail button on the same card did
+// respond). The root cause is likely a layout/overlay interaction rather than
+// a broken handler, but a capture-phase delegate keyed on data-legal-action
+// makes the buttons robust against any inline-onclick failure we haven't
+// pinned down. Idempotent: guarded by a flag so hot-reloads don't stack.
+if (typeof window !== 'undefined' && !window.__adzeLegalClickDelegate) {
+  window.__adzeLegalClickDelegate = true;
+  document.addEventListener('click', (e) => {
+    const el = e.target && e.target.closest ? e.target.closest('[data-legal-action]') : null;
+    if (!el) return;
+    const action = el.getAttribute('data-legal-action');
+    if (action === 'datenschutz' && typeof openDatenschutz === 'function') openDatenschutz();
+    else if (action === 'impressum' && typeof openImpressum === 'function') openImpressum();
+    else if (action === 'privacy-detail' && typeof openPrivacyDetail === 'function') openPrivacyDetail();
+  }, true);
+}

@@ -179,20 +179,23 @@ function computeRecommendation(diag, chipInterp) {
       } else {
         frame = `Each missed factor is a place the engine will give extra attention in the foundation curriculum.`;
       }
+      // v15.18 — no suttaId here: MN 141 is not yet in the in-app sutta
+      // library, and a broken "open sutta" link at the END of setup lost
+      // one tester ~1.5h of input (the modal replaced setup and couldn't
+      // route back). The body still names the sutta so it can be looked up
+      // on SuttaCentral; only the in-app link is suppressed.
       insights.push({
         kind: 'eightfold-gap',
         icon: '🧭',
         title: `Missed factors of the eightfold path: ${missedNames}`,
-        body: frame,
-        suttaId: 'mn141'  // The full exposition of the eightfold path
+        body: frame
       });
     } else if (eightfoldMissed.length > 4) {
       insights.push({
         kind: 'eightfold-gap',
         icon: '🧭',
         title: 'Several eightfold-path factors were missed',
-        body: `It will be worth reading the full exposition (MN 141, the Saccavibhaṅga Sutta). The eightfold path is the fourth noble truth — the prescription that follows the diagnosis. Knowing which are its eight factors, and that they fall into three groups (wisdom, ethics, concentration), is foundation material.`,
-        suttaId: 'mn141'
+        body: `It will be worth reading the full exposition (MN 141, the Saccavibhaṅga Sutta, on SuttaCentral). The eightfold path is the fourth noble truth — the prescription that follows the diagnosis. Knowing which are its eight factors, and that they fall into three groups (wisdom, ethics, concentration), is foundation material.`
       });
     }
 
@@ -219,20 +222,26 @@ function computeRecommendation(diag, chipInterp) {
       // tradition itself points toward but that often thin in daily life.
       const isGoenka = diag.tradition === 'goenka';
       if (isGoenka) {
+        // v15.18 — link to SN 47.19 (which is in-library) rather than
+        // MN 107 (which is not). The gradual-training framing is
+        // preserved in the body; SN 47.19 carries the complementary
+        // "you take care of yourself by taking care of others" gloss
+        // that suits the brahmavihāra redirection here.
         insights.push({
           kind: 'tradition-gratitude',
           icon: '🙏',
           title: 'A quiet offering, with gratitude for the training',
-          body: `${gratitude} What many long-sitters in any intensive-retreat tradition notice after some years is that the body-sensation work is complete on the cushion, but the four brahmavihāras (metta, karuṇā, muditā, upekkhā), the daily sīla, and right view sometimes ask for direct attention to round out the path. Goenka himself taught metta at the end of each course — what you might try this week is bringing it out of the retreat container into a daily five-minute practice. The engine will also surface MN 107 (gradual training) and SN 47.19 early.`,
-          suttaId: 'mn107'
+          body: `${gratitude} What many long-sitters in any intensive-retreat tradition notice after some years is that the body-sensation work is complete on the cushion, but the four brahmavihāras (metta, karuṇā, muditā, upekkhā), the daily sīla, and right view sometimes ask for direct attention to round out the path. Goenka himself taught metta at the end of each course — what you might try this week is bringing it out of the retreat container into a daily five-minute practice. The engine will surface MN 107 (gradual training, on SuttaCentral) and SN 47.19 early.`,
+          suttaId: 'sn47_19'
         });
       } else {
+        // v15.18 — AN 4.170 is not in-library; the body still names it for
+        // SuttaCentral lookup but no in-app link renders.
         insights.push({
           kind: 'tradition-gratitude',
           icon: '🙏',
           title: 'A quiet offering, with gratitude for the training',
-          body: `${gratitude} What often wants attention after years of deep sitting practice is the integration — sīla as daily ground (not only on retreat), the brahmavihāras as everyday warmth, and the framing that holds the whole path together (right view). AN 4.170 — samatha and vipassanā as two wings of the same bird — is worth reading this week; when one wing has grown strong, the other may need feeding.`,
-          suttaId: 'an4_170'
+          body: `${gratitude} What often wants attention after years of deep sitting practice is the integration — sīla as daily ground (not only on retreat), the brahmavihāras as everyday warmth, and the framing that holds the whole path together (right view). AN 4.170 — samatha and vipassanā as two wings of the same bird, on SuttaCentral — is worth reading this week; when one wing has grown strong, the other may need feeding.`
         });
       }
     } else if (diag.stuckness === 'offcushion') {

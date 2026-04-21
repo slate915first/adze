@@ -4,6 +4,31 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.18.0] — 2026-04-21 · tester bug cluster — setup-sutta data loss, save-quote regression, reflection-history discoverability, legal-button tap fix, Quest → Path rename
+
+### Fixed
+
+**Setup-flow sutta crash + data loss** (`src/engine/diagnostic.js`, `src/systems/modal-openers.js`). Tester Bastian reported losing ~1.5h of setup input after clicking a recommended-sutta link on the final step: the sutta returned "sutta not found" and the setup modal was dropped permanently on close. Two independent bugs in one sequence:
+- Three sutta IDs referenced from the diagnostic recommendation insights were not in `SUTTA_FILES` (the content library): `mn141` (lines 187, 195), `mn107` (line 227), `an4_170` (line 235). Clicking these triggered the "sutta not found" branch at `src/modals/sutta-view.js:18`. Fix: drop the broken `suttaId:` property on those insights (so no clickable button renders) and redirect the Goenka-branch insight to `sn47_19` which IS in the library. Body text still names MN 141 / MN 107 / AN 4.170 so they can be found on SuttaCentral.
+- `openSutta()` did not carry `returnTo: 'setup'` into the new modal, so `closeModal()` had no hint to route back. Fix: `openSutta` now checks if the current modal is setup or has `returnTo='setup'` and preserves the context forward. `view.setupData` and `view.setupStep` live outside modal scope and survive the round-trip.
+
+**Today tab — save-quote heart vanished** (`src/render/today.js`). The heart/save button defined as `ajahnCard` (v13.5) was dead code since the two-column hero refactor; the card actually rendered in the hero row (`quoteCard`) had no save control. Ported the save button into `quoteCard` and deleted the dead `ajahnCard`. The `toggleQuoteSaved` flow itself was unchanged.
+
+**Reflection tab — past-reflections tile hidden until first entry** (`src/render/reflection.js`). The readback tile shipped in v15.17 was gated on `hasAnyPastReflection`, so new practitioners never saw the affordance. Removed the gate; the tile is always visible. Added `reflection.history_tile.body_empty` string for the pre-first-entry state. The modal itself already carries `reflection_history.empty` for an empty tap.
+
+**Settings — Datenschutz and Impressum buttons un-tappable on iOS Safari** (`src/render/settings.js`, `src/systems/navigation.js`). Reported by Dirk. On the Privacy card, the first button (Read more) responded; the other two did not. Root cause not definitively isolated in static analysis — likely a flex-wrap / FAB overlap on narrow iPhone-PWA layouts where "Read the full privacy note →" ate most of the width and pushed the other two under the bottom-right feedback-FAB. Two changes:
+- Layout: stack the three buttons vertically on mobile (`flex flex-col sm:flex-row`) so every button sits in clean airspace.
+- Delegated click-fallback keyed on `data-legal-action` attributes, wired once at module load in `navigation.js`. Idempotent; guarded by a module-level flag so hot-reloads don't stack handlers. If any future browser-specific quirk breaks inline onclick on these buttons, the delegate still fires.
+
+### Changed
+
+**"Quest" → "Path" in user-facing copy** (`src/content/strings/en.json`). Agent-fleet review on the "Quest" terminology produced a three-way split: dhamma-reviewer said keep ("Path" conflates with ariya-magga), game-designer said "Path" (RPG-abandonment framing is toxic for a practice app), copy-storyteller said "Undertaking" (too Tolkien). Dirk's call: replace with "Path." Eighteen user-facing strings changed: setup mode/habit/custom-finish copy, victory close-out, quest.no_active / quest.stats_label / quest.stat_past_attempts, pause/resume-path buttons, today.paused eyebrow, header eyebrow + tooltips, habit-manager advice + key-habit-lock alert, settings overview label, settings danger button ("Abandon Quest" → "Leave the Path") + confirm copy, feedback privacy note, first-guidance tutorial reference, wisdom codex notes. Internal identifiers (`questActive`, `questMode`, `questName`, function names like `abandonQuest`) and i18n key names (`quest.*`, `pause_quest.*`) untouched — they are developer-facing only. The code-level rename is tracked for a later refactor turn.
+
+### Not in this release
+Internal code-level `quest*` → `path*` rename (~599 occurrences across 81 files). Deferred to a focused refactor turn; today's scope is user-visible copy only.
+
+Tests: 40/40 vitest green.
+
 ## [15.17.5] — 2026-04-19 · P1 UX cluster — evening-close order, unlock beat, notch safe-area, stale-banner note
 
 ### Fixed

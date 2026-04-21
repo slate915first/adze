@@ -87,7 +87,17 @@ function suttaCentralUrl(internalId, lang) {
 }
 
 function openSutta(suttaId) {
-  view.modal = { type: 'sutta_view', suttaId };
+  // v15.18 — preserve setup context. Earlier, when a tester clicked a
+  // recommended-sutta link on the final setup screen, the sutta_view modal
+  // replaced the setup modal; on close, closeModal had no returnTo hint, so
+  // setup was dropped and ~1.5h of input with it. Carrying returnTo='setup'
+  // forward lets closeModal route back to the unfinished setup modal
+  // (view.setupData / view.setupStep live outside modal scope and survive).
+  const cur = view.modal;
+  const fromSetup = cur && (cur.type === 'setup' || cur.returnTo === 'setup');
+  view.modal = fromSetup
+    ? { type: 'sutta_view', suttaId, returnTo: 'setup' }
+    : { type: 'sutta_view', suttaId };
   renderModal();
 }
 

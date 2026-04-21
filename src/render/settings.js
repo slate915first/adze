@@ -269,10 +269,20 @@ function renderSettings() {
     <div class="parchment rounded-xl p-5 mb-4 border border-amber-700/30">
       <h3 class="font-bold text-amber-100 mb-2">${t('settings.privacy.heading')}</h3>
       <p class="text-xs text-amber-100/70 mb-3 leading-relaxed">${t('settings.privacy.body')}</p>
-      <div class="flex gap-2 flex-wrap">
-        <button onclick="openPrivacyDetail()" class="btn btn-ghost text-xs">${t('settings.privacy.read_more')}</button>
-        <button onclick="openDatenschutz()" class="btn btn-ghost text-xs">${t('welcome.privacy_policy_link')}</button>
-        <button onclick="openImpressum()" class="btn btn-ghost text-xs">${t('welcome.imprint_link')}</button>
+      <!-- v15.18 — stack vertically on mobile. Earlier the three buttons
+           sat in a flex-wrap row where "Read the full privacy note →" ate
+           most of the width, pushing Datenschutz + Impressum onto a second
+           row that drifted under the feedback-FAB at bottom-right of the
+           viewport on iPhone Safari and became un-tappable. Vertical stack
+           on narrow screens keeps every button in clean airspace; on sm+
+           they sit inline. Also switched from inline onclick to a delegated
+           data-legal-action channel (fallback handler wired in navigation.js)
+           in case a specific Safari-PWA build intercepts inline handlers on
+           these exact labels. -->
+      <div class="flex flex-col sm:flex-row gap-2 sm:flex-wrap">
+        <button data-legal-action="privacy-detail" onclick="openPrivacyDetail()" class="btn btn-ghost text-xs">${t('settings.privacy.read_more')}</button>
+        <button data-legal-action="datenschutz" onclick="openDatenschutz()" class="btn btn-ghost text-xs">${t('welcome.privacy_policy_link')}</button>
+        <button data-legal-action="impressum" onclick="openImpressum()" class="btn btn-ghost text-xs">${t('welcome.imprint_link')}</button>
       </div>
     </div>
 

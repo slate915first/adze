@@ -264,29 +264,12 @@ function renderToday() {
   // v13.5 — save-quote: heart button toggles save/unsave for this teaching.
   // v15.14 — switched from positional index to stable id; saved entries embed
   // text+source so they survive any future rename/reorder of teaching-quotes.json.
+  // v15.18 — the heart lives inside quoteCard below (the card actually rendered
+  // in the hero row); an earlier standalone ajahnCard was dead code since the
+  // two-column hero refactor and was silently eating the save affordance.
   // Collection lives in state.savedQuotes[memberId]; reviewable in Wisdom tab
   // (full collection with copy/print) and Review tab (this-period summary).
   const isQuoteSaved = quoteIsSaved(view.currentMember, ajahnChah.id);
-  const ajahnCard = `
-    <div data-component="today.daily_teaching_card" class="parchment rounded-2xl p-5 mb-5 fade-in border-amber-700/30">
-      <div class="flex items-start gap-3">
-        <div class="text-3xl">🌳</div>
-        <div class="flex-1">
-          <div class="flex items-start justify-between gap-2 mb-1">
-            <div class="text-[10px] uppercase tracking-wider text-amber-300/70">${teachingHeader}</div>
-            <button data-component="today.daily_teaching_card.save_button" onclick="toggleQuoteSaved('${ajahnChah.id}')"
-                    class="flex items-center gap-1 text-xs ${isQuoteSaved ? 'text-rose-400 hover:text-rose-300' : 'text-amber-300/70 hover:text-rose-300'} transition shrink-0"
-                    title="${isQuoteSaved ? t('today.teaching.saved_tooltip') : t('today.teaching.save_tooltip')}">
-              <span class="text-lg">${isQuoteSaved ? '♥' : '♡'}</span>
-              <span class="hidden sm:inline">${isQuoteSaved ? t('today.teaching.saved_label') : t('today.teaching.save_label')}</span>
-            </button>
-          </div>
-          <p class="serif text-base text-amber-100/95 leading-relaxed italic">"${ajahnChah.text}"</p>
-          <p class="text-[10px] text-amber-300/60 mt-2 text-right">— ${ajahnChah.source}</p>
-        </div>
-      </div>
-    </div>
-  `;
 
   // v10.1: paused banner at top of Today when quest is paused
   let pausedBanner = '';
@@ -385,13 +368,21 @@ function renderToday() {
   // Right card — curated teaching (matched to dominant hindrance when possible)
   const matchedHindrance = ajahnChah.matchedTo ? FIVE_HINDRANCES.find(h => h.id === ajahnChah.matchedTo) : null;
   const quoteCard = `
-    <div class="parchment rounded-2xl p-5 h-full flex flex-col border border-amber-700/30">
+    <div data-component="today.daily_teaching_card" class="parchment rounded-2xl p-5 h-full flex flex-col border border-amber-700/30">
       <div class="flex items-start gap-3 flex-1">
         <div class="text-2xl">🌳</div>
         <div class="flex-1">
-          <div class="flex items-baseline justify-between mb-1">
+          <div class="flex items-baseline justify-between gap-2 mb-1">
             <div class="text-[10px] uppercase tracking-wider text-amber-300/70">${teachingHeader}</div>
-            ${matchedHindrance ? `<div class="text-[9px] text-amber-300/55 italic" title="${t('today.teaching.matched_tooltip')}">${t('today.teaching.matched_to', {pali: matchedHindrance.pali})}</div>` : ''}
+            <div class="flex items-center gap-2 shrink-0">
+              ${matchedHindrance ? `<div class="text-[9px] text-amber-300/55 italic" title="${t('today.teaching.matched_tooltip')}">${t('today.teaching.matched_to', {pali: matchedHindrance.pali})}</div>` : ''}
+              <button data-component="today.daily_teaching_card.save_button" onclick="toggleQuoteSaved('${ajahnChah.id}')"
+                      class="flex items-center gap-1 text-xs ${isQuoteSaved ? 'text-rose-400 hover:text-rose-300' : 'text-amber-300/70 hover:text-rose-300'} transition"
+                      title="${isQuoteSaved ? t('today.teaching.saved_tooltip') : t('today.teaching.save_tooltip')}">
+                <span class="text-lg leading-none">${isQuoteSaved ? '♥' : '♡'}</span>
+                <span class="hidden sm:inline">${isQuoteSaved ? t('today.teaching.saved_label') : t('today.teaching.save_label')}</span>
+              </button>
+            </div>
           </div>
           <p class="serif text-sm text-amber-100/95 leading-relaxed italic">"${ajahnChah.text}"</p>
           <p class="text-[10px] text-amber-300/60 mt-2 text-right">— ${ajahnChah.source}</p>
