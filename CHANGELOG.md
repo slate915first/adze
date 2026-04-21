@@ -4,6 +4,21 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.10] — 2026-04-21 · Typography tokens
+
+### Added
+
+Two font-stack tokens:
+
+- `--font-serif: 'Georgia', 'Crimson Text', serif` — body, inputs, buttons, scroll-paper, `.serif`.
+- `--font-sans: -apple-system, system-ui, sans-serif` — `.sans`, element-feedback marker, feedback-banner.
+
+Eight `font-family:` declarations in rule bodies now reference these tokens. A future theme could shift the app's register by overriding one stack (e.g. a humanist sans for the serif role, or a classical old-style for a more monastic feel) without editing rules.
+
+### Changed
+
+Four rules previously used a shorter `'Georgia', serif` stack without the `'Crimson Text'` fallback; consolidated to one `--font-serif` stack. Georgia is near-universally installed, so the `'Crimson Text'` fallback rarely activates — the consolidation is primarily a consistency win. No visible behavior change.
+
 ## [15.19.9] — 2026-04-21 · Radius tokens + harder regression guard
 
 ### Added

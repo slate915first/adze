@@ -107,6 +107,16 @@
     --radius-card: 0.5rem;       /* inputs, buttons, scroll-paper */
     --radius-fab: 24px;          /* floating feedback button */
 
+    /* ─── Typography tokens ───
+       Font stacks. A theme can shift the register by overriding these
+       (e.g. a sans-first theme replaces --font-serif with a humanist
+       sans-serif stack). Historically four rules used a shorter
+       serif stack ('Georgia', serif) without the 'Crimson Text'
+       fallback; consolidated here to one stack. Georgia is near-
+       universally installed, so the fallback rarely activates. */
+    --font-serif: 'Georgia', 'Crimson Text', serif;
+    --font-sans: -apple-system, system-ui, sans-serif;
+
     /* ─── Visual-intensity dial ───
        Controls how strongly body::before (dread tint) and body::after
        (shadow darkening) react to --shadow-level. Calm themes lower
@@ -122,7 +132,7 @@
     background:
       radial-gradient(ellipse at top, var(--surface-2) 0%, var(--surface-1) 50%, var(--surface-0) 100%);
     color: var(--surface-ink);
-    font-family: 'Georgia', 'Crimson Text', serif;
+    font-family: var(--font-serif);
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
@@ -147,8 +157,8 @@
   }
   #app, #modal-root { position: relative; z-index: 10; }
 
-  .serif { font-family: 'Georgia', serif; }
-  .sans { font-family: -apple-system, system-ui, sans-serif; }
+  .serif { font-family: var(--font-serif); }
+  .sans { font-family: var(--font-sans); }
 
   .parchment {
     background: linear-gradient(145deg, rgba(var(--path-rgb),0.08), rgba(var(--path-mid-rgb),0.04));
@@ -280,7 +290,7 @@
     padding: 0.7rem 0.9rem;
     border-radius: var(--radius-card);
     width: 100%;
-    font-family: 'Georgia', serif;
+    font-family: var(--font-serif);
   }
   input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
     outline: none;
@@ -295,7 +305,7 @@
     transition: all var(--dur-fast);
     cursor: pointer;
     border: 1px solid transparent;
-    font-family: 'Georgia', serif;
+    font-family: var(--font-serif);
     /* v15.0 — Apple HIG minimum tap target so mobile testers don't
        miss small ghost buttons or "Skip" affordances. */
     min-height: 44px;
@@ -379,7 +389,7 @@
     border-radius: var(--radius-card);
     border: 2px solid var(--path-deep);
     box-shadow: 0 0 50px rgba(var(--path-rgb),0.4);
-    font-family: 'Georgia', serif;
+    font-family: var(--font-serif);
     line-height: 1.7;
   }
   .scroll-paper h3 {
@@ -497,7 +507,7 @@
     border-radius: 0 6px 0 6px;
     z-index: 100;
     pointer-events: none;
-    font-family: -apple-system, system-ui, sans-serif;
+    font-family: var(--font-sans);
     max-width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -559,7 +569,7 @@
     padding: calc(env(safe-area-inset-top, 0px) + 8px) 12px 8px;
     text-align: center;
     font-size: 12px;
-    font-family: -apple-system, system-ui, sans-serif;
+    font-family: var(--font-sans);
     z-index: 199;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   }
