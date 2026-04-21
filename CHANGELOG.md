@@ -4,6 +4,70 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.20.0] — 2026-04-21 · Variant C Calm redesign — CSS layer
+
+First of a 5-commit sequence implementing Claude Design's "Variant C single-screen" Calm redesign. This commit is **CSS only** — zero markup change, zero JS change. Classic is pixel-identical by construction. The remaining 4 commits (welcome markup fork, ShadowSentence helpers, renderTodayCalm branch, Settings preference) follow on top of this foundation.
+
+### Added — ink-alpha system
+
+One ink on teak, four opacities:
+
+- `--ink-rgb: 201, 190, 172` — single source ink.
+- Alpha stops (used inline, not as tokens): 0.95 strong / 0.70 body / 0.40 quiet / 0.18 faint.
+
+### Changed — token aliasing (non-breaking)
+
+Path, Māra, sangha, released tokens aliased to ink in Calm. Rules using `var(--path-*)`, `var(--mara-*)`, etc. continue to work — they just lose their chroma and render as ink. No rule rewrite, no structural change to styles.css.
+
+- `--path-core: rgba(var(--ink-rgb), 0.70)`
+- `--path-bright: rgba(var(--ink-rgb), 0.95)`
+- `--path-deep: rgba(var(--ink-rgb), 0.40)`
+- RGB-triplet tokens (`--path-rgb`, `--path-mid-rgb`, `--path-core-rgb`, `--mara-rgb`, `--mara-banner-deep-rgb`, `--sangha-rgb`, `--released-rgb`) all alias to `var(--ink-rgb)`.
+- `--ember: transparent` (ember particles invisible).
+- `--dread-weight: 0`, `--shadow-overlay-weight: 0` (viewport darkening gone; shadow feedback moves to sentence in Commit 3).
+
+### Added — typography
+
+- `--font-serif: "Iowan Old Style", "Georgia", "Palatino", serif` (iOS gets Iowan; Georgia elsewhere).
+- `--font-sans: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif`.
+
+### Added — structural overrides (Calm only)
+
+- `body` flat teak with Iowan serif + quiet-ink default.
+- `.gold-text` → solid strong ink (gradient stripped).
+- `nav { display: none }` — tab bar hidden on Calm. Navigation routes via the Path sentence (Commit 4) and Settings dot (Commit 4).
+- `[data-classic-only] { display: none }` — hook for Commit 2 welcome markup.
+- Containers (`.parchment`, `.parchment-active`, `.quest-banner`, `.army-card`, `.codex-entry`, `.character-card`, `.tab-active`) → transparent, no border, no shadow, no backdrop-filter.
+- Buttons (`.btn-gold`, `.btn-ghost`) → links with hairline underline.
+- `.btn-danger` → quiet ink link.
+- Progress bars (`.progress-bar`, `.shadow-bar-fill`, `[data-shadow-bar]`) → `display: none`.
+- Checkboxes → em-dash `::before` + struck-through done-state.
+- `.habit-done` / `.habit-missed` → flat, no left border.
+- `.feedback-fab` → 32×32 transparent + 1px ink ring.
+- Anchors → quiet ink with faint underline (darker inside `.scroll-paper`).
+- `.character-card:hover` → `translateY(-2px)` (affordance without spring scale).
+
+### Added — ShadowSentence base styles + game-designer severity guard
+
+- `.shadow-sentence` default: italic, quiet ink (0.40), 14px, pinned below habits with `margin-top: 32px`. Rendered conditionally by `renderShadowSentence()` in Commit 3.
+- `:root[data-shadow-critical="true"] .shadow-sentence` override: lifts opacity to body (0.70) + upright. Game-designer's pre-ship requirement: closes the residual Casino Sober Mode vector by re-surfacing environmental urgency in Calm's own visual language when `state.shadow > 75`, without reintroducing a bar, red, or number. The attribute is set by `systems/shadow.js` in Commit 3 alongside `--shadow-level`.
+
+### Preserved (never touched in Calm)
+
+- `.breath` animation — the practice itself.
+- `.fade-in`, `.scroll-reveal` — one-shot state transitions.
+- Classic theme rendering — verified pixel-identical via Playwright.
+
+### Verified
+
+- Playwright theme-tokens 8/8 (all classic + calm tokens resolve, no circular refs in either stylesheet).
+- Playwright welcome 5/5 (Classic welcome unchanged).
+- No Tailwind class inline in render files broken by CSS changes.
+
+### Breaks `CALM_THEME_FIXES.md` items superseded by redesign
+
+The P0-P3 polish items from `docs/handoff/CALM_THEME_FIXES.md` targeted the *prior* Calm aesthetic (warm sepia). Variant C's more radical flattening (buttons→links, containers off, progress bars hidden, icon→SVG via markup in Commit 2) supersedes most of them. Specific items still actionable after Variant C ships: §5 (`.btn-danger` contrast — already addressed by buttons-as-links), §11 (hover-transform leaks — now caught by `.habit-row:hover { transform: none }` rule), §12 (checkbox glow — superseded by em-dash replacement).
+
 ## [15.19.12] — 2026-04-21 · Welcome-page theme selector (pre-auth)
 
 Discreet "Visual · Classic · Calm" chip pair added to the welcome footer, below the Datenschutz / Impressum row. A returning beta user who cleared cache can restore their preference before signing in; a first-time visitor sees them only if their eye travels past the primary CTA.

@@ -1,149 +1,331 @@
 /* ============================================================================
- * src/styles/theme-calm.css
+ * src/styles/theme-calm.css — Variant C · Monastic editorial
  * ----------------------------------------------------------------------------
- * Second theme for Adze. Activated when the <html> element carries the
- * attribute data-theme="calm". Sets overrides for the CSS custom properties
- * declared in styles.css :root, plus a few structural overrides for rules
- * whose presentation (not their color) needs to change (flat body, dropped
- * gradients, removed glows).
+ * Second theme for Adze. Activated when <html> carries data-theme="calm".
  *
- * Design posture — Calm (viveka):
- *   - Forest-tradition aesthetic: raw unfinished teak, palm-leaf, robed
- *     indigo-grey. No gold leaf, no red-fire alarm, no stage lighting.
- *   - The passaddhi test: every visual element serves attention or removes
- *     itself. The room stops vibrating.
- *   - Keep the game scaffolding HONEST. Māra stays named. Shadow bar stays
- *     fully visible — just desaturated. Nothing engine-driven is hidden.
- *   - Motion: breath (4s) stays because it IS the practice. Shadow-bar
- *     transition stays because it is honesty about setback. Everything
- *     else ambient — shimmer, pulse-glow, danger-pulse, fabPulse, float-up,
- *     ember drift, body::before dread tint — drops.
+ * Posture (do not drift):
+ *   - Monastic editorial. One ink on teak. No amber, no red, no purple, no
+ *     gold. Space does the work. No cards, no borders, no chips, no
+ *     progress bars, no badges. One active element per view.
+ *   - Motion frozen except .breath (the breath animation IS the practice)
+ *     and the shadow-bar width transition (honesty about setback — though
+ *     the bar itself is replaced in this pass by .shadow-sentence).
+ *   - Game scaffolding stays as vocabulary, not chrome. "Māra,"
+ *     "stream-enterer," "shadow," "armies" remain in the copy; their
+ *     visual incarnations are stripped.
+ *   - Engine outputs never hidden. Shadow level still speaks (via the
+ *     single italic sentence, absent when clean). Reflection-due still
+ *     speaks (via its own sentence). Primary alerts and downgrade
+ *     offers continue to render on Today.
  *
- * Palette source: Claude Design review 2026-04-21 (Calm / viveka brief).
+ * Source: Claude Design brief at docs/handoff/CALM_REDESIGN_HANDOFF.md
+ * plus two guards required by game-designer review pre-ship:
+ *   1. ShadowSentence severity tier (shadow > 50 lifts ink weight).
+ *   2. data-shadow-critical="true" at shadow > 75 — re-surfaces
+ *      environmental urgency in Calm's own visual language.
  * ============================================================================ */
 
 :root[data-theme="calm"] {
-  /* ─── Surfaces — raw unfinished teak ─── */
+  /* ─── Surfaces — warm teak, flat ─── */
   --surface-0: #1a1613;
-  --surface-1: #201b16;   /* body flat background (see structural override) */
+  --surface-1: #201b16;   /* body flat background (see .body override) */
   --surface-2: #262019;
   --surface-ink: #c9beac;
 
-  /* ─── Path — no gold leaf, muted bone-wax ─── */
-  --path-core: #b8a278;
-  --path-bright: #d4c4a0;
-  --path-deep: #8a7550;
-  --path-rgb: 212, 196, 160;
-  --path-mid-rgb: 184, 162, 120;
-  --path-core-rgb: 138, 117, 80;
+  /* ─── Ink system — the only new paradigm ───
+     One ink, four opacities. Everything on Calm's Welcome and Today
+     derives from these. Use inline as rgba(var(--ink-rgb), <alpha>).
+       0.95  strong — wordmark, primary links
+       0.70  body   — body copy, default links
+       0.40  quiet  — dates, tertiary, footer, inactive state
+       0.18  faint  — hairlines, em-dashes, faint separators */
+  --ink-rgb: 201, 190, 172;
 
-  /* ─── Parchment — actual palm-leaf ─── */
+  /* ─── Path / amber tokens — neutralized via aliasing ───
+     Path tokens still exist so rules referencing --path-* continue to
+     work; they just render as ink in Calm. This is the non-breaking
+     path: no rule rewrite, rules just lose amber when the theme is
+     active. */
+  --path-core: rgba(var(--ink-rgb), 0.70);
+  --path-bright: rgba(var(--ink-rgb), 0.95);
+  --path-deep: rgba(var(--ink-rgb), 0.40);
+  --path-rgb: var(--ink-rgb);
+  --path-mid-rgb: var(--ink-rgb);
+  --path-core-rgb: var(--ink-rgb);
+
+  /* ─── Māra / game tokens — demoted ───
+     Māra stays named in copy; stops painting UI. Shadow bar is hidden
+     (replaced by .shadow-sentence). Tokens kept so non-Today surfaces
+     (sutta viewer, etc.) don't break. */
+  --mara-core: rgba(var(--ink-rgb), 0.40);
+  --mara-deep: rgba(var(--ink-rgb), 0.30);
+  --mara-shadow: rgba(var(--ink-rgb), 0.25);
+  --mara-ink: rgba(var(--ink-rgb), 0.70);
+  --mara-rgb: var(--ink-rgb);
+  --mara-banner-deep-rgb: var(--ink-rgb);
+  --mara-surface-rgb: 32, 24, 20;
+  --mara-surface-deep-rgb: 20, 14, 12;
+
+  /* Sangha and Released — neutralized. */
+  --sangha-rgb: var(--ink-rgb);
+  --released-rgb: var(--ink-rgb);
+
+  /* Ember — off. Used only by `background: var(--ember)` on ember
+     particles; setting to transparent makes them invisible without
+     breaking any rule. */
+  --ember: transparent;
+
+  /* Parchment — unchanged. Sutta viewer is a different register and
+     not covered by this pass. */
   --parchment-ink: #3a2f22;
   --parchment-heading: #5a4428;
   --parchment-mid-rgb: 216, 198, 160;
 
-  /* ─── Māra — honest but not theatrical, oxidized iron (not fire) ─── */
-  --mara-core: #8a4a3a;
-  --mara-deep: #5a2e24;
-  --mara-shadow: #3f2019;
-  --mara-ink: #c89082;
-  --mara-rgb: 138, 74, 58;
-  --mara-banner-deep-rgb: 90, 46, 36;
-  --mara-surface-rgb: 40, 24, 20;
-  --mara-surface-deep-rgb: 28, 16, 13;
-
-  /* ─── Sangha — robed indigo-grey, not purple neon ─── */
-  --sangha-rgb: 138, 128, 168;
-
-  /* ─── Released — forest moss, not success-green ─── */
-  --released-rgb: 122, 140, 96;
-
-  /* ─── Ember — demoted, near-invisible ───
-     Used only by the kasiṇa / focus-timer surface in calm mode; any
-     ambient drift usage is killed via the animation block below. */
-  --ember: #6b5838;
-
-  /* ─── Overlay — dim, not red ───
-     Black dread instead of warm-grey. The body::before transition is
-     suppressed in the structural block below so high shadow levels no
-     longer repaint-vibrate the whole viewport; the dread is still there
-     as a static darken, just unvarying. */
+  /* Overlays — off. The shadow-level feedback now lives in
+     .shadow-sentence (see below), not in a body tint. */
   --dread-rgb: 0, 0, 0;
+  --dread-weight: 0;
+  --shadow-overlay-weight: 0;
 
-  /* ─── Motion dial ───
-     Informational value. Current architecture enforces calm motion via
-     the explicit selector block below (kills named ambient animations)
-     while preserving .breath, .fade-in, and the shadow-bar transition
-     (all functional or state-communicating, not ambient). A future
-     theme-overlay architecture could wire --motion-ambient into
-     animation-duration calc() for a smooth dial, but not today. */
-  --motion-ambient: 0.25;
+  /* Motion dial — ambient off (except breath, kept alive below). */
+  --motion-ambient: 0;
 
-  /* ─── Visual-intensity dial ───
-     Near-zero weights. The shadow bar in the header renders the number
-     honestly; the full-screen darkening is effectively gone. */
-  --dread-weight: 0.12;
-  --shadow-overlay-weight: 0.08;
+  /* Typography — Iowan Old Style on iOS, Georgia fallback elsewhere.
+     One serif, one sans. */
+  --font-serif: "Iowan Old Style", "Georgia", "Palatino", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
 }
 
 /* ────────────────────────────────────────────────────────────────────────
-   Structural overrides (Calm only) — rules whose PRESENTATION, not color,
-   needs to change. Each targets a specific rule in styles.css and
-   neutralizes its decorative intent.
+   Structural overrides (Calm only).
+   Each rule targets presentation that CANNOT be changed via a token alone.
+   Scoped under :root[data-theme="calm"] so Classic is untouched.
    ──────────────────────────────────────────────────────────────────────── */
 
-/* Flat body background — kill the radial gradient. Warm teak instead
-   of violet-night atmosphere. The dread overlays (body::before, ::after)
-   still apply, but at calm-weight they barely register. */
+/* ─── Body: flat teak + Iowan serif + quiet-ink body copy ─── */
 :root[data-theme="calm"] body {
   background: var(--surface-1);
+  font-family: var(--font-serif);
+  color: rgba(var(--ink-rgb), 0.70);
+  letter-spacing: 0.005em;
 }
 
-/* body::before — drop the transition so the dread tint does not
-   animate/repaint on shadow-level change. The static darken (already
-   near-zero via --dread-weight) is present but no longer vibrates
-   the viewport. */
-:root[data-theme="calm"] body::before {
+/* Body overlays — transition suppressed so --shadow-level changes do
+   not repaint-vibrate the viewport. Static darken is already zero via
+   --dread-weight / --shadow-overlay-weight tokens above. */
+:root[data-theme="calm"] body::before,
+:root[data-theme="calm"] body::after {
   transition: none;
 }
 
-/* Gold-text shimmer gradient → flat bone-wax. The classic theme's
-   three-stop gradient reads as jewelry in calm mode; solid color is
-   truer to the forest-tradition register. */
+/* ─── Gold-text → solid ink ─── */
 :root[data-theme="calm"] .gold-text {
+  color: rgba(var(--ink-rgb), 0.95);
   background: none;
   -webkit-background-clip: unset;
           background-clip: unset;
   -webkit-text-fill-color: unset;
-  color: var(--path-bright);
 }
 
-/* Scroll-paper — drop the 50px gold glow; a palm-leaf sutta is a
-   quiet object, not a spotlit relic. Single hairline border in
-   path-deep instead. */
-:root[data-theme="calm"] .scroll-paper {
+/* ─── Tab bar: hidden on Calm ───
+   Variant C removes tab navigation entirely. Navigation goes through
+   the Path sentence, the Settings dot, and the Settings screen (which
+   becomes the secondary-screen hub). */
+:root[data-theme="calm"] nav {
+  display: none;
+}
+
+/* ─── Classic-only markup: hidden on Calm ───
+   welcome.js and today.js annotate elements with data-classic-only
+   when they should be absent on Calm but preserved on Classic. Pure
+   additive pattern — rules marked data-classic-only render unchanged
+   in Classic. */
+:root[data-theme="calm"] [data-classic-only] {
+  display: none;
+}
+
+/* ─── Containers: flat ───
+   Every card-style container (.parchment, .quest-banner, .army-card,
+   .codex-entry, .character-card) flattens to no background, no border,
+   no shadow. Space separates things. */
+:root[data-theme="calm"] .parchment,
+:root[data-theme="calm"] .parchment-active,
+:root[data-theme="calm"] .quest-banner,
+:root[data-theme="calm"] .army-card,
+:root[data-theme="calm"] .codex-entry,
+:root[data-theme="calm"] .character-card {
+  background: transparent;
+  border: none;
   box-shadow: none;
-  border: 1px solid var(--path-deep);
+  backdrop-filter: none;
 }
 
-/* ────────────────────────────────────────────────────────────────────────
-   Ambient-animation freeze (Calm only).
-   Specificity: :root[data-theme="calm"] .class beats a bare .class, so
-   these rules override without !important.
+/* The tab-active class (previously a gold gradient pill) neutralized
+   in case a tab ever renders through a non-nav path. */
+:root[data-theme="calm"] .tab-active {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
 
-   KEPT alive (deliberate):
-     - .breath (4s) — the breathing animation IS the practice.
-     - .fade-in / .float-down / .scroll-reveal — one-shot transitions
-       communicate state change, not ambient energy.
-     - .shadow-bar-fill width transition — honesty about setback.
+/* ─── Buttons become links ───
+   .btn-gold and .btn-ghost lose their button appearance. Text with a
+   hairline underline replaces the gradient pill. Min-height (44px)
+   from .btn preserved via the base rule for tap target. */
+:root[data-theme="calm"] .btn-gold,
+:root[data-theme="calm"] .btn-ghost {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.70);
+  color: rgba(var(--ink-rgb), 0.95);
+  border-radius: 0;
+  padding: 2px 0 6px;
+  box-shadow: none;
+  font-weight: 400;
+  font-family: var(--font-serif);
+}
+:root[data-theme="calm"] .btn-gold:hover,
+:root[data-theme="calm"] .btn-ghost:hover {
+  transform: none;
+  border-bottom-color: rgba(var(--ink-rgb), 0.95);
+  box-shadow: none;
+  background: transparent;
+}
+:root[data-theme="calm"] .btn-danger {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.40);
+  color: rgba(var(--ink-rgb), 0.70);
+  border-radius: 0;
+  padding: 2px 0 6px;
+}
 
-   DROPPED:
-     - .pulse-glow, .shimmer, .danger-pulse — ambient agitation.
-     - .quest-banner::before shimmer sweep — decorative.
-     - .feedback-fab.active fabPulse — alarm language.
-     - .ember drift — ambient particles.
-     - .float-up (point-gain floater) — celebration dopamine.
-   ──────────────────────────────────────────────────────────────────────── */
+/* ─── Progress bars: hidden ───
+   Shadow bar is replaced by .shadow-sentence (rendered conditionally
+   in render/today.js). Generic progress bars hidden — no engine
+   feature currently surfaces critical data through them on Today. */
+:root[data-theme="calm"] .progress-bar,
+:root[data-theme="calm"] .shadow-bar-fill,
+:root[data-theme="calm"] [data-shadow-bar] {
+  display: none;
+}
+
+/* ─── Checkboxes: become em-dashes ───
+   The done state is struck-through text. The checkmark circle is
+   gone; the em-dash prefix signals row-as-item. */
+:root[data-theme="calm"] .checkbox,
+:root[data-theme="calm"] .checkbox.done {
+  width: auto;
+  height: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+:root[data-theme="calm"] .checkbox::before {
+  content: "—";
+  color: rgba(var(--ink-rgb), 0.18);
+  font-size: 16px;
+  margin-right: 14px;
+}
+:root[data-theme="calm"] .habit-done .checkbox::before,
+:root[data-theme="calm"] .checkbox.done::before {
+  color: rgba(var(--ink-rgb), 0.40);
+}
+:root[data-theme="calm"] .habit-done {
+  background: transparent;
+  border-left: none;
+  text-decoration: line-through;
+  text-decoration-color: rgba(var(--ink-rgb), 0.18);
+  color: rgba(var(--ink-rgb), 0.40);
+}
+:root[data-theme="calm"] .habit-missed {
+  background: transparent;
+  border-left: none;
+  opacity: 1;
+  color: rgba(var(--ink-rgb), 0.40);
+}
+:root[data-theme="calm"] .habit-row:hover {
+  background: transparent;
+  transform: none;
+}
+
+/* ─── FAB: hairline ring ───
+   32×32 transparent fill, ink ring. Findable for beta testers; not
+   loudest element on any view. */
+:root[data-theme="calm"] .feedback-fab {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid rgba(var(--ink-rgb), 0.40);
+  box-shadow: none;
+  color: rgba(var(--ink-rgb), 0.70);
+  font-size: 13px;
+  font-family: var(--font-sans);
+}
+:root[data-theme="calm"] .feedback-fab:hover {
+  transform: none;
+  border-color: rgba(var(--ink-rgb), 0.70);
+}
+:root[data-theme="calm"] .feedback-fab.active {
+  background: transparent;
+  border-color: rgba(var(--ink-rgb), 0.95);
+  color: rgba(var(--ink-rgb), 0.95);
+  box-shadow: none;
+  animation: none;
+}
+
+/* ─── Anchors: quiet ink ─── */
+:root[data-theme="calm"] a {
+  color: rgba(var(--ink-rgb), 0.70);
+  text-decoration-color: rgba(var(--ink-rgb), 0.18);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+:root[data-theme="calm"] a:hover {
+  color: rgba(var(--ink-rgb), 0.95);
+  text-decoration-color: rgba(var(--ink-rgb), 0.40);
+}
+/* Anchors inside parchment (sutta viewer) stay dark-on-cream. */
+:root[data-theme="calm"] .scroll-paper a {
+  color: var(--parchment-heading);
+  text-decoration-color: rgba(90, 68, 40, 0.5);
+}
+
+/* ─── Character-card hover: affordance without spring ─── */
+:root[data-theme="calm"] .character-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ─── Shadow sentence (new component) ───
+   Renders conditionally in render/today.js when shadow > 0. Absence
+   of the sentence is the "all clear" signal. Two severity tiers per
+   game-designer guard:
+     - default (shadow 1–50): italic, quiet ink — honest but soft.
+     - shadow-critical (shadow > 75, set on <html>): body opacity,
+       upright — re-surfaces environmental urgency in Calm's own
+       visual language without reintroducing a bar, red, or number. */
+.shadow-sentence {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: rgba(var(--ink-rgb), 0.40);
+  line-height: 1.6;
+  margin-top: 32px;
+}
+:root[data-shadow-critical="true"] .shadow-sentence {
+  color: rgba(var(--ink-rgb), 0.70);
+  font-style: normal;
+}
+
+/* ─── Ambient-animation freeze ───
+   Kept alive (deliberate): .breath (the practice), .fade-in,
+   .scroll-reveal (one-shot state transitions), .shadow-bar-fill
+   width transition (now moot — shadow bar hidden — but leaving it
+   alive harmless if any other element inherits the rule).
+
+   Dropped: pulse-glow, shimmer, danger-pulse, fabPulse, ember drift,
+   quest-banner shimmer, float-up (celebration dopamine). */
 :root[data-theme="calm"] .pulse-glow,
 :root[data-theme="calm"] .shimmer,
 :root[data-theme="calm"] .danger-pulse,
