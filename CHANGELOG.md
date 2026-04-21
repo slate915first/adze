@@ -4,9 +4,9 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
-## [15.19.2] — 2026-04-21 · setup-progress persistence — close the 1.5h-loss class entirely
+## [15.19.3] — 2026-04-21 · setup-progress persistence — close the 1.5h-loss class entirely
 
-(Versioned as 15.19.2 to follow the existing local v15.19.0 / v15.19.1 theming progression; semantically this is the v15.18.0 tester-bug-cluster follow-up.)
+(Versioned as 15.19.3 to avoid a label collision with the v15.19.2 theme motion-reduction commit that landed the same day; semantically this is the v15.18.0 tester-bug-cluster follow-up.)
 
 ### Fixed
 
