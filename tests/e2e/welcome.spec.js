@@ -50,12 +50,14 @@ test.describe('Welcome page (closed beta)', () => {
     // Initial: no data-theme attribute (classic is the default).
     await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'calm');
 
-    // Tap Calm chip → attribute flips to "calm".
+    // Tap the Classic-footer's Calm chip → attribute flips to "calm".
     await page.getByRole('button', { name: /^calm$/i }).click();
     await expect(page.locator('html')).toHaveAttribute('data-theme', 'calm');
 
-    // Tap Classic chip → attribute removed.
-    await page.getByRole('button', { name: /^classic$/i }).click();
+    // v15.20.1 — on Calm the full Classic footer is hidden (containing the
+    // classic/calm chip pair). The revert path is the "back to classic"
+    // button rendered only when calmActive.
+    await page.getByRole('button', { name: /back to classic/i }).click();
     await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'calm');
   });
 });

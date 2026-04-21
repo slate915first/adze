@@ -1877,5 +1877,11 @@
 
   "welcome.theme_label":                            "Visual",
   "welcome.theme_classic":                          "Classic",
-  "welcome.theme_calm":                             "Calm"
+  "welcome.theme_calm":                             "Calm",
+
+  "welcome.calm_subtitle":                          "A journal for Theravāda practice.",
+  "welcome.calm_beta_line":                         "Invitation only — write hello@adze.life.",
+  "welcome.calm_footer":                            "private by default",
+  "welcome.calm_footer_link":                       "privacy",
+  "welcome.calm_revert":                            "← back to classic"
 }

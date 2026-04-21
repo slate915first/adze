@@ -4,6 +4,29 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.20.1] — 2026-04-21 · Variant C · Welcome markup fork
+
+Commit 2 of the Variant C sequence. Classic welcome unchanged; Calm welcome strips to a monastic 5-element composition.
+
+### Added
+
+- **`data-classic-only` attribute** on decorative Welcome elements that should be absent on Calm: emoji wheel icon, italic tagline, `welcome.one_line` body sentence, closed-beta pill, sign-in hint, verbose beta explainer, full Classic footer (including the Datenschutz/Impressum row and the theme chips row). Paired with the `:root[data-theme="calm"] [data-classic-only] { display: none }` rule shipped in v15.20.0. Pure additive markup — Classic renders pixel-identical.
+- **Hairline SVG dharma wheel** (22×22, ink-at-0.40, 48px margin-bottom) rendered only when `calmActive`. Replaces the emoji tile which read as purple "wellness-app" chroma against the teak base.
+- **Calm-specific subtitle**: single quiet sentence "*A journal for Theravāda practice.*" at 15px with 56px bottom margin. More restrained than `welcome.one_line`'s Classic paragraph.
+- **Calm-specific beta line**: one italic "*Invitation only — write hello@adze.life.*" at 13px, quiet-ink. Replaces the verbose Classic explainer.
+- **Calm footer**: single row, 10px sans-serif with 0.12em letter-spacing, centered, quiet-ink. Three links — `private by default`, `privacy`, `← back to classic`. The revert link exists so a user who reached Calm pre-auth can get back to Classic without signing in.
+- **i18n keys** added: `welcome.calm_subtitle`, `welcome.calm_beta_line`, `welcome.calm_footer`, `welcome.calm_footer_link`, `welcome.calm_revert`.
+
+### Changed
+
+- `tests/e2e/welcome.spec.js` — the theme-chip toggle test updated: after flipping to Calm, the Classic chip is no longer visible (hidden via `data-classic-only`); the revert path is the Calm footer's "back to classic" button. Test clicks that instead. Covers the actual user-reachable pre-auth revert path.
+
+### Verified
+
+- Playwright full suite: 13/13 passing (theme-tokens 8/8 + welcome 5/5).
+- Classic Welcome: every element renders identically to v15.20.0 (pre-fork).
+- Calm Welcome: SVG wheel, wordmark (solid ink), subtitle sentence, sign-in as hairline-underlined link, italic beta line, single-row footer with three quiet links.
+
 ## [15.20.0] — 2026-04-21 · Variant C Calm redesign — CSS layer
 
 First of a 5-commit sequence implementing Claude Design's "Variant C single-screen" Calm redesign. This commit is **CSS only** — zero markup change, zero JS change. Classic is pixel-identical by construction. The remaining 4 commits (welcome markup fork, ShadowSentence helpers, renderTodayCalm branch, Settings preference) follow on top of this foundation.

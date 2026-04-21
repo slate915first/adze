@@ -8,6 +8,14 @@
 // The long-form intro (diagnostic / scaffolding / tradition) and the full
 // privacy note live behind the "Read the full privacy note" link, which opens
 // the privacy_detail modal.
+//
+// v15.20.1 — Variant C fork. Classic rendering unchanged. On Calm
+// (data-theme="calm" on <html>), decorative elements are hidden via
+// [data-classic-only]; Calm-only elements (hairline SVG wheel, quiet
+// subtitle, italic beta line, monastic-style footer) render only when
+// calmActive is true. Theme chips move to Settings on Calm but a small
+// "back to classic" revert remains on Welcome so a pre-auth user who
+// landed on Calm can get back without signing in first.
 // ============================================================================
 
 function renderWelcome() {
@@ -25,19 +33,51 @@ function renderWelcome() {
     <div class="fade-in min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center max-w-md mx-auto">
 
       <div class="flex-1 flex flex-col items-center justify-center w-full">
-        <div class="text-6xl md:text-7xl mb-4 breath">☸️</div>
+
+        <!-- Icon: Classic emoji wheel (gilded tile, breathing animation).
+             Hidden on Calm; the hairline SVG below replaces it. -->
+        <div class="text-6xl md:text-7xl mb-4 breath" data-classic-only>☸️</div>
+        ${calmActive ? `
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
+               stroke="currentColor" stroke-width="1"
+               style="color: rgba(var(--ink-rgb), 0.40); display: block; margin: 0 auto 48px;">
+            <circle cx="11" cy="11" r="9"/>
+            <circle cx="11" cy="11" r="1.5"/>
+            <line x1="11" y1="2" x2="11" y2="20"/>
+            <line x1="2" y1="11" x2="20" y2="11"/>
+            <line x1="4.6" y1="4.6" x2="17.4" y2="17.4"/>
+            <line x1="17.4" y1="4.6" x2="4.6" y2="17.4"/>
+          </svg>
+        ` : ''}
+
+        <!-- Wordmark: visible on both themes. The Calm CSS override strips
+             the gold-text gradient to solid strong ink. -->
         <h1 class="text-4xl md:text-5xl font-bold gold-text mb-1">${APP_NAME}</h1>
-        <p class="text-base md:text-lg serif italic text-amber-200/80 mb-5">${APP_TAGLINE}</p>
-        <p class="text-sm text-amber-100/80 serif leading-relaxed mb-6 max-w-xs">
+
+        <!-- Tagline: Classic only. Italic amber would pull focus from the
+             wordmark on Calm. -->
+        <p class="text-base md:text-lg serif italic text-amber-200/80 mb-5" data-classic-only>${APP_TAGLINE}</p>
+
+        <!-- Body sentence: Classic renders the full welcome.one_line.
+             Calm renders a shorter quiet subtitle with generous margin. -->
+        <p class="text-sm text-amber-100/80 serif leading-relaxed mb-6 max-w-xs" data-classic-only>
           ${t('welcome.one_line')}
         </p>
+        ${calmActive ? `
+          <p style="font-size: 15px; color: rgba(var(--ink-rgb), 0.40); margin-bottom: 56px; max-width: 340px; line-height: 1.6;">
+            ${t('welcome.calm_subtitle')}
+          </p>
+        ` : ''}
 
+        <!-- Closed-beta pill: Classic only. -->
         ${publicSignup ? '' : `
-          <div class="mb-6 px-3 py-1.5 rounded-full text-[11px] tracking-wider uppercase text-amber-300/85 border border-amber-700/40 bg-amber-900/20">
+          <div class="mb-6 px-3 py-1.5 rounded-full text-[11px] tracking-wider uppercase text-amber-300/85 border border-amber-700/40 bg-amber-900/20" data-classic-only>
             Closed beta · by invitation
           </div>
         `}
 
+        <!-- Primary CTA: visible on both. Calm CSS override flattens
+             .btn-gold to a hairline-underlined link. -->
         ${publicSignup
           ? `
             <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="startSetup()">${t('welcome.begin_button')}</button>
@@ -46,27 +86,32 @@ function renderWelcome() {
             </button>
           `
           : `
-            <!-- v15.11 — closed beta: magic-link sign-in is the only entry.
-                 Anonymous "Begin" reappears automatically when
-                 ADZE_PUBLIC_SIGNUP_ENABLED flips to true. -->
             <button class="btn btn-gold text-lg px-10 py-3 w-full max-w-xs" onclick="openAuth('magic-request')">
               ✉️  Sign in with email
             </button>
-            <p class="mt-3 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
+            <p class="mt-3 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs" data-classic-only>
               ${t('welcome.signin_hint')}
             </p>
           `
         }
 
+        <!-- Beta explainer: Classic renders the full explanatory paragraph
+             with email link. Calm renders a single italic line. -->
         ${publicSignup ? '' : `
-          <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs">
+          <p class="mt-4 text-[11px] text-amber-100/55 italic leading-relaxed max-w-xs" data-classic-only>
             Closed beta — invite-only. To request access, email
             <a href="mailto:hello@adze.life" class="text-amber-300 underline">hello@adze.life</a>.
           </p>
+          ${calmActive ? `
+            <p style="font-size: 13px; font-style: italic; color: rgba(var(--ink-rgb), 0.40); margin-top: 16px; max-width: 340px;">
+              ${t('welcome.calm_beta_line')}
+            </p>
+          ` : ''}
         `}
       </div>
 
-      <div class="w-full pt-6 mt-6 border-t border-amber-800/30 text-[11px] text-amber-100/55 leading-relaxed">
+      <!-- Classic footer: privacy note + Datenschutz/Impressum + theme chips. -->
+      <div class="w-full pt-6 mt-6 border-t border-amber-800/30 text-[11px] text-amber-100/55 leading-relaxed" data-classic-only>
         <div>
           <span>🔒 ${t('welcome.footer_privacy')}</span>
           <button onclick="openPrivacyDetail()" class="text-amber-300/80 hover:text-amber-200 underline ml-1">
@@ -82,11 +127,6 @@ function renderWelcome() {
             ${t('welcome.imprint_link')}
           </button>
         </div>
-        <!-- Discreet theme chips. Footer placement is deliberate: a
-             first-time user's eye goes to the primary CTA, not here.
-             A returning beta user who cleared cache finds their
-             preference easily. Reads data-theme attribute (set by the
-             preferences.js IIFE) to highlight the active option. -->
         <div class="mt-2 flex justify-center items-center gap-2 text-[10px] text-amber-100/45"
              data-component="welcome.theme_chips">
           <span>${t('welcome.theme_label')}</span>
@@ -99,6 +139,26 @@ function renderWelcome() {
           </button>
         </div>
       </div>
+
+      <!-- Calm footer: single quiet line, sans-serif, all-caps letter-
+           spaced. Three links — privacy, and a revert-to-classic chip
+           for a user who reached Calm pre-auth and wants out. -->
+      ${calmActive ? `
+        <div style="margin-top: 48px; font-family: var(--font-sans); font-size: 10px; letter-spacing: 0.12em;
+                    text-align: center; color: rgba(var(--ink-rgb), 0.40);">
+          ${t('welcome.calm_footer')}
+          <span style="margin: 0 6px;">·</span>
+          <button onclick="openPrivacyDetail()"
+                  style="background: none; border: none; color: inherit; font: inherit; letter-spacing: inherit;
+                         text-decoration: underline; text-decoration-color: rgba(var(--ink-rgb), 0.18);
+                         padding: 0; cursor: pointer;">${t('welcome.calm_footer_link')}</button>
+          <span style="margin: 0 6px;">·</span>
+          <button onclick="setThemeBeforeAuth('classic')"
+                  style="background: none; border: none; color: inherit; font: inherit; letter-spacing: inherit;
+                         text-decoration: underline; text-decoration-color: rgba(var(--ink-rgb), 0.18);
+                         padding: 0; cursor: pointer;">${t('welcome.calm_revert')}</button>
+        </div>
+      ` : ''}
 
     </div>
   `;
