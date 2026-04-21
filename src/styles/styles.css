@@ -15,28 +15,28 @@
        stored as "R, G, B" triplets and used via rgba(var(--foo-rgb), α). */
 
     /* Surface — dark base */
-    --surface-0: var(--surface-0);
-    --surface-1: var(--surface-1);
-    --surface-2: var(--surface-2);
-    --surface-ink: var(--surface-ink);
+    --surface-0: #050308;
+    --surface-1: #0a0612;
+    --surface-2: #1a1530;
+    --surface-ink: #e6dcc8;
 
     /* Path — gold / lotus / progression */
-    --path-core: var(--path-core);
-    --path-bright: var(--path-bright);
-    --path-deep: var(--path-deep);
-    --path-rgb: 244, 228, 188;       /* cream-gold (= var(--path-bright)) */
+    --path-core: #d4a857;
+    --path-bright: #f4e4bc;
+    --path-deep: #8b6914;
+    --path-rgb: 244, 228, 188;       /* cream-gold (= #f4e4bc) */
     --path-mid-rgb: 212, 184, 140;   /* warm gold */
-    --path-core-rgb: 212, 168, 87;   /* (= var(--path-core)) */
+    --path-core-rgb: 212, 168, 87;   /* (= #d4a857) */
 
     /* Parchment — scroll paper */
-    --parchment-ink: var(--parchment-ink);
-    --parchment-heading: var(--parchment-heading);
+    --parchment-ink: #2c1810;
+    --parchment-heading: #5c2c0a;
 
     /* Māra — hindrance / setback */
-    --mara-core: var(--mara-core);
-    --mara-deep: var(--mara-deep);
-    --mara-shadow: var(--mara-shadow);
-    --mara-ink: var(--mara-ink);
+    --mara-core: #dc2626;
+    --mara-deep: #991b1b;
+    --mara-shadow: #7f1d1d;
+    --mara-ink: #fca5a5;
     --mara-rgb: 220, 38, 38;
     --mara-banner-deep-rgb: 168, 30, 30;
 
@@ -47,7 +47,7 @@
     --released-rgb: 34, 197, 94;
 
     /* Accent */
-    --ember: var(--ember);
+    --ember: #fbbf24;
 
     /* Overlay — body::before dread tint */
     --dread-rgb: 20, 0, 0;

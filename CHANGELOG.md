@@ -4,6 +4,24 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.6] — 2026-04-21 · HOTFIX — restore readability (circular CSS var references)
+
+Critical fix. v15.19.0 shipped a broken `:root` block in `src/styles/styles.css` where every solid-hex token was declared as `var(--itself)` — circular self-reference. Browsers resolve these as invalid → empty string → rules that consumed those tokens lost their values entirely:
+
+- Body radial-gradient (three surface tokens) → no background
+- `color: var(--surface-ink)` → text fell back to initial/inherited
+- Borders, button backgrounds, scroll-paper, btn-gold → broken
+
+The result on adze.life was a nearly-unreadable page regardless of theme choice. Classic users saw the app break; calm users saw it break in a different way.
+
+Root cause: during v15.19.0's mechanical extraction, the `replace_all` sweep that turned `#1a1530` into `var(--surface-2)` hit the `:root` declaration `--surface-2: #1a1530;` too, producing `--surface-2: var(--surface-2);`. Same pattern for every solid-hex token (14 tokens in total). The rgb-triplet tokens were not affected because their declaration value shape (`244, 228, 188`) did not match any `replace_all` target.
+
+Fix: restored the 14 hex literal values in the `:root` block. Rule bodies already correctly reference `var(--surface-*)` etc., so no other changes needed.
+
+Apology: this bug should have been caught by opening the app in a browser after v15.19.0, which was not done (the "test each step" discipline only ran vitest, which does not cover CSS-variable resolution). Adding a browser-smoke-test step to the commit-discipline going forward.
+
+No JS change. APP_VERSION → 15.19.6.
+
 ## [15.19.5] — 2026-04-21 · Calm theme refinement — Claude Design palette integration
 
 Second pass on the Calm theme shipped in v15.19.4, integrating a refined palette reviewed by Claude Design. Shifts the aesthetic from "sepia kuṭi-at-dusk" to **raw unfinished teak**: truer to the forest-tradition register, less candlelit, less decorative. Also refines the motion posture: the breath animation and shadow-bar transition now survive in calm mode because both are functional (the practice itself, and honest setback signal) rather than ambient.
