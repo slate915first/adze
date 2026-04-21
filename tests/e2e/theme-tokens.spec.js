@@ -47,6 +47,28 @@ async function resolveAllTokens(page, names) {
   }, names);
 }
 
+// Enumerate tokens declared in theme-calm.css under :root[data-theme="calm"].
+// The v15.19.0 circular-ref bug happened in this exact block shape but in
+// styles.css; the bug class applies equally here. This function mirrors
+// readBaseTokens for the calm theme.
+async function readCalmTokens(page) {
+  return page.evaluate(() => {
+    const names = [];
+    for (const sheet of document.styleSheets) {
+      if (!sheet.href || !sheet.href.includes('theme-calm.css')) continue;
+      for (const rule of sheet.cssRules || []) {
+        if (rule.type !== CSSRule.STYLE_RULE) continue;
+        if (rule.selectorText !== ':root[data-theme="calm"]') continue;
+        for (let i = 0; i < rule.style.length; i++) {
+          const prop = rule.style[i];
+          if (prop.startsWith('--')) names.push(prop);
+        }
+      }
+    }
+    return names;
+  });
+}
+
 test.describe('Design tokens — regression guard', () => {
   test('every :root token resolves to a non-empty value in classic theme', async ({
     page,
@@ -74,6 +96,50 @@ test.describe('Design tokens — regression guard', () => {
       .filter(([, v]) => v === '')
       .map(([n]) => n);
     expect(empty, 'tokens that failed to resolve in calm theme').toEqual([]);
+  });
+
+  test('theme-calm.css :root[data-theme="calm"] — every declared token resolves (when active)', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await page.evaluate(() =>
+      document.documentElement.setAttribute('data-theme', 'calm')
+    );
+    const names = await readCalmTokens(page);
+    // Calm may be empty in theory; if so the test is vacuous — fine.
+    if (names.length === 0) return;
+    const resolved = await resolveAllTokens(page, names);
+    const empty = Object.entries(resolved)
+      .filter(([, v]) => v === '')
+      .map(([n]) => n);
+    expect(empty, 'calm-theme tokens that failed to resolve').toEqual([]);
+  });
+
+  test('theme-calm.css — no circular self-reference in :root[data-theme="calm"]', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const circular = await page.evaluate(() => {
+      const found = [];
+      for (const sheet of document.styleSheets) {
+        if (!sheet.href || !sheet.href.includes('theme-calm.css')) continue;
+        for (const rule of sheet.cssRules || []) {
+          if (rule.type !== CSSRule.STYLE_RULE) continue;
+          if (rule.selectorText !== ':root[data-theme="calm"]') continue;
+          for (let i = 0; i < rule.style.length; i++) {
+            const name = rule.style[i];
+            if (!name.startsWith('--')) continue;
+            const value = rule.style.getPropertyValue(name).trim();
+            const selfRefPattern = new RegExp(
+              `^var\\(\\s*${name.replace(/-/g, '\\-')}\\s*[,)]`
+            );
+            if (selfRefPattern.test(value)) found.push(name);
+          }
+        }
+      }
+      return found;
+    });
+    expect(circular, 'circular self-references in theme-calm.css').toEqual([]);
   });
 
   test('no token self-references itself (circular ref guard)', async ({ page }) => {
