@@ -3,103 +3,152 @@
  * ----------------------------------------------------------------------------
  * Second theme for Adze. Activated when the <html> element carries the
  * attribute data-theme="calm". Sets overrides for the CSS custom properties
- * declared in styles.css :root — no rule below the :root block of either
- * stylesheet needs to change.
+ * declared in styles.css :root, plus a few structural overrides for rules
+ * whose presentation (not their color) needs to change (flat body, dropped
+ * gradients, removed glows).
  *
- * Design posture (dhamma-designer brief, 2026-04-21):
- *   - Forest-tradition aesthetic: Wat Pah Pong bare wood, low contrast,
- *     no horror-film dramaturgy around Māra. Bare > decorated. Negative
- *     space is load-bearing.
+ * Design posture — Calm (viveka):
+ *   - Forest-tradition aesthetic: raw unfinished teak, palm-leaf, robed
+ *     indigo-grey. No gold leaf, no red-fire alarm, no stage lighting.
  *   - The passaddhi test: every visual element serves attention or removes
- *     itself. No shouting; no ambient motion; no red alarm language.
- *   - Keep the game scaffolding HONEST. Māra stays named and present.
- *     Shadow bar stays visible. Downgrade/bump banners, Next Step CTA,
- *     three-column grid are never hidden.
- *   - Avoid wellness-spa vocabulary in palette: this is not sage-and-linen.
- *     Warm kuṭi-at-dusk, muted but not washed-out.
+ *     itself. The room stops vibrating.
+ *   - Keep the game scaffolding HONEST. Māra stays named. Shadow bar stays
+ *     fully visible — just desaturated. Nothing engine-driven is hidden.
+ *   - Motion: breath (4s) stays because it IS the practice. Shadow-bar
+ *     transition stays because it is honesty about setback. Everything
+ *     else ambient — shimmer, pulse-glow, danger-pulse, fabPulse, float-up,
+ *     ember drift, body::before dread tint — drops.
+ *
+ * Palette source: Claude Design review 2026-04-21 (Calm / viveka brief).
  * ============================================================================ */
 
 :root[data-theme="calm"] {
-  /* ─── Surfaces ───
-     Warm charcoal → sepia-dark, like a meditation hall at dusk. Keeps
-     readability for dark-room practice but drops the violet-theatrical
-     register of the classic theme. */
-  --surface-0: #17150f;   /* deepest */
-  --surface-1: #221f18;   /* body mid */
-  --surface-2: #2e2a22;   /* body rise, tooltip, btn-gold text surface */
-  --surface-ink: #d8cfc1; /* soft parchment — lower contrast than classic */
+  /* ─── Surfaces — raw unfinished teak ─── */
+  --surface-0: #1a1613;
+  --surface-1: #201b16;   /* body flat background (see structural override) */
+  --surface-2: #262019;
+  --surface-ink: #c9beac;
 
-  /* ─── Path — gold / lotus / progression ───
-     Dusty amber, not glowing gold. Warm, earned, not theatrical. */
-  --path-core: #b89968;       /* signature amber, was #d4a857 */
-  --path-bright: #d4c39a;     /* bone-gold, was #f4e4bc */
-  --path-deep: #6b5636;       /* deep warm brown, was #8b6914 */
-  --path-rgb: 212, 195, 154;     /* replaces 244, 228, 188 */
-  --path-mid-rgb: 184, 153, 104; /* replaces 212, 184, 140 */
-  --path-core-rgb: 155, 128, 86; /* replaces 212, 168, 87 */
+  /* ─── Path — no gold leaf, muted bone-wax ─── */
+  --path-core: #b8a278;
+  --path-bright: #d4c4a0;
+  --path-deep: #8a7550;
+  --path-rgb: 212, 196, 160;
+  --path-mid-rgb: 184, 162, 120;
+  --path-core-rgb: 138, 117, 80;
 
-  /* ─── Parchment — scroll paper ───
-     Unchanged ink; a sutta scroll is a sutta scroll in either theme.
-     The parchment mid-tone (second gradient stop) drifts slightly
-     warmer to match the palette shift. */
+  /* ─── Parchment — actual palm-leaf ─── */
+  --parchment-ink: #3a2f22;
+  --parchment-heading: #5a4428;
+  --parchment-mid-rgb: 216, 198, 160;
 
-  /* ─── Māra — hindrance / setback ───
-     Named, not screaming. Dim bronze-brown replaces crimson. The army
-     cards remain a distinct surface (so the practitioner can still
-     locate the Māra information) but the visual alarm is gone. */
-  --mara-core: #8a6550;        /* was #dc2626 */
-  --mara-deep: #5a4034;        /* was #991b1b */
-  --mara-shadow: #3f2a21;      /* was #7f1d1d */
-  --mara-ink: #c9a999;         /* was #fca5a5 */
-  --mara-rgb: 138, 101, 80;       /* was 220, 38, 38 */
-  --mara-banner-deep-rgb: 90, 64, 52;  /* was 168, 30, 30 */
-  --mara-surface-rgb: 45, 32, 26;      /* was 40, 10, 10 */
-  --mara-surface-deep-rgb: 30, 22, 18; /* was 20, 5, 5 */
+  /* ─── Māra — honest but not theatrical, oxidized iron (not fire) ─── */
+  --mara-core: #8a4a3a;
+  --mara-deep: #5a2e24;
+  --mara-shadow: #3f2019;
+  --mara-ink: #c89082;
+  --mara-rgb: 138, 74, 58;
+  --mara-banner-deep-rgb: 90, 46, 36;
+  --mara-surface-rgb: 40, 24, 20;
+  --mara-surface-deep-rgb: 28, 16, 13;
 
-  /* ─── Sangha — community ───
-     Warm muted plum, not saturated purple. Present but quiet. */
-  --sangha-rgb: 120, 100, 130;  /* was 168, 85, 247 */
+  /* ─── Sangha — robed indigo-grey, not purple neon ─── */
+  --sangha-rgb: 138, 128, 168;
 
-  /* ─── Released — defeated army ───
-     Soft sage-gray, not alert green. Completion is not celebration. */
-  --released-rgb: 120, 140, 110; /* was 34, 197, 94 */
+  /* ─── Released — forest moss, not success-green ─── */
+  --released-rgb: 122, 140, 96;
 
-  /* ─── Accent ───
-     Ember warmth kept but dimmed. Particle animations suppress in
-     Step 4 via motion dial; this value is for static ember colors. */
-  --ember: #a8875a;  /* was #fbbf24 */
+  /* ─── Ember — demoted, near-invisible ───
+     Used only by the kasiṇa / focus-timer surface in calm mode; any
+     ambient drift usage is killed via the animation block below. */
+  --ember: #6b5838;
 
-  /* ─── Overlay — body::before dread tint ───
-     Warm gray replaces red-black. The shadow-level feedback still
-     renders (honest diagnostic), but without the horror-film register. */
-  --dread-rgb: 35, 30, 25;  /* was 20, 0, 0 */
+  /* ─── Overlay — dim, not red ───
+     Black dread instead of warm-grey. The body::before transition is
+     suppressed in the structural block below so high shadow levels no
+     longer repaint-vibrate the whole viewport; the dread is still there
+     as a static darken, just unvarying. */
+  --dread-rgb: 0, 0, 0;
 
   /* ─── Motion dial ───
-     Declarative value used by future rules that consume it. The actual
-     ambient-animation freeze is done by the explicit selector block
-     below — mirrors the @media (prefers-reduced-motion) block in
-     styles.css so calm mode is freeze-equivalent without the OS flag. */
-  --motion-ambient: 0;
+     Informational value. Current architecture enforces calm motion via
+     the explicit selector block below (kills named ambient animations)
+     while preserving .breath, .fade-in, and the shadow-bar transition
+     (all functional or state-communicating, not ambient). A future
+     theme-overlay architecture could wire --motion-ambient into
+     animation-duration calc() for a smooth dial, but not today. */
+  --motion-ambient: 0.25;
 
   /* ─── Visual-intensity dial ───
-     Keep the shadow bar honest (header still renders the number), but
-     drop the full-screen darkening that drove the horror-film register.
-     Weights close to 0 but not exactly 0: at very-high shadow levels
-     (80+) the practitioner still gets a quiet ambient signal that
-     something is off, without the theatrical darkening. */
-  --dread-weight: 0.15;
-  --shadow-overlay-weight: 0.1;
+     Near-zero weights. The shadow bar in the header renders the number
+     honestly; the full-screen darkening is effectively gone. */
+  --dread-weight: 0.12;
+  --shadow-overlay-weight: 0.08;
 }
 
-/* Ambient-animation freeze in calm mode.
+/* ────────────────────────────────────────────────────────────────────────
+   Structural overrides (Calm only) — rules whose PRESENTATION, not color,
+   needs to change. Each targets a specific rule in styles.css and
+   neutralizes its decorative intent.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Flat body background — kill the radial gradient. Warm teak instead
+   of violet-night atmosphere. The dread overlays (body::before, ::after)
+   still apply, but at calm-weight they barely register. */
+:root[data-theme="calm"] body {
+  background: var(--surface-1);
+}
+
+/* body::before — drop the transition so the dread tint does not
+   animate/repaint on shadow-level change. The static darken (already
+   near-zero via --dread-weight) is present but no longer vibrates
+   the viewport. */
+:root[data-theme="calm"] body::before {
+  transition: none;
+}
+
+/* Gold-text shimmer gradient → flat bone-wax. The classic theme's
+   three-stop gradient reads as jewelry in calm mode; solid color is
+   truer to the forest-tradition register. */
+:root[data-theme="calm"] .gold-text {
+  background: none;
+  -webkit-background-clip: unset;
+          background-clip: unset;
+  -webkit-text-fill-color: unset;
+  color: var(--path-bright);
+}
+
+/* Scroll-paper — drop the 50px gold glow; a palm-leaf sutta is a
+   quiet object, not a spotlit relic. Single hairline border in
+   path-deep instead. */
+:root[data-theme="calm"] .scroll-paper {
+  box-shadow: none;
+  border: 1px solid var(--path-deep);
+}
+
+/* ────────────────────────────────────────────────────────────────────────
+   Ambient-animation freeze (Calm only).
    Specificity: :root[data-theme="calm"] .class beats a bare .class, so
-   these rules override without !important. Mirrors the @media
-   (prefers-reduced-motion) block in styles.css. */
+   these rules override without !important.
+
+   KEPT alive (deliberate):
+     - .breath (4s) — the breathing animation IS the practice.
+     - .fade-in / .float-down / .scroll-reveal — one-shot transitions
+       communicate state change, not ambient energy.
+     - .shadow-bar-fill width transition — honesty about setback.
+
+   DROPPED:
+     - .pulse-glow, .shimmer, .danger-pulse — ambient agitation.
+     - .quest-banner::before shimmer sweep — decorative.
+     - .feedback-fab.active fabPulse — alarm language.
+     - .ember drift — ambient particles.
+     - .float-up (point-gain floater) — celebration dopamine.
+   ──────────────────────────────────────────────────────────────────────── */
 :root[data-theme="calm"] .pulse-glow,
-:root[data-theme="calm"] .breath,
 :root[data-theme="calm"] .shimmer,
 :root[data-theme="calm"] .danger-pulse,
 :root[data-theme="calm"] .ember,
+:root[data-theme="calm"] .float-up,
 :root[data-theme="calm"] .quest-banner::before,
 :root[data-theme="calm"] .feedback-fab.active {
   animation: none;

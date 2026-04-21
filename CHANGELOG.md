@@ -4,6 +4,36 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.5] — 2026-04-21 · Calm theme refinement — Claude Design palette integration
+
+Second pass on the Calm theme shipped in v15.19.4, integrating a refined palette reviewed by Claude Design. Shifts the aesthetic from "sepia kuṭi-at-dusk" to **raw unfinished teak**: truer to the forest-tradition register, less candlelit, less decorative. Also refines the motion posture: the breath animation and shadow-bar transition now survive in calm mode because both are functional (the practice itself, and honest setback signal) rather than ambient.
+
+### Changed
+
+- **Surface palette** — warmer, less sepia: `#1a1613 / #201b16 / #262019 / #c9beac` (was `#17150f / #221f18 / #2e2a22 / #d8cfc1`).
+- **Path palette** — muted bone-wax instead of dusty amber: `#b8a278 / #d4c4a0 / #8a7550` + rgb `212,196,160`.
+- **Māra palette** — oxidized iron, not bronze-brown: `#8a4a3a / #5a2e24 / #c89082` + rgb `138,74,58`. Cooler and more honest; still distinct from path, no red alarm.
+- **Sangha** — robed indigo-grey `138,128,168` (was warm-plum `120,100,130`).
+- **Released** — forest moss `122,140,96` (was sage-gray `120,140,110`).
+- **Parchment** — palm-leaf ink `#3a2f22`, heading `#5a4428`, mid-tone rgb `216,198,160` now overridden in calm mode (was inherited from classic).
+- **Ember** — demoted to near-invisible `#6b5838` (was `#a8875a`).
+- **Dread overlay** — black `0,0,0` (was warm-grey `35,30,25`); cleaner dim.
+- **Visual-intensity weights** — `--dread-weight: 0.12`, `--shadow-overlay-weight: 0.08` (slightly lower than v15.19.4's 0.15/0.1).
+
+### Added — structural overrides (calm only)
+
+- **Flat body background** — kills the violet radial-gradient in favor of a solid `var(--surface-1)` teak tone.
+- **`body::before` transition suppressed** — the dread tint no longer animates on shadow-level change; the static darken at calm-weight is present but does not vibrate the viewport.
+- **`.gold-text` → solid bone-wax** — the three-stop gold gradient is stripped; calm reads as solid `var(--path-bright)`.
+- **`.scroll-paper` glow removed** — the 50px gold glow around sutta scrolls is dropped; single hairline `var(--path-deep)` border instead.
+
+### Motion posture refined
+
+- **Kept alive in calm mode**: `.breath` (4s — the breathing animation IS the practice), `.fade-in / .scroll-reveal` (one-shot state transitions), `.shadow-bar-fill width transition` (honest setback signal).
+- **Dropped in calm mode** (additions to the v15.19.4 kill-list): `.float-up` (point-gain floater — celebration dopamine). Others already dropped: pulse-glow, shimmer, danger-pulse, fabPulse, ember drift, quest-banner shimmer.
+
+No JS change. Engine contract preserved. Game remains visible in both themes.
+
 ## [15.19.4] — 2026-04-21 · adaptive theme system — classic ⇄ calm
 
 Scaffolding for multiple visual themes, plus the first second-theme (Calm) that aligns with Theravāda forest-tradition aesthetic — warm charcoal surfaces, dusty amber path, muted bronze for Māra, ambient animations frozen. The game scaffolding (Māra's armies, shadow bar, ranks, quests) remains fully visible in both themes; only the theatrical amplification is dimmed. Nothing engine-driven is hidden — game-designer and dhamma-reviewer aligned on this.
