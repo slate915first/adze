@@ -4,6 +4,47 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.20.3] — 2026-04-21 · Variant C · Calm single-screen Today
+
+Commit 4 of the Variant C sequence. The single-screen monastic Today now ships. Classic rendering is untouched by construction — an internal branch at the top of `renderToday()` dispatches to `renderTodayCalm()` only when `data-theme="calm"`.
+
+### Added — `renderTodayCalm()` in `src/render/today.js`
+
+New hoisted function directly below the classic `renderToday()`. Produces the Variant C composition in order:
+
+1. **Settings dot** — top-right, 8px visible + 32×32 tap target (WCAG 2.5.5 compliant; senior-engineer's pre-ship flag resolved via padding).
+2. **Date strip** — "MONDAY · 21 APRIL" in 10px sans, 0.22em letter-spacing, quiet ink.
+3. **Yesterday's one-line reflection** — if `state.reflectionLog[yesterday][member].oneline.text` exists; omitted entirely otherwise (no empty placeholder).
+4. **The door** — "TODAY" eyebrow + large hairline-underlined anchor. Wired to `pickNextStep(member)` for live title + action (not hardcoded "Sit · twenty minutes" — senior-engineer flag #3 resolved).
+5. **Journal** — habits as bare rows with `.checkbox` and `.habit-done` classes. CSS from v15.20.0 transforms these to em-dash prefix + struck-through text in Calm.
+6. **Shadow sentence** — `renderShadowSentence()`, conditional on `state.shadow > 0` AND missed sits > 0. Two severity tiers per game-designer guard.
+7. **Reflection sentence** — `renderReflectionSentence()`, conditional on daily/weekly/monthly reflection due. Preserves Reflection-tab notification-dot engine output.
+8. **Study sentence** — `renderStudySentence()`, conditional on SRS cards due > 0. Preserves Study-tab badge engine output.
+9. **Path sentence** — rank name + days ("*Stream-enterer · fourteen days on the path.* ›") tappable → `showTab('path')`. Game-designer zero-rank fallback: when `state.questActive` is false, renders "*Beginning the path. ›*" so first-week practitioners have path discoverability.
+
+### Changed — `renderToday()` dispatcher
+
+Single line at the top:
+
+```js
+if (document.documentElement.getAttribute('data-theme') === 'calm') {
+  return renderTodayCalm();
+}
+```
+
+All subsequent code in `renderToday()` is identical to pre-v15.20.3. `main.js` never sees a new render function — the branch is internal to `today.js`.
+
+### Verified
+
+- Playwright 13/13 passing.
+- Classic Today: unchanged by construction (fallthrough path identical).
+- Calm Today: renders single-screen monastic layout; engine outputs preserved through three conditional sentences; Path still reachable (tap sentence); Settings still reachable (tap dot); FAB still present (restyled as hairline ring by v15.20.0 CSS).
+
+### Gaps flagged for Commit 5 / future
+
+- **Wisdom / Sangha / Review** tabs — not surfaced in Calm Today. Reachable via Settings screen only. Acceptable for v1; Settings becomes the secondary-screen hub.
+- **`calm_today_layout` preference** (Variant A fallback with hairline dots instead of single-screen) — not implemented yet. Ship in Commit 5 if needed; otherwise the default is simply Variant C on Calm.
+
 ## [15.20.2] — 2026-04-21 · Variant C · Calm helpers + shadow-critical guard
 
 Commit 3 of the Variant C sequence. Pure additions — none of these helpers are wired into any render path yet. Classic rendering is completely unaffected; the helpers exist in the module scope ready for Commit 4.

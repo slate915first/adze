@@ -137,6 +137,13 @@ function renderStudySentence() {
 }
 
 function renderToday() {
+  // v15.20.3 — Variant C branch. When data-theme="calm" is active on
+  // <html>, dispatch to the single-screen monastic layout. The branch
+  // is internal so main.js's render dispatcher stays untouched.
+  // Classic code path below is pixel-identical to pre-v15.20.3.
+  if (document.documentElement.getAttribute('data-theme') === 'calm') {
+    return renderTodayCalm();
+  }
   const habits = state.habits.filter(h => h.who === 'all' || h.who === view.currentMember);
   if (habits.length === 0) {
     return `<div class="parchment rounded-xl p-8 text-center fade-in">
@@ -747,4 +754,171 @@ function renderToday() {
 
   // v8.1: Ajahn Chah is now in prime position at the top, no footer version.
   return html;
+}
+
+// ----------------------------------------------------------------------------
+// renderTodayCalm — Variant C (monastic editorial) single-screen layout
+// ----------------------------------------------------------------------------
+// Dispatched from renderToday() when data-theme="calm". Produces, in order:
+//
+//   1. Settings dot (top-right, 8px visible, 32×32 tap target)
+//   2. Date strip ("MONDAY · 21 APRIL")
+//   3. Yesterday's one line (if present)
+//   4. The door — "TODAY" eyebrow + large anchor (from pickNextStep)
+//   5. Journal — habits as em-dash rows (CSS transforms .checkbox → "—")
+//   6. Shadow sentence (conditional)
+//   7. Reflection sentence (conditional — preserves Reflection tab badge)
+//   8. Study sentence (conditional — preserves Study tab badge)
+//   9. Path sentence (rank + days, or "Beginning the path" before quest)
+//
+// No tab bar (hidden by CSS). No header. No rank badge. The FAB remains
+// (globally positioned, restyled as hairline ring by the Calm CSS).
+// ----------------------------------------------------------------------------
+
+function renderTodayCalm() {
+  const memberId = view.currentMember;
+  const habits = state.habits.filter(h => h.who === 'all' || h.who === memberId);
+
+  // Date strip — "MONDAY · 21 APRIL"
+  const now = new Date();
+  const dayName = now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+  const dayNum = now.getDate();
+  const monthName = now.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
+  const dateStrip = `${dayName} · ${dayNum} ${monthName}`;
+
+  // Yesterday's one-line reflection, if present.
+  let yesterdayBlock = '';
+  try {
+    const yKey = daysAgo(1);
+    const yRef = state.reflectionLog && state.reflectionLog[yKey] && state.reflectionLog[yKey][memberId];
+    const yOneline = (yRef && yRef.oneline && yRef.oneline.text)
+      || (yRef && yRef.daily && yRef.daily.answer);
+    if (yOneline) {
+      yesterdayBlock = `
+        <div style="font-size: 18px; color: rgba(var(--ink-rgb), 0.70);
+                    max-width: 340px; margin: 36px auto 56px; line-height: 1.6;">
+          ${yOneline}
+        </div>`;
+    }
+  } catch (_) { /* skip silently */ }
+
+  // The door — primary sit CTA, wired to pickNextStep for live copy.
+  // Fallback to a simple "Begin sitting" if pickNextStep is unavailable.
+  let doorTitle = 'Begin sitting';
+  let doorAction = 'openMeditationTimer()';
+  if (typeof pickNextStep === 'function' && memberId) {
+    const step = pickNextStep(memberId);
+    if (step) {
+      if (step.title) doorTitle = step.title;
+      // The Classic renderer reads step.action to wire the CTA; honor that.
+      if (step.action) doorAction = step.action;
+    }
+  }
+
+  // Journal — habits as simple rows. CSS transforms .checkbox → em-dash
+  // and .habit-done → struck-through text in Calm.
+  const dk = todayKey();
+  const todayLog = (state.log && state.log[dk] && state.log[dk][memberId]) || {};
+  const habitsHtml = habits.map((h) => {
+    const isDone = !!todayLog[h.id];
+    return `
+      <div class="habit-row ${isDone ? 'habit-done' : ''}"
+           onclick="handleHabitTap('${h.id}')"
+           style="display: flex; align-items: center; padding: 10px 0;
+                  font-size: 16px; cursor: pointer;">
+        <span class="checkbox ${isDone ? 'done' : ''}"></span>
+        <span>${h.name}</span>
+      </div>
+    `;
+  }).join('');
+
+  // Path sentence — rank name + days on the path. Before quest starts,
+  // show a beginning sentence (game-designer's zero-rank fallback).
+  let pathLine = '';
+  try {
+    if (state.questActive && typeof computeMemberRank === 'function' && memberId) {
+      const rankId = computeMemberRank(memberId);
+      const rank = (typeof getRankInfo === 'function') ? getRankInfo(rankId) : null;
+      const name = (rank && rank.english) ? rank.english : 'On the path';
+      const days = state.questStartDate ? daysBetween(state.questStartDate, todayKey()) : 0;
+      const daysWord = days <= 9 ? numToWord(Math.max(1, days)) : String(days);
+      const dayLabel = days === 1 ? 'day' : 'days';
+      pathLine = `
+        <div class="shadow-sentence" style="cursor: pointer; margin-top: 48px;"
+             onclick="showTab('path')" role="button" tabindex="0">
+          <em>${name} · ${daysWord} ${dayLabel} on the path.</em> ›
+        </div>`;
+    } else {
+      pathLine = `
+        <div class="shadow-sentence" style="cursor: pointer; margin-top: 48px;"
+             onclick="showTab('path')" role="button" tabindex="0">
+          <em>Beginning the path.</em> ›
+        </div>`;
+    }
+  } catch (_) { /* skip silently */ }
+
+  // Compose.
+  return `
+    <div class="fade-in" style="position: relative; max-width: 520px; margin: 0 auto;
+                                padding: 72px 24px 120px; display: flex; flex-direction: column;
+                                min-height: 100vh;">
+
+      <!-- Settings dot, top-right. 8px visible + 32×32 tap target via padding. -->
+      <button onclick="showTab('settings')" aria-label="Settings"
+              style="position: absolute; top: 20px; right: 20px;
+                     width: 32px; height: 32px; padding: 12px;
+                     background: transparent; border: none; cursor: pointer;
+                     display: flex; align-items: center; justify-content: center;">
+        <span style="display: block; width: 8px; height: 8px; border-radius: 50%;
+                     background: rgba(var(--ink-rgb), 0.40);"></span>
+      </button>
+
+      <!-- Date strip -->
+      <div style="font-family: var(--font-sans); font-size: 10px; text-transform: uppercase;
+                  letter-spacing: 0.22em; color: rgba(var(--ink-rgb), 0.40);
+                  text-align: center;">
+        ${dateStrip}
+      </div>
+
+      <!-- Yesterday's one line -->
+      ${yesterdayBlock}
+
+      <!-- The door — TODAY eyebrow + large anchor -->
+      <div style="margin-top: ${yesterdayBlock ? '0' : '56px'}; text-align: center;">
+        <div style="font-family: var(--font-sans); font-size: 10px; text-transform: uppercase;
+                    letter-spacing: 0.22em; color: rgba(var(--ink-rgb), 0.40);
+                    margin-bottom: 12px;">
+          TODAY
+        </div>
+        <a onclick="${doorAction}" href="javascript:void(0)"
+           style="font-size: 22px; color: rgba(var(--ink-rgb), 0.95);
+                  text-decoration: underline; text-decoration-thickness: 1px;
+                  text-decoration-color: rgba(var(--ink-rgb), 0.40);
+                  text-underline-offset: 6px; cursor: pointer;">
+          ${doorTitle}
+        </a>
+      </div>
+
+      <!-- Journal: habits as em-dash rows -->
+      <div style="margin-top: 56px; max-width: 340px; margin-left: auto; margin-right: auto;
+                  width: 100%;">
+        ${habitsHtml}
+      </div>
+
+      <!-- Engine-driven sentences (shadow / reflection / study).
+           Each returns empty string when nothing to say. -->
+      <div style="max-width: 340px; margin: 0 auto; width: 100%; text-align: center;">
+        ${renderShadowSentence()}
+        ${renderReflectionSentence()}
+        ${renderStudySentence()}
+      </div>
+
+      <!-- Path sentence — pinned near the bottom via flex. -->
+      <div style="margin-top: auto; text-align: center; max-width: 340px;
+                  margin-left: auto; margin-right: auto; width: 100%;">
+        ${pathLine}
+      </div>
+
+    </div>
+  `;
 }
