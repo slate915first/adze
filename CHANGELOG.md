@@ -4,6 +4,28 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.20.2] — 2026-04-21 · Variant C · Calm helpers + shadow-critical guard
+
+Commit 3 of the Variant C sequence. Pure additions — none of these helpers are wired into any render path yet. Classic rendering is completely unaffected; the helpers exist in the module scope ready for Commit 4.
+
+### Added — `src/render/today.js` helper functions
+
+- **`numToWord(n)`** — 1–9 → English word. Used by the Calm sentences so they read as prose ("three sits missed") rather than digits. Caps at 9; returns `String(n)` beyond that.
+- **`computeMissedSits(memberId, days = 7)`** — counts distinct calendar days in the last `days` days where no `sitRecord` exists for the given member. Excludes today (in-progress). Returns `0..days`.
+- **`renderShadowSentence()`** — returns the `<div class="shadow-sentence">…</div>` HTML for Variant C. Present only when `state.shadow > 0` **and** there are missed sits to report; absent otherwise. Game-designer severity tier: at `shadow > 50` the copy shifts to "*N sits missed — armies are advancing.*"; otherwise "*N sits missed this week.*". The CSS handles the visual-weight lift via the `data-shadow-critical` attribute set by `updateShadowVisual()`.
+- **`renderReflectionSentence()`** — preserves the Reflection tab's notification-dot engine output as a one-line sentence. Present only when daily reflection is not done, or weekly / monthly is available. Tappable → `showTab('reflection')`.
+- **`renderStudySentence()`** — preserves the Study tab's SRS-cards-due badge as a one-line sentence. Present only when due > 0 and `srsDueToday` is defined.
+
+### Changed — `src/systems/shadow.js`
+
+`updateShadowVisual()` now also sets / removes `data-shadow-critical="true"` on `<html>` when `state.shadow` crosses 50. This is the game-designer's pre-ship requirement: closes the residual Casino Sober Mode vector by surfacing environmental urgency in Calm's own visual language exactly where diagnostic precision matters most. On Classic the attribute is set the same way but has no CSS target — inert.
+
+### Verified
+
+- `node --check` on both changed files.
+- Playwright theme-tokens 8/8 + welcome 5/5 = **13/13 passing**.
+- Classic rendering: pixel-identical (the added functions are not called by `renderToday()` yet; Classic goes through the unchanged render path).
+
 ## [15.20.1] — 2026-04-21 · Variant C · Welcome markup fork
 
 Commit 2 of the Variant C sequence. Classic welcome unchanged; Calm welcome strips to a monastic 5-element composition.

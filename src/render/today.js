@@ -44,6 +44,98 @@
 // global scope in the built single-file artifact.
 // ============================================================================
 
+// ----------------------------------------------------------------------------
+// Calm (Variant C) helpers
+// ----------------------------------------------------------------------------
+// v15.20.2 — added below but not yet wired into the render path. Commit 4
+// (renderTodayCalm) calls these; until then they are pure module-private
+// additions with zero effect on Classic rendering.
+
+// Convert 1–9 to English word. Used by renderShadowSentence so the shadow
+// sentence reads as prose ("three sits missed") not as a digit count.
+// Caps at 9; beyond that, return the digit string.
+function numToWord(n) {
+  const words = [
+    'zero', 'one', 'two', 'three', 'four',
+    'five', 'six', 'seven', 'eight', 'nine',
+  ];
+  return (n >= 0 && n < words.length) ? words[n] : String(n);
+}
+
+// Count distinct calendar days in the last `days` days where NO sitRecord
+// exists for the given member. Today itself is excluded (it's still "in
+// progress" — a missed sit can only be counted retrospectively). Returns
+// 0..days.
+function computeMissedSits(memberId, days = 7) {
+  if (!memberId || !Array.isArray(state.sitRecords)) return 0;
+  let missed = 0;
+  // Start at yesterday (offset 1), count backwards `days` days.
+  for (let i = 1; i <= days; i++) {
+    const dk = daysAgo(i);
+    const hasSit = state.sitRecords.some(
+      (r) => r.memberId === memberId && r.date === dk
+    );
+    if (!hasSit) missed++;
+  }
+  return missed;
+}
+
+// Shadow sentence (Calm-only component). Renders when shadow > 0 AND there
+// are missed sits to report; absent otherwise. Game-designer guard: at
+// shadow > 50, copy shifts to include "armies are advancing" and the CSS
+// picks up the data-shadow-critical attribute (set by updateShadowVisual
+// in systems/shadow.js) to lift the ink weight.
+function renderShadowSentence() {
+  const shadow = state.shadow || 0;
+  if (shadow <= 0) return '';
+  const missed = computeMissedSits(view.currentMember, 7);
+  if (missed <= 0) return '';
+  const word = numToWord(missed);
+  const sitWord = missed === 1 ? 'sit' : 'sits';
+  const body = shadow > 50
+    ? `${word} ${sitWord} missed — armies are advancing.`
+    : `${word} ${sitWord} missed this week.`;
+  return `<div class="shadow-sentence">${body}</div>`;
+}
+
+// Reflection sentence (Calm-only component). Renders when daily/weekly/
+// monthly reflection is due — the same condition that lit the Reflection
+// tab's notification dot on Classic. This preserves an engine output that
+// would otherwise disappear with the tab bar on Calm.
+function renderReflectionSentence() {
+  const dailyDone = typeof isDailyReflectionDoneToday === 'function'
+    ? isDailyReflectionDoneToday() : true;
+  const weeklyAvail = typeof isWeeklyReflectionAvailable === 'function'
+    ? isWeeklyReflectionAvailable() : false;
+  const monthlyAvail = typeof isMonthlyReflectionAvailable === 'function'
+    ? isMonthlyReflectionAvailable() : false;
+  if (dailyDone && !weeklyAvail && !monthlyAvail) return '';
+  const which = monthlyAvail ? 'monthly'
+              : weeklyAvail ? 'weekly'
+              : 'daily';
+  const copy = {
+    daily:   'one reflection ready.',
+    weekly:  'a weekly reflection ready.',
+    monthly: 'a monthly reflection ready.',
+  }[which];
+  return `<div class="shadow-sentence" style="font-style: italic;"
+               onclick="showTab('reflection')"
+               role="button" tabindex="0">${copy}</div>`;
+}
+
+// Study sentence (Calm-only component). SRS cards due — preserves the
+// Study tab badge as a one-line sentence. Present only when due > 0.
+function renderStudySentence() {
+  if (!view.currentMember || typeof srsDueToday !== 'function') return '';
+  const due = srsDueToday(view.currentMember) || [];
+  if (due.length <= 0) return '';
+  const word = numToWord(due.length);
+  const cardWord = due.length === 1 ? 'card' : 'cards';
+  return `<div class="shadow-sentence" style="font-style: italic;"
+               onclick="showTab('study')"
+               role="button" tabindex="0">${word} ${cardWord} ready.</div>`;
+}
+
 function renderToday() {
   const habits = state.habits.filter(h => h.who === 'all' || h.who === view.currentMember);
   if (habits.length === 0) {
