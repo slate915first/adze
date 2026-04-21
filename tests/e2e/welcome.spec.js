@@ -39,6 +39,25 @@ test.describe('Welcome page (closed beta)', () => {
     // Closed-beta note inside the modal.
     await expect(page.getByText(/closed beta/i).nth(1)).toBeVisible();
   });
+
+  test('footer theme chips toggle data-theme on <html>', async ({ page }) => {
+    // Clear any saved theme so we start from a known state.
+    await page.addInitScript(() => {
+      try { localStorage.removeItem('adze_theme'); } catch (_) {}
+    });
+    await page.goto('/');
+
+    // Initial: no data-theme attribute (classic is the default).
+    await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'calm');
+
+    // Tap Calm chip → attribute flips to "calm".
+    await page.getByRole('button', { name: /^calm$/i }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'calm');
+
+    // Tap Classic chip → attribute removed.
+    await page.getByRole('button', { name: /^classic$/i }).click();
+    await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'calm');
+  });
 });
 
 test.describe('Welcome page · mobile @mobile', () => {

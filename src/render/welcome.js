@@ -12,6 +12,15 @@
 
 function renderWelcome() {
   const publicSignup = typeof ADZE_PUBLIC_SIGNUP_ENABLED === 'boolean' ? ADZE_PUBLIC_SIGNUP_ENABLED : false;
+  // Read the theme from the DOM attribute (set by preferences.js IIFE
+  // at script-parse time). No state access — welcome runs pre-auth.
+  const calmActive = document.documentElement.getAttribute('data-theme') === 'calm';
+  const classicCls = !calmActive
+    ? 'text-amber-200 font-bold'
+    : 'text-amber-300/70 hover:text-amber-200';
+  const calmCls = calmActive
+    ? 'text-amber-200 font-bold'
+    : 'text-amber-300/70 hover:text-amber-200';
   document.getElementById('app').innerHTML = `
     <div class="fade-in min-h-screen flex flex-col items-center justify-center px-6 py-10 text-center max-w-md mx-auto">
 
@@ -71,6 +80,22 @@ function renderWelcome() {
           <span class="text-amber-100/30">·</span>
           <button onclick="openImpressum()" class="text-amber-300/80 hover:text-amber-200 underline">
             ${t('welcome.imprint_link')}
+          </button>
+        </div>
+        <!-- Discreet theme chips. Footer placement is deliberate: a
+             first-time user's eye goes to the primary CTA, not here.
+             A returning beta user who cleared cache finds their
+             preference easily. Reads data-theme attribute (set by the
+             preferences.js IIFE) to highlight the active option. -->
+        <div class="mt-2 flex justify-center items-center gap-2 text-[10px] text-amber-100/45"
+             data-component="welcome.theme_chips">
+          <span>${t('welcome.theme_label')}</span>
+          <button onclick="setThemeBeforeAuth('classic')" class="${classicCls} underline">
+            ${t('welcome.theme_classic')}
+          </button>
+          <span class="text-amber-100/30">·</span>
+          <button onclick="setThemeBeforeAuth('calm')" class="${calmCls} underline">
+            ${t('welcome.theme_calm')}
           </button>
         </div>
       </div>
