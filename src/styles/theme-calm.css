@@ -127,12 +127,27 @@
   -webkit-text-fill-color: unset;
 }
 
-/* ─── Tab bar: hidden on Calm ───
-   Variant C removes tab navigation entirely. Navigation goes through
-   the Path sentence, the Settings dot, and the Settings screen (which
-   becomes the secondary-screen hub). */
-:root[data-theme="calm"] nav {
-  display: none;
+/* ─── Tab bar: Calm interior-screen styling ───
+   On Calm Today the tab bar is suppressed at the render layer (renderTabs()
+   in header.js returns empty when data-theme="calm" and view.tab==="today").
+   On interior Calm screens (Path, Reflection, Wisdom, etc.) the bar
+   remains rendered so navigation is possible — here we restyle it as
+   quiet text-links. */
+:root[data-theme="calm"] nav button {
+  background: transparent;
+  border: none;
+  color: rgba(var(--ink-rgb), 0.70);
+  font-family: var(--font-serif);
+  font-weight: 400;
+  padding: 6px 10px;
+}
+:root[data-theme="calm"] nav button.tab-active {
+  color: rgba(var(--ink-rgb), 0.95);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.70);
+  border-radius: 0;
+}
+:root[data-theme="calm"] nav button:hover {
+  color: rgba(var(--ink-rgb), 0.95);
 }
 
 /* ─── Classic-only markup: hidden on Calm ───

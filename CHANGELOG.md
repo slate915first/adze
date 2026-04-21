@@ -4,6 +4,39 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.20.4] — 2026-04-21 · Variant C · Preserve interior-screen navigation on Calm
+
+Commit 5 of the Variant C sequence. Refines the tab-bar suppression shipped in v15.20.0 so interior Calm screens (Path, Reflection, Wisdom, Settings, Sangha, Review, Study) remain navigable. The Variant C spec calls for "no tab bar" but implicitly only on Today — on interior screens, without navigation, users become stranded.
+
+### Changed — tab-bar suppression scope
+
+**Before** (v15.20.0): `:root[data-theme="calm"] nav { display: none; }` — hid the tab bar on every Calm screen. Users could reach interior screens from Today (via sentences + Settings dot) but had no way to navigate between them or back to Today.
+
+**After** (v15.20.4):
+- `renderHeader()` in `src/render/header.js` returns empty string when `data-theme="calm"` AND `view.tab === 'today'`. Interior Calm screens see the header normally (rank badge, character row, etc.).
+- `renderTabs()` does the same — empty on Calm Today, normal on interior Calm screens.
+- The CSS rule `:root[data-theme="calm"] nav { display: none }` is removed. Replaced by quiet-text styling of tab buttons on Calm: flat background, no border, quiet ink, active tab marked by a hairline bottom-border.
+
+Calm Today thus remains fully monastic (no header, no tabs, Path/Settings/Reflection reached via sentences). Calm Path / Reflection / etc. render with a quiet-styled tab bar for navigation. Classic is untouched — the `view.tab === 'today'` AND `data-theme === 'calm'` guard is the only branch condition.
+
+### Verified
+
+- Playwright 13/13 passing.
+- Welcome both themes (regenerated snapshots): Classic pixel-identical to baseline; Calm renders per Variant C spec — hairline SVG wheel, solid-ink wordmark, quiet subtitle, hairline-underlined CTA, italic beta line, monastic footer with three quiet links.
+- Navigation: on Calm Today the page has no header and no tab bar; all navigation is via the single-screen elements. On any other Calm tab (Settings, Path, etc.) the tab bar reappears and is styled as quiet text links.
+
+### Variant C — sequence complete
+
+This is the final commit of the 5-commit Variant C implementation:
+
+| Commit | Scope |
+|---|---|
+| v15.20.0 | CSS layer: ink-alpha system, token aliasing, structural overrides, shadow-sentence base. |
+| v15.20.1 | Welcome markup fork with `[data-classic-only]` + hairline SVG + Calm-only elements. |
+| v15.20.2 | Today helpers (numToWord, computeMissedSits, renderShadowSentence, renderReflectionSentence, renderStudySentence) + shadow-critical guard. |
+| v15.20.3 | renderTodayCalm() single-screen layout with internal renderToday() branch. |
+| v15.20.4 | Interior-screen nav preservation (this commit). |
+
 ## [15.20.3] — 2026-04-21 · Variant C · Calm single-screen Today
 
 Commit 4 of the Variant C sequence. The single-screen monastic Today now ships. Classic rendering is untouched by construction — an internal branch at the top of `renderToday()` dispatches to `renderTodayCalm()` only when `data-theme="calm"`.

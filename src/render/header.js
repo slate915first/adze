@@ -49,6 +49,13 @@
 // ============================================================================
 
 function renderHeader() {
+  // v15.20.4 — Variant C: header is suppressed on Calm Today only.
+  // Interior Calm screens (Path, Reflection, Settings, Wisdom, etc.)
+  // keep the header so the rank/character context remains visible.
+  if (view.tab === 'today'
+      && document.documentElement.getAttribute('data-theme') === 'calm') {
+    return '';
+  }
   if (!state.questActive && state.questMode === 'custom') {
     return `
       <header class="mb-6">
@@ -237,6 +244,16 @@ function renderMembersBar() {
 }
 
 function renderTabs() {
+  // v15.20.4 — Variant C: tab bar suppressed on Calm Today only. On
+  // interior Calm screens the bar remains so users can navigate (we
+  // also style it as text-links via theme-calm.css). On Today the
+  // Variant C monastic layout owns navigation via Path sentence,
+  // Settings dot, and the Reflection/Study sentences.
+  if (view.tab === 'today'
+      && document.documentElement.getAttribute('data-theme') === 'calm') {
+    return '';
+  }
+
   // Build reflection tab label with notification dot if anything is due
   const dailyDone = isDailyReflectionDoneToday();
   const weeklyAvail = isWeeklyReflectionAvailable();
