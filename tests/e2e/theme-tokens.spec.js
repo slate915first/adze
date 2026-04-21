@@ -106,6 +106,39 @@ test.describe('Design tokens — regression guard', () => {
     expect(circular, 'circular self-references in :root').toEqual([]);
   });
 
+  test('every token referenced in a rule body is declared in :root', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    const diagnostics = await page.evaluate(() => {
+      const declared = new Set();
+      const referenced = new Set();
+      for (const sheet of document.styleSheets) {
+        if (!sheet.href || !sheet.href.includes('styles.css')) continue;
+        if (sheet.href.includes('theme-')) continue;
+        for (const rule of sheet.cssRules || []) {
+          if (rule.type !== CSSRule.STYLE_RULE) continue;
+          if (rule.selectorText === ':root') {
+            for (let i = 0; i < rule.style.length; i++) {
+              const prop = rule.style[i];
+              if (prop.startsWith('--')) declared.add(prop);
+            }
+            continue;
+          }
+          // Scan rule.cssText for var(--name) references.
+          const matches = rule.cssText.matchAll(/var\(\s*(--[\w-]+)/g);
+          for (const m of matches) referenced.add(m[1]);
+        }
+      }
+      const missing = [...referenced].filter((r) => !declared.has(r));
+      return { missing, declaredCount: declared.size, referencedCount: referenced.size };
+    });
+    expect(
+      diagnostics.missing,
+      `${diagnostics.missing.length} token(s) referenced in rule bodies but not declared in :root`
+    ).toEqual([]);
+  });
+
   test('body has a real background in classic theme (sentinel)', async ({ page }) => {
     await page.goto('/');
     const bg = await page.evaluate(

@@ -96,6 +96,17 @@
     --dur-ember: 4000ms;
     --dur-shimmer-slow: 6000ms;
 
+    /* ─── Radius tokens ───
+       Border-radius vocabulary. Rule bodies reference these via
+       var(--radius-*). A theme can shift the whole app toward flatter
+       (0px) or rounder (larger) surfaces via a few overrides. */
+    --radius-pill: 50%;          /* checkbox, stage-marker, ember */
+    --radius-xs: 4px;            /* scrollbar thumb */
+    --radius-sm: 6px;            /* progress-bar */
+    --radius-md: 8px;            /* tooltip, element-feedback marker */
+    --radius-card: 0.5rem;       /* inputs, buttons, scroll-paper */
+    --radius-fab: 24px;          /* floating feedback button */
+
     /* ─── Visual-intensity dial ───
        Controls how strongly body::before (dread tint) and body::after
        (shadow darkening) react to --shadow-level. Calm themes lower
@@ -167,7 +178,7 @@
   .checkbox {
     width: 36px; height: 36px;
     border: 2px solid rgba(var(--path-core-rgb),0.4);
-    border-radius: 50%;
+    border-radius: var(--radius-pill);
     cursor: pointer;
     transition: all var(--dur-fast);
     display: flex; align-items: center; justify-content: center;
@@ -221,7 +232,7 @@
   .progress-bar {
     height: 12px;
     background: rgba(0,0,0,0.5);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     border: 1px solid rgba(var(--path-core-rgb),0.3);
   }
@@ -259,7 +270,7 @@
   .scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
   .scrollbar::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, var(--path-core), var(--path-deep));
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
   }
 
   input:not([type="checkbox"]):not([type="radio"]), select, textarea {
@@ -267,7 +278,7 @@
     border: 1px solid rgba(var(--path-core-rgb),0.3);
     color: var(--path-bright);
     padding: 0.7rem 0.9rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-card);
     width: 100%;
     font-family: 'Georgia', serif;
   }
@@ -279,7 +290,7 @@
 
   .btn {
     padding: 0.7rem 1.4rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-card);
     font-weight: 600;
     transition: all var(--dur-fast);
     cursor: pointer;
@@ -342,7 +353,7 @@
 
   .stage-marker {
     width: 50px; height: 50px;
-    border-radius: 50%;
+    border-radius: var(--radius-pill);
     border: 3px solid rgba(var(--path-core-rgb),0.4);
     display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.5);
@@ -365,7 +376,7 @@
       linear-gradient(180deg, rgba(var(--path-rgb),0.95), rgba(var(--parchment-mid-rgb),0.9));
     color: var(--parchment-ink);
     padding: 2rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-card);
     border: 2px solid var(--path-deep);
     box-shadow: 0 0 50px rgba(var(--path-rgb),0.4);
     font-family: 'Georgia', serif;
@@ -380,7 +391,7 @@
     position: absolute;
     width: 4px; height: 4px;
     background: var(--ember);
-    border-radius: 50%;
+    border-radius: var(--radius-pill);
     pointer-events: none;
     animation: ember var(--dur-ember) linear infinite;
   }
@@ -444,7 +455,7 @@
     background: var(--surface-2);
     border: 1px solid var(--path-core);
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 0.75rem;
     white-space: nowrap;
     opacity: 0;
@@ -512,7 +523,7 @@
     z-index: 200;
     width: 48px;
     height: 48px;
-    border-radius: 24px;
+    border-radius: var(--radius-fab);
     background: linear-gradient(135deg, var(--path-bright), var(--path-core));
     color: var(--surface-2);
     border: none;

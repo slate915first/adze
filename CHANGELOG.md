@@ -4,6 +4,25 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.9] — 2026-04-21 · Radius tokens + harder regression guard
+
+### Added
+
+**Radius tokens (6):** every `border-radius` literal in `src/styles/styles.css` now references a semantic token. A theme can flatten (set all tokens to 0px) or round (larger values) the whole app from one block.
+
+- `--radius-pill: 50%` — checkbox, stage-marker, ember
+- `--radius-xs: 4px` — scrollbar thumb
+- `--radius-sm: 6px` — progress-bar
+- `--radius-md: 8px` — tooltip, element-feedback corner marker
+- `--radius-card: 0.5rem` — inputs, buttons, scroll-paper
+- `--radius-fab: 24px` — floating feedback button
+
+Zero visual change. Same values in different syntactic form.
+
+### Added — regression spec hardening
+
+`tests/e2e/theme-tokens.spec.js` gained a sixth test: **every token referenced via `var(--name)` in a rule body must be declared in the base `:root` block**. Caught a real in-flight mistake during the radius refactor when a Edit failure on the `:root` addition left rule bodies referencing undeclared tokens — the test would have flagged it immediately in CI. Now 6 tests passing against live CSSOM.
+
 ## [15.19.8] — 2026-04-21 · Duration tokens — motion surface becomes themeable
 
 Extracts every `animation-duration` and `transition-duration` literal in `src/styles/styles.css` to named tokens in `:root`. A future theme can now change the cadence of the whole app by overriding one token (e.g. `--dur-breath: 6000ms` for a slower breath animation, or `--dur-pulse-glow: 0ms` to freeze a specific ambient loop) without touching any rule.
