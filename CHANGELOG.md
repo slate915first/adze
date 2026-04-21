@@ -4,6 +4,24 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.8] — 2026-04-21 · Duration tokens — motion surface becomes themeable
+
+Extracts every `animation-duration` and `transition-duration` literal in `src/styles/styles.css` to named tokens in `:root`. A future theme can now change the cadence of the whole app by overriding one token (e.g. `--dur-breath: 6000ms` for a slower breath animation, or `--dur-pulse-glow: 0ms` to freeze a specific ambient loop) without touching any rule.
+
+### Added
+
+13 new tokens under the `dur-` prefix:
+
+- **Interactive transitions** — `--dur-tooltip` (200ms), `--dur-fast` (300ms), `--dur-stage` (400ms), `--dur-medium` (600ms), `--dur-slow` (1000ms).
+- **One-shot feedback animations** — `--dur-scroll-reveal` (1200ms), `--dur-float-up` (1800ms). (Note: `fadeIn` uses `--dur-medium`.)
+- **Ambient loops** — `--dur-pulse-glow` (3000ms), `--dur-breath` (4000ms), `--dur-ember` (4000ms), `--dur-danger-pulse` (1500ms), `--dur-shimmer-fast` (2000ms), `--dur-shimmer-slow` (6000ms).
+
+### Refactor-safety notes
+
+Tokens are declared in **milliseconds** (`300ms`) while rule bodies still use **seconds** via `var(--dur-*)`. This is deliberate: it guarantees zero substring collision between the `:root` declarations and the bare values in rule bodies, avoiding the circular-reference trap that broke v15.19.0. Browsers treat `300ms` and `0.3s` as identical values — this is a purely textual guard that has no runtime effect.
+
+Zero visual change. The Playwright token-resolution spec (`tests/e2e/theme-tokens.spec.js`) passes 5/5 against the refactored file.
+
 ## [15.19.7] — 2026-04-21 · Playwright regression guard for CSS design tokens
 
 Adds `tests/e2e/theme-tokens.spec.js` — a five-test spec that would have caught the v15.19.0 circular-ref bug before it shipped. Enumerates every `:root` token via the browser's parsed CSSOM, asserts each resolves to a non-empty value in both classic and calm themes, explicitly scans for `--foo: var(--foo)` self-references, and sanity-checks the body's computed background and color. No source change to `styles.css`, `theme-calm.css`, or any render file — purely a test addition.

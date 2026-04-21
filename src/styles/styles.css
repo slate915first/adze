@@ -66,6 +66,36 @@
        file and the mirror rule in theme-calm.css. */
     --motion-ambient: 1;
 
+    /* ─── Duration tokens ───
+       Stored in ms so they never collide with "0.3s"-style values in
+       rule bodies (this avoids the circular-reference trap that broke
+       v15.19.0). Rule bodies reference them via var(--dur-*), which
+       the browser resolves to the ms value — visually identical to
+       the previous second-based literals.
+
+       Families:
+         - dur-tooltip / dur-fast / dur-stage / dur-medium / dur-slow
+             → interactive transitions (hover, state change, overlays)
+         - dur-fade-in / dur-scroll-reveal / dur-float-up
+             → one-shot feedback animations (state change)
+         - dur-pulse-glow / dur-breath / dur-ember / dur-danger-pulse /
+           dur-shimmer-fast / dur-shimmer-slow
+             → ambient loops (themes may override; a calm theme that
+             wants motion off can set individual dur-* tokens to 0ms) */
+    --dur-tooltip: 200ms;
+    --dur-fast: 300ms;
+    --dur-stage: 400ms;
+    --dur-medium: 600ms;
+    --dur-slow: 1000ms;
+    --dur-scroll-reveal: 1200ms;
+    --dur-danger-pulse: 1500ms;
+    --dur-float-up: 1800ms;
+    --dur-shimmer-fast: 2000ms;
+    --dur-pulse-glow: 3000ms;
+    --dur-breath: 4000ms;
+    --dur-ember: 4000ms;
+    --dur-shimmer-slow: 6000ms;
+
     /* ─── Visual-intensity dial ───
        Controls how strongly body::before (dread tint) and body::after
        (shadow darkening) react to --shadow-level. Calm themes lower
@@ -93,7 +123,7 @@
     background: radial-gradient(ellipse at center, transparent 0%, rgba(var(--dread-rgb),calc(var(--shadow-level) * var(--dread-weight))) 100%);
     pointer-events: none;
     z-index: 1;
-    transition: background 1s ease;
+    transition: background var(--dur-slow) ease;
   }
   body::after {
     content: '';
@@ -102,7 +132,7 @@
     background: rgba(0,0,0,calc(var(--shadow-level) * var(--shadow-overlay-weight)));
     pointer-events: none;
     z-index: 1;
-    transition: background 1s ease;
+    transition: background var(--dur-slow) ease;
   }
   #app, #modal-root { position: relative; z-index: 10; }
 
@@ -129,7 +159,7 @@
   .mara-glow { box-shadow: 0 0 25px rgba(var(--mara-rgb),0.5); }
   .sangha-glow { box-shadow: 0 0 20px rgba(var(--sangha-rgb),0.4); }
 
-  .habit-row { transition: all 0.3s ease; cursor: pointer; }
+  .habit-row { transition: all var(--dur-fast) ease; cursor: pointer; }
   .habit-row:hover { background: rgba(var(--path-rgb),0.05); transform: translateX(4px); }
   .habit-done { background: linear-gradient(90deg, rgba(var(--path-rgb),0.15), transparent); border-left: 3px solid var(--path-core); }
   .habit-missed { background: linear-gradient(90deg, rgba(var(--mara-rgb),0.1), transparent); border-left: 3px solid var(--mara-deep); opacity: 0.6; }
@@ -139,7 +169,7 @@
     border: 2px solid rgba(var(--path-core-rgb),0.4);
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all var(--dur-fast);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     background: rgba(0,0,0,0.3);
@@ -151,31 +181,31 @@
     box-shadow: 0 0 20px rgba(var(--path-rgb),0.6);
   }
 
-  .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+  .pulse-glow { animation: pulse-glow var(--dur-pulse-glow) ease-in-out infinite; }
   @keyframes pulse-glow {
     0%,100% { box-shadow: 0 0 20px rgba(var(--path-rgb),0.3); }
     50% { box-shadow: 0 0 40px rgba(var(--path-rgb),0.6); }
   }
 
-  .breath { animation: breath 4s ease-in-out infinite; }
+  .breath { animation: breath var(--dur-breath) ease-in-out infinite; }
   @keyframes breath {
     0%,100% { transform: scale(1); }
     50% { transform: scale(1.02); }
   }
 
-  .float-up { animation: floatUp 1.8s ease-out forwards; }
+  .float-up { animation: floatUp var(--dur-float-up) ease-out forwards; }
   @keyframes floatUp {
     0% { transform: translateY(0); opacity: 1; }
     100% { transform: translateY(-100px); opacity: 0; }
   }
 
-  .fade-in { animation: fadeIn 0.6s ease-out; }
+  .fade-in { animation: fadeIn var(--dur-medium) ease-out; }
   @keyframes fadeIn {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
   }
 
-  .scroll-reveal { animation: scrollReveal 1.2s ease-out; }
+  .scroll-reveal { animation: scrollReveal var(--dur-scroll-reveal) ease-out; }
   @keyframes scrollReveal {
     0% { opacity: 0; transform: scale(0.8) rotateX(20deg); }
     100% { opacity: 1; transform: scale(1) rotateX(0); }
@@ -198,13 +228,13 @@
   .progress-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--path-core), var(--path-bright));
-    transition: width 0.6s ease;
+    transition: width var(--dur-medium) ease;
     box-shadow: 0 0 10px rgba(var(--path-rgb),0.5);
   }
   .shadow-bar-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--mara-shadow), var(--mara-core), var(--mara-deep));
-    transition: width 0.6s ease;
+    transition: width var(--dur-medium) ease;
     box-shadow: 0 0 10px rgba(var(--mara-rgb),0.6);
   }
 
@@ -251,7 +281,7 @@
     padding: 0.7rem 1.4rem;
     border-radius: 0.5rem;
     font-weight: 600;
-    transition: all 0.3s;
+    transition: all var(--dur-fast);
     cursor: pointer;
     border: 1px solid transparent;
     font-family: 'Georgia', serif;
@@ -284,7 +314,7 @@
   }
 
   .character-card {
-    transition: all 0.3s ease;
+    transition: all var(--dur-fast) ease;
     cursor: pointer;
   }
   .character-card:hover {
@@ -316,7 +346,7 @@
     border: 3px solid rgba(var(--path-core-rgb),0.4);
     display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.5);
-    transition: all 0.4s;
+    transition: all var(--dur-stage);
     flex-shrink: 0;
   }
   .stage-current {
@@ -352,7 +382,7 @@
     background: var(--ember);
     border-radius: 50%;
     pointer-events: none;
-    animation: ember 4s linear infinite;
+    animation: ember var(--dur-ember) linear infinite;
   }
   @keyframes ember {
     0% { transform: translateY(0) translateX(0); opacity: 0; }
@@ -374,7 +404,7 @@
     inset: 0;
     background: linear-gradient(90deg, transparent, rgba(var(--path-rgb),0.05), transparent);
     background-size: 200% 100%;
-    animation: shimmer 6s infinite;
+    animation: shimmer var(--dur-shimmer-slow) infinite;
     pointer-events: none;
   }
   @keyframes shimmer {
@@ -384,14 +414,14 @@
   .shimmer {
     background: linear-gradient(90deg, var(--path-core), var(--path-bright), var(--path-core), var(--path-bright), var(--path-core));
     background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
+    animation: shimmer var(--dur-shimmer-fast) linear infinite;
   }
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
   }
 
-  .danger-pulse { animation: dangerPulse 1.5s ease-in-out infinite; }
+  .danger-pulse { animation: dangerPulse var(--dur-danger-pulse) ease-in-out infinite; }
   @keyframes dangerPulse {
     0%,100% { box-shadow: 0 0 20px rgba(var(--mara-rgb),0.4); }
     50% { box-shadow: 0 0 40px rgba(var(--mara-rgb),0.8); }
@@ -400,7 +430,7 @@
   .codex-entry {
     background: linear-gradient(145deg, rgba(var(--path-rgb),0.08), rgba(var(--path-core-rgb),0.04));
     border-left: 3px solid var(--path-core);
-    transition: all 0.3s;
+    transition: all var(--dur-fast);
     cursor: pointer;
   }
   .codex-entry:hover { background: rgba(var(--path-rgb),0.12); }
@@ -419,7 +449,7 @@
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.2s;
+    transition: opacity var(--dur-tooltip);
   }
   /* v14.2 — Beta feedback mode. When body.feedback-mode is active, every
      element with a data-component attribute gets a dashed outline on hover
@@ -498,7 +528,7 @@
     background: linear-gradient(135deg, var(--mara-ink), var(--mara-core));
     color: #fff;
     box-shadow: 0 4px 20px rgba(var(--mara-rgb),0.5);
-    animation: fabPulse 2s ease-in-out infinite;
+    animation: fabPulse var(--dur-shimmer-fast) ease-in-out infinite;
   }
   @keyframes fabPulse {
     0%,100% { box-shadow: 0 4px 15px rgba(var(--mara-rgb),0.4); }
