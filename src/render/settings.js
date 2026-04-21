@@ -236,6 +236,21 @@ function renderSettings() {
       </div>
     </div>
 
+    <div class="parchment rounded-xl p-5 mb-4" data-component="settings.theme">
+      <h3 class="font-bold text-amber-100 mb-2">${t('settings.theme.heading')}</h3>
+      <p class="text-xs text-amber-100/60 mb-3 leading-relaxed">${t('settings.theme.body')}</p>
+      <div class="space-y-2">
+        <button onclick="setVisualIntensity('classic')" class="w-full text-left rounded-lg p-3 ${(state.prefs?.visualIntensity !== 'calm') ? 'parchment-active border border-amber-400' : 'parchment border border-amber-700/30'} hover:parchment-active transition">
+          <div class="text-sm font-bold text-amber-100">${t('settings.theme.classic_title')}</div>
+          <div class="text-[11px] text-amber-100/60">${t('settings.theme.classic_body')}</div>
+        </button>
+        <button onclick="setVisualIntensity('calm')" class="w-full text-left rounded-lg p-3 ${(state.prefs?.visualIntensity === 'calm') ? 'parchment-active border border-amber-400' : 'parchment border border-amber-700/30'} hover:parchment-active transition">
+          <div class="text-sm font-bold text-amber-100">${t('settings.theme.calm_title')}</div>
+          <div class="text-[11px] text-amber-100/60">${t('settings.theme.calm_body')}</div>
+        </button>
+      </div>
+    </div>
+
     <div class="parchment rounded-xl p-5 mb-4 border border-amber-500/40">
       <h3 class="font-bold text-amber-100 mb-1">${t('settings.feedback.heading')}</h3>
       <p class="text-xs text-amber-100/70 mb-3 leading-relaxed">${t('settings.feedback.body')}</p>

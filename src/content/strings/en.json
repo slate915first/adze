@@ -1579,6 +1579,13 @@
   "settings.points.hide_title":                     "Hide points <span class=\"text-xs text-emerald-300/70\">(contemplative mode)</span>",
   "settings.points.hide_body":                      "The game still tracks completion and tisikkhā internally. The display simply stops showing numbers so the practice is not scoreboarded.",
 
+  "settings.theme.heading":                         "🪷 Visual intensity",
+  "settings.theme.body":                            "The classic theme is dramatic — violet night, glowing gold, red flare around Māra. Some practitioners find this activating rather than settling. Calm mode mutes the visual register toward a forest-tradition aesthetic: warm charcoal, dusty amber, Māra still named but no red alarm. Nothing is hidden — the shadow bar, Next Step, and banners all still render. Only the theatrical amplification is dimmed.",
+  "settings.theme.classic_title":                   "Classic <span class=\"text-xs text-amber-300/70\">(default)</span>",
+  "settings.theme.classic_body":                    "The full visual register — violet surfaces, gold glow, red Māra, ambient breath and shimmer animations.",
+  "settings.theme.calm_title":                      "Calm <span class=\"text-xs text-emerald-300/70\">(passaddhi)</span>",
+  "settings.theme.calm_body":                       "Warm sepia surfaces, dusty amber path, muted bronze for Māra, shadow overlay dimmed to near-zero, ambient animations frozen. The game remains — only the loudness is gone.",
+
   "settings.feedback.heading":                      "📮 Beta feedback",
   "settings.feedback.body":                         "Adze is in beta. Your reports shape the app. Each button opens a structured form that takes under a minute — tap the category, mark what happened, add a short comment. Nothing sends until you hit send in your mail client.",
   "settings.feedback.bug_label":                    "Bug",
