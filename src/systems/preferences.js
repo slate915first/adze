@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // Extracted in Turn 31 from src/app.html systems layer.
 // Contains 9 function(s): setTimerMode, setPointsVisible, dismissStagePreview, toggleHeaderTisikkha, toggleWisdomExpand, toggleSanghaExpand, toggleReviewCharts, engagePathArmy, releasePathArmyEngagement
-// v15.19.3 — added setVisualIntensity() and a load-time IIFE that applies
+// v15.19.4 — added setVisualIntensity() and a load-time IIFE that applies
 // the saved theme to <html> before bootstrap renders. This module runs
 // before state.js hydrates `state`, so the IIFE reads localStorage
 // directly rather than going through getState(). Keeping the theme-apply

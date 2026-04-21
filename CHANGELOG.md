@@ -4,6 +4,27 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.4] — 2026-04-21 · adaptive theme system — classic ⇄ calm
+
+Scaffolding for multiple visual themes, plus the first second-theme (Calm) that aligns with Theravāda forest-tradition aesthetic — warm charcoal surfaces, dusty amber path, muted bronze for Māra, ambient animations frozen. The game scaffolding (Māra's armies, shadow bar, ranks, quests) remains fully visible in both themes; only the theatrical amplification is dimmed. Nothing engine-driven is hidden — game-designer and dhamma-reviewer aligned on this.
+
+### Added
+
+- **Color-token layer in `src/styles/styles.css`** (`:root` block): every hex literal and themeable rgba family extracted to CSS custom properties. Families: `--surface-*`, `--path-*`, `--parchment-*`, `--mara-*`, `--sangha-rgb`, `--released-rgb`, `--ember`, `--dread-rgb`. Dual representation — opaque hex tokens + rgb triplets for alpha usage — so one override updates both. Zero classic-theme visual change.
+
+- **Visual-intensity dial:** new `--dread-weight` (0.6) and `--shadow-overlay-weight` (0.4) tokens control how strongly `body::before` (dread tint) and `body::after` (shadow darkening) react to the runtime `--shadow-level`. Classic behavior preserved by extracting the prior hardcoded multipliers.
+
+- **Motion-reduction honoring:** new `@media (prefers-reduced-motion: reduce)` block freezes seven infinite ambient animations (pulse-glow, breath, shimmer, danger-pulse, ember, quest-banner::before, feedback-fab.active) regardless of theme. One-shot transitions (fade-in, float-up, scroll-reveal) preserved — they communicate state, not ambient energy.
+
+- **Calm theme — `src/styles/theme-calm.css`:** `:root[data-theme="calm"]` overrides for every token plus a mirror animation-kill block so calm mode freezes ambient motion without the OS flag. Dread weights dropped to 0.15 / 0.1 (shadow bar stays visible and honest, horror-film darkening gone). 107 lines total.
+
+- **Settings toggle — `setVisualIntensity(mode)` in `src/systems/preferences.js`:** mirrors `setPointsVisible` pattern. Plus a load-time IIFE at top of the module that reads `adze_v1` from localStorage directly and sets `data-theme="calm"` on `<html>` before the first render — avoids first-paint flicker without touching Stage-1 bootstrap.js/main.js. New radio card in Settings modeled on the Points-visibility card.
+
+### Architecture notes
+
+- Rooted in a principle: every visual decision in `styles.css` goes through a semantic token. A future third theme is a new 100-line CSS file, not a codebase sweep. This replaces the prior architecture where colors were baked into every rule.
+- 1,248 inline Tailwind color utilities across 40 JS render/modal files deliberately not refactored. They tint softer against the calm palette and are acceptable for v1; they get replaced by semantic classes only when other work touches those files (drift, not big-bang).
+
 ## [15.19.3] — 2026-04-21 · setup-progress persistence — close the 1.5h-loss class entirely
 
 (Versioned as 15.19.3 to avoid a label collision with the v15.19.2 theme motion-reduction commit that landed the same day; semantically this is the v15.18.0 tester-bug-cluster follow-up.)
