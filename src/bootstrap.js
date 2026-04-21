@@ -112,6 +112,22 @@ async function boot() {
   }
   render();
 
+  // 5a. v15.18.1 — resume interrupted setup. If the user was mid-setup when
+  //     the tab was killed / battery died / re-auth bounced them, localStorage
+  //     holds their progress. Reopen the setup modal at the saved step so
+  //     they pick up exactly where they left off rather than being dumped
+  //     onto the welcome page (which looks like a logout and used to lead
+  //     them to re-auth → startSetup → wipe). Gate on "no modal yet" so we
+  //     don't override auth gates (invite-landing, passphrase-unlock, etc.)
+  //     that boot steps 4a–4c have already queued.
+  if (!view.modal
+      && (!state || !state.setupComplete)
+      && typeof setupProgressExists === 'function'
+      && setupProgressExists()
+      && typeof startSetup === 'function') {
+    startSetup();
+  }
+
   // 5. Session 2: if a prior onboarding diagnostic was interrupted, resume it.
   if (state && state.setupComplete && state.pendingOnboardingDiagnostic >= 0
       && state.pendingOnboardingDiagnostic < (state.members?.length || 0)) {

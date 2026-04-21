@@ -75,6 +75,12 @@ function renderModal() {
 
   if (m.type === 'setup') {
     content = renderSetup();
+    // v15.18.1 — autosave setup progress on every render. Setup interactions
+    // are user-paced (not a hot loop), so the write rate is bounded by taps
+    // and keystrokes. Idempotent; no-ops if the user isn't authed. This is
+    // what guarantees Bastian's 1.5h never evaporates again: page reload,
+    // tab kill, and re-auth-mid-setup all now resume cleanly.
+    if (typeof persistSetupProgress === 'function') persistSetupProgress();
   }
   else if (m.type === 'setup_loading') {
     const phrases = [

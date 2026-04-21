@@ -5,8 +5,134 @@
 // Contains 42 function(s): startSetup, getShuffledOptionsFor, getFirstSuttaName, setDiagnosticA, toggleDiagnosticHope, setDiagnosticB, setDiagnosticC, setupToggleMulti, computeAndShowRecommendation, pauseSetupForCare, adjustRecommendation, updateRecommendationDailyTotal, setRecommendationMinutes, toggleRecommendationMidday, acceptRecommendation, takeTheVow, setupNext, setupBack, setSetupMode, setSetupCategory, setSetupQuest, setSetupHabitMode, setSetupCustomMinutes, toggleSetupSmallHabit, setSetupDuration, addSetupMember, onNameInput, addSetupMemberFromBrowser, browseCharPrev, browseCharNext, openCharacterDetail, selectCharacterFromDetail, removeSetupMember, finishSetup, openNextOnboardingDiagnostic, onboardingDiagnosticAnswer, onboardingDiagnosticSliderTouch, onboardingDiagnosticNext, onboardingDiagnosticBack, closeFirstGuidance, openTutorialFromFirstGuidance, completeSetupTransition
 // ============================================================================
 
+// ============================================================================
+// v15.18.1 — Setup-progress persistence.
+// ----------------------------------------------------------------------------
+// In-flight setup lives in `view.setupData` + `view.setupStep`, which used to
+// be in-memory only. A tester (Bastian) lost ~1.5h of input when a dangling
+// sutta link in the final-step recommendation replaced the setup modal with a
+// "sutta not found" screen; closing it dropped him on the welcome page, and
+// re-auth called `startSetup()` a second time, which unconditionally reset the
+// data. These three helpers close the whole class of failure:
+//
+//   - autosave after every setup-modal render (wired in main.js renderModal)
+//   - resume-on-start in startSetup()
+//   - boot-time resume in bootstrap.js
+//   - explicit clear on finishSetup / pauseSetupForCare
+//
+// Scope: only authenticated users (closed beta always has an email). Stored
+// payload includes the email so one account's progress can't hydrate into a
+// different account on the same device. Hard cap on age = 7 days so truly
+// abandoned sessions don't resurrect.
+// ============================================================================
+
+const SETUP_PROGRESS_STORAGE_KEY = 'adze-setup-progress-v1';
+const SETUP_PROGRESS_MAX_AGE_MS  = 7 * 24 * 60 * 60 * 1000;
+
+// v15.18.1 — Security-reviewer gate (2026-04-21). These fields either carry
+// Art. 9 GDPR health-category weight (wellbeingAck 'crisis' is clinical-
+// adjacent) or are practitioner-disclosed freetext narrative (teachers,
+// wantFromTool, unclear, the "Other" long-form fields on the chip questions).
+// None of them are needed to STRUCTURALLY resume setup — the recommendation
+// is already computed and stored separately by the time they matter. Strip
+// them from the localStorage snapshot; the in-memory copy still carries them
+// forward through finishSetup for the lifetime of the tab.
+// TODO(dsgvo-lawyer, v15.19): decide whether `wellbeingAck`'s *presence*
+// (without value) should also be redacted — currently persisted so Phase-A
+// users can resume without re-taking the check. Trade-off documented in
+// docs/DECISIONS.md.
+const SETUP_PROGRESS_REDACT_DIAGNOSTIC_KEYS = [
+  'teachers',
+  'wantFromTool',
+  'unclear',
+  'stoppedBeforeOther',
+  'physicalConcernsOther',
+  'concernsOther'
+];
+
+function _redactSetupDataForStorage(data) {
+  if (!data || typeof data !== 'object') return data;
+  // Structured clone via JSON round-trip — safe because `data` is a pure
+  // plain-object tree (no Dates, no functions, no circular refs).
+  const copy = JSON.parse(JSON.stringify(data));
+  if (copy.diagnostic && typeof copy.diagnostic === 'object') {
+    for (const k of SETUP_PROGRESS_REDACT_DIAGNOSTIC_KEYS) {
+      if (k in copy.diagnostic) copy.diagnostic[k] = '';
+    }
+  }
+  return copy;
+}
+
+function persistSetupProgress() {
+  if (!view || !view.setupData || typeof view.setupStep !== 'number') return;
+  const email = (typeof authGetEmail === 'function') ? authGetEmail() : null;
+  if (!email) return; // only persist identified-session progress
+  try {
+    localStorage.setItem(SETUP_PROGRESS_STORAGE_KEY, JSON.stringify({
+      v:       1,
+      step:    view.setupStep,
+      data:    _redactSetupDataForStorage(view.setupData),
+      savedAt: Date.now(),
+      email
+    }));
+  } catch (e) {
+    // Quota or serialization failure — don't block the user. The in-memory
+    // state still holds; they just lose the reload-survival guarantee.
+  }
+}
+
+function loadSetupProgress() {
+  const currentEmail = (typeof authGetEmail === 'function') ? authGetEmail() : null;
+  if (!currentEmail) return null;
+  try {
+    const raw = localStorage.getItem(SETUP_PROGRESS_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || parsed.v !== 1) return null;
+    if (typeof parsed.step !== 'number' || !parsed.data) return null;
+    if (parsed.email !== currentEmail) return null;
+    if (Date.now() - (parsed.savedAt || 0) > SETUP_PROGRESS_MAX_AGE_MS) return null;
+    return parsed;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearSetupProgress() {
+  try { localStorage.removeItem(SETUP_PROGRESS_STORAGE_KEY); } catch (e) { /* ignore */ }
+}
+
+function setupProgressExists() {
+  return !!loadSetupProgress();
+}
+
 function startSetup() {
   if (!state) state = newState();
+
+  // v15.18.1 — resume-or-reset.
+  // 1. If an in-memory setup is already in flight (re-auth mid-setup, or any
+  //    other caller re-entering startSetup), DO NOT wipe view.setupData.
+  //    This is the Bastian fix: re-auth used to silently reset 1.5h of input.
+  // 2. Otherwise, try localStorage — survives reloads, tab kills, battery death.
+  // 3. Only if both are empty, initialize fresh defaults.
+  const inMemoryHasProgress =
+    typeof view.setupStep === 'number' && view.setupStep > 0
+    && view.setupData
+    && (view.setupData.diagnostic || (view.setupData.members && view.setupData.members.length > 0));
+  if (inMemoryHasProgress) {
+    view.modal = { type: 'setup' };
+    renderModal();
+    return;
+  }
+  const saved = loadSetupProgress();
+  if (saved) {
+    view.setupStep = saved.step;
+    view.setupData = saved.data;
+    view.modal = { type: 'setup' };
+    renderModal();
+    return;
+  }
+
   view.setupStep = 0;
   view.setupData = {
     mode: null,
@@ -90,6 +216,7 @@ function setDiagnosticA(key, val) {
     view.setupData.diagnostic.energy = parseInt(val, 10);
     const el = document.getElementById('energy-val');
     if (el) el.textContent = val + t('setup.assessment.value_of_ten');
+    persistSetupProgress(); // v15.18.1 — no-render path
     return;
   }
   view.setupData.diagnostic[key] = val;
@@ -104,6 +231,7 @@ function setDiagnosticA(key, val) {
   if (key === 'experience' || key === 'dominantHindrance') {
     patchRadioButtonsInPlace('setDiagnosticA', key, val);
     refreshPhaseAContinueState();
+    persistSetupProgress(); // v15.18.1 — no-render path
     return;
   }
   renderModal();
@@ -184,6 +312,7 @@ function setDiagnosticB(key, val) {
   if (isNumeric) {
     const el = document.getElementById('diagB-val-' + key);
     if (el) el.textContent = t('common.minutes', {n: val});
+    persistSetupProgress(); // v15.18.1 — no-render path
     return;
   }
   // v15.11.4 — select-type re-render list was hardcoded and stale.
@@ -195,8 +324,10 @@ function setDiagnosticB(key, val) {
   const selectKeys = getPhaseBSelectKeys();
   if (selectKeys.includes(key)) {
     renderModal();
+    return;
   }
   // Otherwise (textareas like teacherInfluence, whatUnclear) — no re-render.
+  persistSetupProgress(); // v15.18.1 — no-render path; autosave freetext
 }
 
 // v15.11.4 — Derived once from __ASSESSMENT after boot. Cached so we don't
@@ -228,6 +359,7 @@ function setDiagnosticC(key, val) {
   // slider interaction (no midway focus loss on touch devices).
   const el = document.getElementById('diagC-val-' + key);
   if (el) el.textContent = val;
+  persistSetupProgress(); // v15.18.1 — no-render path
 }
 
 function setupToggleMulti(key, optionId) {
@@ -260,6 +392,10 @@ function computeAndShowRecommendation() {
 function pauseSetupForCare() {
   // Reset the setup view entirely; don't accidentally persist an in-progress
   // state with a crisis flag that would follow the user back.
+  // v15.18.1 — also clear localStorage progress so the crisis-paused session
+  // does NOT auto-resume on next boot. Care is care; the setup flow starts
+  // over cleanly when they come back.
+  clearSetupProgress();
   view.setupStep = 0;
   view.setupData = {
     mode: null, category: null, quest: null,
@@ -311,6 +447,7 @@ function adjustRecommendation(key, val) {
   if (el) el.textContent = n + ' min';
   // v13.4 — also keep the daily-total readout fresh in-place
   updateRecommendationDailyTotal();
+  persistSetupProgress(); // v15.18.1 — no-render path
 }
 
 function updateRecommendationDailyTotal() {
@@ -567,6 +704,9 @@ function finishSetup() {
   // fails here, it fails visibly in the console — not silently inside a timeout.
   try {
     state.setupComplete = true;
+    // v15.18.1 — persisted setup progress served its purpose; clear it so a
+    // future startSetup() call on this device doesn't resurrect stale input.
+    clearSetupProgress();
     state.members = view.setupData.members;
     state.questMode = view.setupData.mode;
 

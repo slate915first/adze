@@ -339,6 +339,9 @@ function abandonQuest() {
 function resetAll() {
   if (!confirm(t('alerts.reset_confirm'))) return;
   localStorage.removeItem(STORAGE_KEY);
+  // v15.18.1 — also clear any in-flight setup snapshot so the fresh-start
+  // reload doesn't auto-resume into the state the user is trying to wipe.
+  if (typeof clearSetupProgress === 'function') clearSetupProgress();
   state = null;
   location.reload();
 }

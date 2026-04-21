@@ -353,6 +353,10 @@ async function authSignOut() {
   // means sign-out everywhere on this device. Data is safe in the Supabase
   // ciphertext; sign-in + passphrase-unlock restores it.
   try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  // v15.18.1 — also wipe in-progress setup. The email-scoped load check
+  // already blocks cross-account hydration, but plaintext diagnostic answers
+  // sitting on disk after sign-out is the exact shared-browser threat model.
+  if (typeof clearSetupProgress === 'function') clearSetupProgress();
   state = (typeof newState === 'function') ? newState() : null;
   view.modal = null;
   view.currentMember = null;

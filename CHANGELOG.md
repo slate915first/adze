@@ -4,6 +4,47 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.2] — 2026-04-21 · setup-progress persistence — close the 1.5h-loss class entirely
+
+(Versioned as 15.19.2 to follow the existing local v15.19.0 / v15.19.1 theming progression; semantically this is the v15.18.0 tester-bug-cluster follow-up.)
+
+### Fixed
+
+**Setup data can no longer be lost mid-flow.** v15.18.0 closed Bastian's specific failure path (dangling sutta refs + openSutta returnTo). This release closes the broader class: any tab kill, page reload, battery death, or re-auth mid-setup used to wipe `view.setupData` / `view.setupStep` because they lived in memory only. Now they persist to localStorage and auto-resume cleanly.
+
+Implementation:
+
+- **New helpers in `src/systems/setup-flow.js`:** `persistSetupProgress()`, `loadSetupProgress()`, `clearSetupProgress()`, `setupProgressExists()`. Key `adze-setup-progress-v1`, schema-versioned, 7-day TTL, scoped by auth email (one account's progress never hydrates into another's session on the same device).
+
+- **`startSetup()` is now idempotent.** Three priority sources, in order: (1) already-populated `view.setupData` in memory (re-auth while modal is live — the exact path that finished Bastian off once he got bounced to the welcome page), (2) localStorage (reload survival), (3) fresh defaults. `view.setupStep > 0` guard prevents a never-started session from accidentally matching the in-memory branch.
+
+- **Autosave hook in `src/main.js` `renderModal()`.** Fires whenever the setup modal re-renders. User-paced, not a hot loop, so write rate is bounded by taps and keystrokes.
+
+- **Autosave on no-render paths.** `setDiagnosticA`, `setDiagnosticB`, `setDiagnosticC`, `adjustRecommendation` all mutate `view.setupData` without calling `renderModal()` (for focus-preservation reasons in sliders and textareas). Added explicit `persistSetupProgress()` calls at the end of each so those mutations are durable without a round-trip through render. Caught by senior-engineer pre-ship review.
+
+- **Boot-time resume in `src/bootstrap.js`.** After the first `render()`, if no modal is queued (so auth gates still take precedence) and state is incomplete and `setupProgressExists()` returns true, call `startSetup()`. The user lands back exactly where they left off rather than being dumped onto the welcome page.
+
+- **`finishSetup()` and `pauseSetupForCare()` both call `clearSetupProgress()`.** Completion clears the snapshot; crisis-pause clears it too, so a crisis-paused session never auto-resumes on next boot (care is care).
+
+- **Sign-out wipes the snapshot** (`src/systems/auth.js`). Security-reviewer gate: the email-scoped load check blocks cross-account hydration, but leaving plaintext diagnostic answers on disk after sign-out is the exact shared-browser threat model v15.15.5 was written to close. Now symmetric with the `STORAGE_KEY` wipe.
+
+- **`resetAll()` wipes the snapshot** (`src/render/settings.js`). Otherwise a deliberate reset would auto-resume into the state the user is trying to wipe.
+
+### Security — Art. 9 / freetext redaction
+
+Pre-ship security-reviewer flagged that `view.setupData.diagnostic` contains practitioner-disclosed freetext (`teachers`, `wantFromTool`, `unclear`, `stoppedBeforeOther`, `physicalConcernsOther`, `concernsOther`) which becomes Art. 9-adjacent under GDPR when persisted to plaintext localStorage on a shared device. Fix: `_redactSetupDataForStorage()` blanks those six fields on every write. In-memory state still carries them through `finishSetup()` — the redaction only applies to what sits on disk. Unit test at `tests/unit/setup-progress-redaction.test.js` locks the redaction list + verifies structural fields survive. Open question for dsgvo-lawyer (v15.19): should `wellbeingAck='crisis'` also be redacted? Currently kept so Phase-A users can resume without re-answering the wellbeing check; alternative is a neutral "already passed" marker.
+
+### Tests
+
+- **New:** `tests/unit/setup-progress-redaction.test.js` — 5 tests locking the sensitive-field blanking contract.
+- Full unit suite: 45/45 vitest green (40 existing + 5 new).
+
+### Known trade-offs
+
+- **7-day TTL.** Reasonable for closed-beta. Revisit before public launch — consider 48h to reduce zombie-progress surface.
+- **Double JSON-parse on boot** (setupProgressExists → loadSetupProgress → startSetup → loadSetupProgress). Harmless; <1ms on a ~5KB payload. Not worth a cache.
+- **`onNameInput` pending-name field not autosaved.** Acceptable: retyping a short name on resume is low cost.
+
 ## [15.18.0] — 2026-04-21 · tester bug cluster — setup-sutta data loss, save-quote regression, reflection-history discoverability, legal-button tap fix, Quest → Path rename
 
 ### Fixed
