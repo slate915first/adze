@@ -1,0 +1,81 @@
+/* ============================================================================
+ * src/styles/theme-calm.css
+ * ----------------------------------------------------------------------------
+ * Second theme for Adze. Activated when the <html> element carries the
+ * attribute data-theme="calm". Sets overrides for the CSS custom properties
+ * declared in styles.css :root — no rule below the :root block of either
+ * stylesheet needs to change.
+ *
+ * Design posture (dhamma-designer brief, 2026-04-21):
+ *   - Forest-tradition aesthetic: Wat Pah Pong bare wood, low contrast,
+ *     no horror-film dramaturgy around Māra. Bare > decorated. Negative
+ *     space is load-bearing.
+ *   - The passaddhi test: every visual element serves attention or removes
+ *     itself. No shouting; no ambient motion; no red alarm language.
+ *   - Keep the game scaffolding HONEST. Māra stays named and present.
+ *     Shadow bar stays visible. Downgrade/bump banners, Next Step CTA,
+ *     three-column grid are never hidden.
+ *   - Avoid wellness-spa vocabulary in palette: this is not sage-and-linen.
+ *     Warm kuṭi-at-dusk, muted but not washed-out.
+ * ============================================================================ */
+
+:root[data-theme="calm"] {
+  /* ─── Surfaces ───
+     Warm charcoal → sepia-dark, like a meditation hall at dusk. Keeps
+     readability for dark-room practice but drops the violet-theatrical
+     register of the classic theme. */
+  --surface-0: #17150f;   /* deepest */
+  --surface-1: #221f18;   /* body mid */
+  --surface-2: #2e2a22;   /* body rise, tooltip, btn-gold text surface */
+  --surface-ink: #d8cfc1; /* soft parchment — lower contrast than classic */
+
+  /* ─── Path — gold / lotus / progression ───
+     Dusty amber, not glowing gold. Warm, earned, not theatrical. */
+  --path-core: #b89968;       /* signature amber, was #d4a857 */
+  --path-bright: #d4c39a;     /* bone-gold, was #f4e4bc */
+  --path-deep: #6b5636;       /* deep warm brown, was #8b6914 */
+  --path-rgb: 212, 195, 154;     /* replaces 244, 228, 188 */
+  --path-mid-rgb: 184, 153, 104; /* replaces 212, 184, 140 */
+  --path-core-rgb: 155, 128, 86; /* replaces 212, 168, 87 */
+
+  /* ─── Parchment — scroll paper ───
+     Unchanged ink; a sutta scroll is a sutta scroll in either theme.
+     The parchment mid-tone (second gradient stop) drifts slightly
+     warmer to match the palette shift. */
+
+  /* ─── Māra — hindrance / setback ───
+     Named, not screaming. Dim bronze-brown replaces crimson. The army
+     cards remain a distinct surface (so the practitioner can still
+     locate the Māra information) but the visual alarm is gone. */
+  --mara-core: #8a6550;        /* was #dc2626 */
+  --mara-deep: #5a4034;        /* was #991b1b */
+  --mara-shadow: #3f2a21;      /* was #7f1d1d */
+  --mara-ink: #c9a999;         /* was #fca5a5 */
+  --mara-rgb: 138, 101, 80;       /* was 220, 38, 38 */
+  --mara-banner-deep-rgb: 90, 64, 52;  /* was 168, 30, 30 */
+  --mara-surface-rgb: 45, 32, 26;      /* was 40, 10, 10 */
+  --mara-surface-deep-rgb: 30, 22, 18; /* was 20, 5, 5 */
+
+  /* ─── Sangha — community ───
+     Warm muted plum, not saturated purple. Present but quiet. */
+  --sangha-rgb: 120, 100, 130;  /* was 168, 85, 247 */
+
+  /* ─── Released — defeated army ───
+     Soft sage-gray, not alert green. Completion is not celebration. */
+  --released-rgb: 120, 140, 110; /* was 34, 197, 94 */
+
+  /* ─── Accent ───
+     Ember warmth kept but dimmed. Particle animations suppress in
+     Step 4 via motion dial; this value is for static ember colors. */
+  --ember: #a8875a;  /* was #fbbf24 */
+
+  /* ─── Overlay — body::before dread tint ───
+     Warm gray replaces red-black. The shadow-level feedback still
+     renders (honest diagnostic), but without the horror-film register. */
+  --dread-rgb: 35, 30, 25;  /* was 20, 0, 0 */
+
+  /* ─── Motion dial ───
+     Set to 0; Step 4 wires this to actually freeze ambient animation.
+     In this file's scope it is declarative only. */
+  --motion-ambient: 0;
+}
