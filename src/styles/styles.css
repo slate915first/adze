@@ -8,12 +8,68 @@
  * ============================================================================ */
 
   :root {
+    /* ─── Color tokens ───
+       Every color in this file references one of these. To rethemé the app,
+       override these in a [data-theme="..."] block — no rules below need to
+       change. Solid values are hex; families with many alpha variants are
+       stored as "R, G, B" triplets and used via rgba(var(--foo-rgb), α). */
+
+    /* Surface — dark base */
+    --surface-0: var(--surface-0);
+    --surface-1: var(--surface-1);
+    --surface-2: var(--surface-2);
+    --surface-ink: var(--surface-ink);
+
+    /* Path — gold / lotus / progression */
+    --path-core: var(--path-core);
+    --path-bright: var(--path-bright);
+    --path-deep: var(--path-deep);
+    --path-rgb: 244, 228, 188;       /* cream-gold (= var(--path-bright)) */
+    --path-mid-rgb: 212, 184, 140;   /* warm gold */
+    --path-core-rgb: 212, 168, 87;   /* (= var(--path-core)) */
+
+    /* Parchment — scroll paper */
+    --parchment-ink: var(--parchment-ink);
+    --parchment-heading: var(--parchment-heading);
+
+    /* Māra — hindrance / setback */
+    --mara-core: var(--mara-core);
+    --mara-deep: var(--mara-deep);
+    --mara-shadow: var(--mara-shadow);
+    --mara-ink: var(--mara-ink);
+    --mara-rgb: 220, 38, 38;
+    --mara-banner-deep-rgb: 168, 30, 30;
+
+    /* Sangha — community */
+    --sangha-rgb: 168, 85, 247;
+
+    /* Released — defeated army (green) */
+    --released-rgb: 34, 197, 94;
+
+    /* Accent */
+    --ember: var(--ember);
+
+    /* Overlay — body::before dread tint */
+    --dread-rgb: 20, 0, 0;
+
+    /* Māra army-card surfaces (dark red-brown tints) */
+    --mara-surface-rgb: 40, 10, 10;
+    --mara-surface-deep-rgb: 20, 5, 5;
+
+    /* Parchment mid-tone (scroll-paper gradient second stop) */
+    --parchment-mid-rgb: 232, 212, 164;
+
+    /* ─── Motion dial ───
+       Themes can override to 0 to freeze ambient animation. */
+    --motion-ambient: 1;
+
+    /* ─── Runtime state ─── */
     --shadow-level: 0;
   }
   body {
     background:
-      radial-gradient(ellipse at top, #1a1530 0%, #0a0612 50%, #050308 100%);
-    color: #e6dcc8;
+      radial-gradient(ellipse at top, var(--surface-2) 0%, var(--surface-1) 50%, var(--surface-0) 100%);
+    color: var(--surface-ink);
     font-family: 'Georgia', 'Crimson Text', serif;
     min-height: 100vh;
     position: relative;
@@ -23,7 +79,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(20,0,0,calc(var(--shadow-level)*0.6)) 100%);
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(var(--dread-rgb),calc(var(--shadow-level)*0.6)) 100%);
     pointer-events: none;
     z-index: 1;
     transition: background 1s ease;
@@ -43,33 +99,33 @@
   .sans { font-family: -apple-system, system-ui, sans-serif; }
 
   .parchment {
-    background: linear-gradient(145deg, rgba(244,228,188,0.08), rgba(212,184,140,0.04));
-    border: 1px solid rgba(212,184,140,0.25);
+    background: linear-gradient(145deg, rgba(var(--path-rgb),0.08), rgba(var(--path-mid-rgb),0.04));
+    border: 1px solid rgba(var(--path-mid-rgb),0.25);
     backdrop-filter: blur(8px);
   }
   .parchment-active {
-    background: linear-gradient(145deg, rgba(244,228,188,0.18), rgba(212,184,140,0.1));
-    border-color: #d4a857;
-    box-shadow: 0 0 30px rgba(212,168,87,0.3);
+    background: linear-gradient(145deg, rgba(var(--path-rgb),0.18), rgba(var(--path-mid-rgb),0.1));
+    border-color: var(--path-core);
+    box-shadow: 0 0 30px rgba(var(--path-core-rgb),0.3);
   }
   .gold-text {
-    background: linear-gradient(135deg, #f4e4bc, #d4a857, #f4e4bc);
+    background: linear-gradient(135deg, var(--path-bright), var(--path-core), var(--path-bright));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .lotus-glow { box-shadow: 0 0 30px rgba(244,228,188,0.4); }
-  .mara-glow { box-shadow: 0 0 25px rgba(220,38,38,0.5); }
-  .sangha-glow { box-shadow: 0 0 20px rgba(168,85,247,0.4); }
+  .lotus-glow { box-shadow: 0 0 30px rgba(var(--path-rgb),0.4); }
+  .mara-glow { box-shadow: 0 0 25px rgba(var(--mara-rgb),0.5); }
+  .sangha-glow { box-shadow: 0 0 20px rgba(var(--sangha-rgb),0.4); }
 
   .habit-row { transition: all 0.3s ease; cursor: pointer; }
-  .habit-row:hover { background: rgba(244,228,188,0.05); transform: translateX(4px); }
-  .habit-done { background: linear-gradient(90deg, rgba(244,228,188,0.15), transparent); border-left: 3px solid #d4a857; }
-  .habit-missed { background: linear-gradient(90deg, rgba(220,38,38,0.1), transparent); border-left: 3px solid #991b1b; opacity: 0.6; }
+  .habit-row:hover { background: rgba(var(--path-rgb),0.05); transform: translateX(4px); }
+  .habit-done { background: linear-gradient(90deg, rgba(var(--path-rgb),0.15), transparent); border-left: 3px solid var(--path-core); }
+  .habit-missed { background: linear-gradient(90deg, rgba(var(--mara-rgb),0.1), transparent); border-left: 3px solid var(--mara-deep); opacity: 0.6; }
 
   .checkbox {
     width: 36px; height: 36px;
-    border: 2px solid rgba(212,168,87,0.4);
+    border: 2px solid rgba(var(--path-core-rgb),0.4);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s;
@@ -77,17 +133,17 @@
     flex-shrink: 0;
     background: rgba(0,0,0,0.3);
   }
-  .checkbox:hover { border-color: #d4a857; transform: scale(1.1); box-shadow: 0 0 20px rgba(212,168,87,0.4); }
+  .checkbox:hover { border-color: var(--path-core); transform: scale(1.1); box-shadow: 0 0 20px rgba(var(--path-core-rgb),0.4); }
   .checkbox.done {
-    background: radial-gradient(circle, #f4e4bc, #d4a857);
-    border-color: #f4e4bc;
-    box-shadow: 0 0 20px rgba(244,228,188,0.6);
+    background: radial-gradient(circle, var(--path-bright), var(--path-core));
+    border-color: var(--path-bright);
+    box-shadow: 0 0 20px rgba(var(--path-rgb),0.6);
   }
 
   .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
   @keyframes pulse-glow {
-    0%,100% { box-shadow: 0 0 20px rgba(244,228,188,0.3); }
-    50% { box-shadow: 0 0 40px rgba(244,228,188,0.6); }
+    0%,100% { box-shadow: 0 0 20px rgba(var(--path-rgb),0.3); }
+    50% { box-shadow: 0 0 40px rgba(var(--path-rgb),0.6); }
   }
 
   .breath { animation: breath 4s ease-in-out infinite; }
@@ -115,10 +171,10 @@
   }
 
   .tab-active {
-    background: linear-gradient(135deg, rgba(212,168,87,0.3), rgba(244,228,188,0.2));
-    color: #f4e4bc;
-    border-color: #d4a857;
-    box-shadow: 0 4px 15px rgba(212,168,87,0.3);
+    background: linear-gradient(135deg, rgba(var(--path-core-rgb),0.3), rgba(var(--path-rgb),0.2));
+    color: var(--path-bright);
+    border-color: var(--path-core);
+    box-shadow: 0 4px 15px rgba(var(--path-core-rgb),0.3);
   }
 
   .progress-bar {
@@ -126,19 +182,19 @@
     background: rgba(0,0,0,0.5);
     border-radius: 6px;
     overflow: hidden;
-    border: 1px solid rgba(212,168,87,0.3);
+    border: 1px solid rgba(var(--path-core-rgb),0.3);
   }
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #d4a857, #f4e4bc);
+    background: linear-gradient(90deg, var(--path-core), var(--path-bright));
     transition: width 0.6s ease;
-    box-shadow: 0 0 10px rgba(244,228,188,0.5);
+    box-shadow: 0 0 10px rgba(var(--path-rgb),0.5);
   }
   .shadow-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #7f1d1d, #dc2626, #991b1b);
+    background: linear-gradient(90deg, var(--mara-shadow), var(--mara-core), var(--mara-deep));
     transition: width 0.6s ease;
-    box-shadow: 0 0 10px rgba(220,38,38,0.6);
+    box-shadow: 0 0 10px rgba(var(--mara-rgb),0.6);
   }
 
   .modal-bg {
@@ -161,14 +217,14 @@
   .scrollbar::-webkit-scrollbar { width: 8px; }
   .scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
   .scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #d4a857, #8b6914);
+    background: linear-gradient(180deg, var(--path-core), var(--path-deep));
     border-radius: 4px;
   }
 
   input:not([type="checkbox"]):not([type="radio"]), select, textarea {
     background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(212,168,87,0.3);
-    color: #f4e4bc;
+    border: 1px solid rgba(var(--path-core-rgb),0.3);
+    color: var(--path-bright);
     padding: 0.7rem 0.9rem;
     border-radius: 0.5rem;
     width: 100%;
@@ -176,8 +232,8 @@
   }
   input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #d4a857;
-    box-shadow: 0 0 0 3px rgba(212,168,87,0.2);
+    border-color: var(--path-core);
+    box-shadow: 0 0 0 3px rgba(var(--path-core-rgb),0.2);
   }
 
   .btn {
@@ -193,27 +249,27 @@
     min-height: 44px;
   }
   .btn-gold {
-    background: linear-gradient(135deg, #d4a857, #8b6914);
-    color: #1a1530;
-    border-color: #f4e4bc;
+    background: linear-gradient(135deg, var(--path-core), var(--path-deep));
+    color: var(--surface-2);
+    border-color: var(--path-bright);
   }
   .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(212,168,87,0.5);
+    box-shadow: 0 8px 25px rgba(var(--path-core-rgb),0.5);
   }
   .btn-ghost {
-    background: rgba(244,228,188,0.05);
-    color: #f4e4bc;
-    border-color: rgba(212,168,87,0.3);
+    background: rgba(var(--path-rgb),0.05);
+    color: var(--path-bright);
+    border-color: rgba(var(--path-core-rgb),0.3);
   }
   .btn-ghost:hover {
-    background: rgba(244,228,188,0.1);
-    border-color: #d4a857;
+    background: rgba(var(--path-rgb),0.1);
+    border-color: var(--path-core);
   }
   .btn-danger {
-    background: rgba(220,38,38,0.2);
-    color: #fca5a5;
-    border-color: rgba(220,38,38,0.5);
+    background: rgba(var(--mara-rgb),0.2);
+    color: var(--mara-ink);
+    border-color: rgba(var(--mara-rgb),0.5);
   }
 
   .character-card {
@@ -224,65 +280,65 @@
     transform: translateY(-4px) scale(1.02);
   }
   .character-selected {
-    border-color: #d4a857;
-    background: linear-gradient(145deg, rgba(244,228,188,0.2), rgba(212,168,87,0.1));
-    box-shadow: 0 0 30px rgba(212,168,87,0.4);
+    border-color: var(--path-core);
+    background: linear-gradient(145deg, rgba(var(--path-rgb),0.2), rgba(var(--path-core-rgb),0.1));
+    box-shadow: 0 0 30px rgba(var(--path-core-rgb),0.4);
   }
 
   .army-card {
-    background: linear-gradient(145deg, rgba(40,10,10,0.6), rgba(20,5,5,0.4));
-    border: 1px solid rgba(220,38,38,0.4);
+    background: linear-gradient(145deg, rgba(var(--mara-surface-rgb),0.6), rgba(var(--mara-surface-deep-rgb),0.4));
+    border: 1px solid rgba(var(--mara-rgb),0.4);
   }
   .army-defeated {
-    background: linear-gradient(145deg, rgba(34,197,94,0.1), rgba(0,0,0,0.4));
-    border-color: rgba(34,197,94,0.5);
+    background: linear-gradient(145deg, rgba(var(--released-rgb),0.1), rgba(0,0,0,0.4));
+    border-color: rgba(var(--released-rgb),0.5);
   }
 
   .lotus-icon {
     font-size: 2rem;
-    filter: drop-shadow(0 0 10px rgba(244,228,188,0.5));
+    filter: drop-shadow(0 0 10px rgba(var(--path-rgb),0.5));
   }
 
   .stage-marker {
     width: 50px; height: 50px;
     border-radius: 50%;
-    border: 3px solid rgba(212,168,87,0.4);
+    border: 3px solid rgba(var(--path-core-rgb),0.4);
     display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,0.5);
     transition: all 0.4s;
     flex-shrink: 0;
   }
   .stage-current {
-    border-color: #f4e4bc;
-    background: radial-gradient(circle, rgba(244,228,188,0.3), rgba(212,168,87,0.1));
-    box-shadow: 0 0 30px rgba(244,228,188,0.5);
+    border-color: var(--path-bright);
+    background: radial-gradient(circle, rgba(var(--path-rgb),0.3), rgba(var(--path-core-rgb),0.1));
+    box-shadow: 0 0 30px rgba(var(--path-rgb),0.5);
     transform: scale(1.15);
   }
   .stage-complete {
-    background: radial-gradient(circle, #d4a857, #8b6914);
-    border-color: #f4e4bc;
+    background: radial-gradient(circle, var(--path-core), var(--path-deep));
+    border-color: var(--path-bright);
   }
 
   .scroll-paper {
     background:
-      linear-gradient(180deg, rgba(244,228,188,0.95), rgba(232,212,164,0.9));
-    color: #2c1810;
+      linear-gradient(180deg, rgba(var(--path-rgb),0.95), rgba(var(--parchment-mid-rgb),0.9));
+    color: var(--parchment-ink);
     padding: 2rem;
     border-radius: 0.5rem;
-    border: 2px solid #8b6914;
-    box-shadow: 0 0 50px rgba(244,228,188,0.4);
+    border: 2px solid var(--path-deep);
+    box-shadow: 0 0 50px rgba(var(--path-rgb),0.4);
     font-family: 'Georgia', serif;
     line-height: 1.7;
   }
   .scroll-paper h3 {
-    color: #5c2c0a;
+    color: var(--parchment-heading);
     font-style: italic;
   }
 
   .ember {
     position: absolute;
     width: 4px; height: 4px;
-    background: #fbbf24;
+    background: var(--ember);
     border-radius: 50%;
     pointer-events: none;
     animation: ember 4s linear infinite;
@@ -295,9 +351,9 @@
 
   .quest-banner {
     background:
-      linear-gradient(135deg, rgba(244,228,188,0.1), rgba(212,168,87,0.05)),
-      radial-gradient(ellipse at top, rgba(244,228,188,0.15), transparent);
-    border: 1px solid rgba(212,168,87,0.4);
+      linear-gradient(135deg, rgba(var(--path-rgb),0.1), rgba(var(--path-core-rgb),0.05)),
+      radial-gradient(ellipse at top, rgba(var(--path-rgb),0.15), transparent);
+    border: 1px solid rgba(var(--path-core-rgb),0.4);
     position: relative;
     overflow: hidden;
   }
@@ -305,7 +361,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(244,228,188,0.05), transparent);
+    background: linear-gradient(90deg, transparent, rgba(var(--path-rgb),0.05), transparent);
     background-size: 200% 100%;
     animation: shimmer 6s infinite;
     pointer-events: none;
@@ -315,7 +371,7 @@
     100% { background-position: 200% 0; }
   }
   .shimmer {
-    background: linear-gradient(90deg, #d4a857, #f4e4bc, #d4a857, #f4e4bc, #d4a857);
+    background: linear-gradient(90deg, var(--path-core), var(--path-bright), var(--path-core), var(--path-bright), var(--path-core));
     background-size: 200% 100%;
     animation: shimmer 2s linear infinite;
   }
@@ -326,17 +382,17 @@
 
   .danger-pulse { animation: dangerPulse 1.5s ease-in-out infinite; }
   @keyframes dangerPulse {
-    0%,100% { box-shadow: 0 0 20px rgba(220,38,38,0.4); }
-    50% { box-shadow: 0 0 40px rgba(220,38,38,0.8); }
+    0%,100% { box-shadow: 0 0 20px rgba(var(--mara-rgb),0.4); }
+    50% { box-shadow: 0 0 40px rgba(var(--mara-rgb),0.8); }
   }
 
   .codex-entry {
-    background: linear-gradient(145deg, rgba(244,228,188,0.08), rgba(212,168,87,0.04));
-    border-left: 3px solid #d4a857;
+    background: linear-gradient(145deg, rgba(var(--path-rgb),0.08), rgba(var(--path-core-rgb),0.04));
+    border-left: 3px solid var(--path-core);
     transition: all 0.3s;
     cursor: pointer;
   }
-  .codex-entry:hover { background: rgba(244,228,188,0.12); }
+  .codex-entry:hover { background: rgba(var(--path-rgb),0.12); }
 
   .tooltip { position: relative; }
   .tooltip:hover .tooltip-text { opacity: 1; }
@@ -344,8 +400,8 @@
     position: absolute;
     bottom: 100%; left: 50%;
     transform: translateX(-50%);
-    background: #1a1530;
-    border: 1px solid #d4a857;
+    background: var(--surface-2);
+    border: 1px solid var(--path-core);
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 0.75rem;
@@ -365,7 +421,7 @@
      reporting points still stand out. */
   body.feedback-mode { cursor: crosshair; }
   body.feedback-mode *:not(#feedback-fab):not(#feedback-banner):not(#modal-root):hover {
-    outline: 1px dashed rgba(212, 168, 87, 0.55);
+    outline: 1px dashed rgba(var(--path-core-rgb), 0.55);
     outline-offset: 1px;
   }
   body.feedback-mode [data-component] {
@@ -373,7 +429,7 @@
     cursor: crosshair;
   }
   body.feedback-mode [data-component]:hover {
-    outline: 2px dashed #d4a857;
+    outline: 2px dashed var(--path-core);
     outline-offset: 2px;
   }
   body.feedback-mode [data-component]:hover::after {
@@ -381,8 +437,8 @@
     position: absolute;
     top: -2px;
     right: -2px;
-    background: #d4a857;
-    color: #1a1530;
+    background: var(--path-core);
+    color: var(--surface-2);
     padding: 2px 8px;
     font-size: 10px;
     font-weight: bold;
@@ -416,32 +472,32 @@
     width: 48px;
     height: 48px;
     border-radius: 24px;
-    background: linear-gradient(135deg, #f4e4bc, #d4a857);
-    color: #1a1530;
+    background: linear-gradient(135deg, var(--path-bright), var(--path-core));
+    color: var(--surface-2);
     border: none;
     font-size: 20px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(212,168,87,0.4);
+    box-shadow: 0 4px 15px rgba(var(--path-core-rgb),0.4);
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .feedback-fab.active {
-    background: linear-gradient(135deg, #fca5a5, #dc2626);
+    background: linear-gradient(135deg, var(--mara-ink), var(--mara-core));
     color: #fff;
-    box-shadow: 0 4px 20px rgba(220,38,38,0.5);
+    box-shadow: 0 4px 20px rgba(var(--mara-rgb),0.5);
     animation: fabPulse 2s ease-in-out infinite;
   }
   @keyframes fabPulse {
-    0%,100% { box-shadow: 0 4px 15px rgba(220,38,38,0.4); }
-    50%     { box-shadow: 0 4px 25px rgba(220,38,38,0.7); }
+    0%,100% { box-shadow: 0 4px 15px rgba(var(--mara-rgb),0.4); }
+    50%     { box-shadow: 0 4px 25px rgba(var(--mara-rgb),0.7); }
   }
   .feedback-fab:hover { transform: scale(1.08); }
   .feedback-banner {
     position: fixed;
     top: 0; left: 0; right: 0;
-    background: linear-gradient(135deg, rgba(220,38,38,0.95), rgba(168,30,30,0.9));
+    background: linear-gradient(135deg, rgba(var(--mara-rgb),0.95), rgba(var(--mara-banner-deep-rgb),0.9));
     color: #fff;
     /* v15.17.5 — Dynamic-Island / notched-iPhone PWA fix. Previously the
        banner text sat under the notch when the app ran in standalone
