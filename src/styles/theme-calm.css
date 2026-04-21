@@ -75,7 +75,32 @@
   --dread-rgb: 35, 30, 25;  /* was 20, 0, 0 */
 
   /* ─── Motion dial ───
-     Set to 0; Step 4 wires this to actually freeze ambient animation.
-     In this file's scope it is declarative only. */
+     Declarative value used by future rules that consume it. The actual
+     ambient-animation freeze is done by the explicit selector block
+     below — mirrors the @media (prefers-reduced-motion) block in
+     styles.css so calm mode is freeze-equivalent without the OS flag. */
   --motion-ambient: 0;
+
+  /* ─── Visual-intensity dial ───
+     Keep the shadow bar honest (header still renders the number), but
+     drop the full-screen darkening that drove the horror-film register.
+     Weights close to 0 but not exactly 0: at very-high shadow levels
+     (80+) the practitioner still gets a quiet ambient signal that
+     something is off, without the theatrical darkening. */
+  --dread-weight: 0.15;
+  --shadow-overlay-weight: 0.1;
+}
+
+/* Ambient-animation freeze in calm mode.
+   Specificity: :root[data-theme="calm"] .class beats a bare .class, so
+   these rules override without !important. Mirrors the @media
+   (prefers-reduced-motion) block in styles.css. */
+:root[data-theme="calm"] .pulse-glow,
+:root[data-theme="calm"] .breath,
+:root[data-theme="calm"] .shimmer,
+:root[data-theme="calm"] .danger-pulse,
+:root[data-theme="calm"] .ember,
+:root[data-theme="calm"] .quest-banner::before,
+:root[data-theme="calm"] .feedback-fab.active {
+  animation: none;
 }

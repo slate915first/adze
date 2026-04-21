@@ -60,8 +60,19 @@
     --parchment-mid-rgb: 232, 212, 164;
 
     /* ─── Motion dial ───
-       Themes can override to 0 to freeze ambient animation. */
+       Themes can override to 0 to freeze ambient animation.
+       The value is declarative; the actual animation kill is done by
+       the @media (prefers-reduced-motion) block at the bottom of this
+       file and the mirror rule in theme-calm.css. */
     --motion-ambient: 1;
+
+    /* ─── Visual-intensity dial ───
+       Controls how strongly body::before (dread tint) and body::after
+       (shadow darkening) react to --shadow-level. Calm themes lower
+       these so the practitioner keeps the honest shadow-bar number
+       without the full-screen darkening. */
+    --dread-weight: 0.6;            /* body::before multiplier */
+    --shadow-overlay-weight: 0.4;   /* body::after multiplier */
 
     /* ─── Runtime state ─── */
     --shadow-level: 0;
@@ -79,7 +90,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(var(--dread-rgb),calc(var(--shadow-level)*0.6)) 100%);
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(var(--dread-rgb),calc(var(--shadow-level) * var(--dread-weight))) 100%);
     pointer-events: none;
     z-index: 1;
     transition: background 1s ease;
@@ -88,7 +99,7 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,calc(var(--shadow-level)*0.4));
+    background: rgba(0,0,0,calc(var(--shadow-level) * var(--shadow-overlay-weight)));
     pointer-events: none;
     z-index: 1;
     transition: background 1s ease;
@@ -512,3 +523,24 @@
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   }
   .feedback-banner b { letter-spacing: 0.5px; }
+
+  /* ─── Motion reduction — OS-level accessibility ───
+     Honors the user's prefers-reduced-motion system setting regardless
+     of which theme is active. Kills ambient (infinite) animations while
+     keeping one-shot transitions (.fade-in, .float-up, .scroll-reveal)
+     because those communicate state change, not ambient energy. The
+     calm theme mirrors these rules independently in theme-calm.css so
+     calm mode also freezes ambient motion even without the OS flag. */
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-glow,
+    .breath,
+    .shimmer,
+    .danger-pulse,
+    .ember,
+    .quest-banner::before,
+    .feedback-fab.active {
+      animation: none !important;
+    }
+    body::before,
+    body::after { transition: none !important; }
+  }
