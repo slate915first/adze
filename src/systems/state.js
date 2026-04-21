@@ -72,6 +72,20 @@ function migrateState(s) {
   // v8.1: preferences
   if (!s.prefs) s.prefs = {};
   if (typeof s.prefs.timerMode !== 'string') s.prefs.timerMode = 'ask';
+  // v15.19.11 — seed visualIntensity from the dedicated pre-auth key.
+  // A user who picked a theme on the welcome page before signing in has
+  // their choice in localStorage 'adze_theme'. When their first sign-in
+  // hydrates an empty state from Supabase, that preference would be lost
+  // unless we carry it forward here. Only seed when unset to avoid
+  // overwriting a later Settings change that hasn't synced yet.
+  if (typeof s.prefs.visualIntensity !== 'string') {
+    try {
+      const seeded = localStorage.getItem('adze_theme');
+      if (seeded === 'classic' || seeded === 'calm') {
+        s.prefs.visualIntensity = seeded;
+      }
+    } catch (_) { /* non-fatal */ }
+  }
   // v13.4 — one-time reset: previous versions let users lock themselves into
   // 'never' via a "Never ask" shortcut in the timer prompt. That shortcut was
   // a footgun — users later wondered why tapping the morning sit marked it

@@ -4,6 +4,25 @@ All notable changes to Adze. Format loosely follows [Keep a Changelog](https://k
 
 Update this file whenever `APP_VERSION` in `src/data/loaders.js` changes.
 
+## [15.19.11] — 2026-04-21 · Safe pre-auth theme wiring (source-of-truth split)
+
+Prepares the ground for a welcome-page theme selector (next commit) by splitting the theme source-of-truth into two keys. Addresses a real issue flagged by the senior-engineer review: before this change, a user who picked a theme via `setVisualIntensity()` was writing to `state.prefs` which lives inside the encrypted `adze_v1` blob. A brand-new user signing in for the first time triggers `loadState()` → Supabase hydration → which overwrites `adze_v1` with an empty server-side state, **losing the theme preference**.
+
+### Added
+
+- **Dedicated `adze_theme` localStorage key** — primary source of truth for theme. Lives outside `adze_v1` and therefore survives Supabase hydration.
+- **`setThemeBeforeAuth(mode)` in `src/systems/preferences.js`** — pre-auth-safe setter. Writes only to the DOM attribute and the dedicated key. Never touches `state.prefs` or calls `saveState()`, so it cannot crash when `state` is still `null` on the welcome page.
+- **Legacy migration in the load-time IIFE** — users upgrading from v15.19.3–v15.19.10 whose theme lived only in `adze_v1.prefs.visualIntensity` get their choice migrated to the dedicated key on next load. One-shot.
+- **Seed hook in `migrateState()` (`src/systems/state.js`)** — if `state.prefs.visualIntensity` is unset, seed it from `adze_theme`. Runs on every state hydration; only writes when unset, so a later Settings change is never overwritten.
+
+### Changed
+
+- **`setVisualIntensity()`** now writes to BOTH `state.prefs.visualIntensity` AND `adze_theme`, keeping both sources in sync after authentication.
+
+### Impact
+
+Pre-auth welcome-page theme selection now works safely and persists across sign-in boundaries. No user-visible behavior change in v15.19.11 yet (the welcome chips ship in v15.19.12); this commit is the infrastructure.
+
 ## [15.19.10] — 2026-04-21 · Typography tokens
 
 ### Added
